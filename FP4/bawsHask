@@ -1,0 +1,39 @@
+   
+   
+{-
+
+main = 
+  do 
+    putStrLn "Enter: "
+    string <- getLine
+    putStr (show (wordCount string))
+
+-}
+
+  
+
+wordCount :: String -> Int
+wordCount [] = 1
+wordCount (x:xs) =
+  if x == ' '
+       then 1 + wordCount xs
+       else wordCount xs
+
+
+checkDiff2 :: [Int] -> [Int]
+checkDiff2 [] = []
+checkDiff2 (x:xs) =
+  if elem x xs
+    then x: checkDiff xs
+    else checkDiff xs
+
+
+checkDiff :: [Int] -> [Int]
+checkDiff [] = []
+checkDiff (x:xs) =
+  if elem x xs
+    then 
+      if elem x (checkDiff xs)
+	then checkDiff xs
+	else x: checkDiff xs
+    else checkDiff xs
