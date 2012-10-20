@@ -49,7 +49,7 @@ data Tokens
 
 data Tokens
 	= KeyWord String
-	| Symbol String
+	| BooleanOperator String
 	| Number Int
 	| Identifier String
 	deriving (Read, Show)
@@ -63,15 +63,20 @@ lexicalAnalyser :: [String] -> [Tokens]
 lexicalAnalyser [] = []
 lexicalAnalyser (x:xs)
 	| elem x ["begin","read","write","end"] = (KeyWord x) : (lexicalAnalyser xs)
-	| elem x [":","=","<",">"] = (Symbol x) : (lexicalAnalyser xs)
+	| elem x ["=","<",">"] && nextIsEquals (head xs) = (BooleanOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))
 	| elem x (map char2string ['0'..'9']) = (Number (read x :: Int)) : (lexicalAnalyser xs)
 	| otherwise = (Identifier x) : (lexicalAnalyser xs)
 
 
 -- Lexical Analyser Helpers --
 
+nextIsEquals :: String -> Bool
+nextIsEquals xs =
+	if (head xs) == '=' then True else False
 
-
+skip :: [String] -> [String]
+skip (x:xs) =
+	xs
 
 
 myDelimiter :: String -> [String]
