@@ -43,15 +43,25 @@ data Tokens
 	deriving (Read, Show)
 
 
-myDelimiter :: String -> [String]
-myDelimiter xs =
-	-- Delimit the program (removing the delimiters listed in the first argument of splitOneOf and filtering out black (""))
-	filter (\x -> x /= "") (splitOneOf (';':'\n':' ':'\r':'\t':[]) xs)
-	-- 
+
+
 
 lexicalAnalyser :: String -> [Tokens]
 lexicalAnalyser [] = []
-	
+
+
+
+
+
+
+
+
+myDelimiter :: String -> [String]
+myDelimiter xs =
+	-- Delimit the program (removing the delimiters listed in the first argument of splitOneOf and filtering out black (""))
+	--filter (\x -> x /= "")-- 
+	filter (\x -> (not (elem x ["\n","\t","\r"," ","",";"]))) (split (oneOf "<=>+-/*;\n\r\t ") xs)
+
 
 
 -- IntVar's --
