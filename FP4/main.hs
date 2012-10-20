@@ -33,8 +33,11 @@ data Stmt
 	 deriving (Read, Show)
 
 -}
+
+{- OLD TOKENS
 data Tokens
 	= KeyWord String
+	| Decaration [Char]
 	| Identifier String
 	| BooleanOperator Char
 	| AssignmentOperator String
@@ -42,15 +45,30 @@ data Tokens
 	| Number Int
 	deriving (Read, Show)
 
+-}
+
+data Tokens
+	= KeyWord String
+	| Symbol String
+	| Number Int
+	| Identifier String
+	deriving (Read, Show)
+
+char2string :: Char -> String
+char2string x =
+	x : []
 
 
-
-
-lexicalAnalyser :: String -> [Tokens]
+lexicalAnalyser :: [String] -> [Tokens]
 lexicalAnalyser [] = []
+lexicalAnalyser (x:xs)
+	| elem x ["begin","read","write","end"] = (KeyWord x) : (lexicalAnalyser xs)
+	| elem x [":","=","<",">"] = (Symbol x) : (lexicalAnalyser xs)
+	| elem x (map char2string ['0'..'9']) = (Number (read x :: Int)) : (lexicalAnalyser xs)
+	| otherwise = (Identifier x) : (lexicalAnalyser xs)
 
 
-
+-- Lexical Analyser Helpers --
 
 
 
@@ -60,7 +78,7 @@ myDelimiter :: String -> [String]
 myDelimiter xs =
 	-- Delimit the program (removing the delimiters listed in the first argument of splitOneOf and filtering out black (""))
 	--filter (\x -> x /= "")-- 
-	filter (\x -> (not (elem x ["\n","\t","\r"," ","",";"]))) (split (oneOf "<=>+-/*;\n\r\t ") xs)
+	filter (\x -> (not (elem x ["\n","\t","\r"," ","",";"]))) (split (oneOf "<:=>+-/*;\n\r\t ") xs)
 
 
 
@@ -77,7 +95,7 @@ isIntExp str =
     
 main = do
 	 x <- readFile "exampleProg.txt"
-     	 putStr (show (myDelimiter x)) 
+     	 putStr (show (lexicalAnalyser (myDelimiter x))) 
 
 
 
