@@ -47,28 +47,31 @@ data Tokens
 
 -}
 
+-- ################################################ --
+--                 Lexical Analyser                 --
+-- ################################################ --
+
 data Tokens
 	= KeyWord String
 	| BooleanOperator String
+	| EnvAssignmentOperator String
+	| OrdAssignmentOperator String
 	| Number Int
 	| Identifier String
 	deriving (Read, Show)
-
-char2string :: Char -> String
-char2string x =
-	x : []
-
 
 lexicalAnalyser :: [String] -> [Tokens]
 lexicalAnalyser [] = []
 lexicalAnalyser (x:xs)
 	| elem x ["begin","read","write","end"] = (KeyWord x) : (lexicalAnalyser xs)
 	| elem x ["=","<",">"] && nextIsEquals (head xs) = (BooleanOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))
+	| elem x ["<",">"] = (BooleanOperator x) : (lexicalAnalyser xs)
+	| x == ":" && nextIsEquals (head xs) = (EnvAssignmentOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))
+	| x == "=" = (OrdAssignmentOperator x) : (lexicalAnalyser xs)
 	| elem x (map char2string ['0'..'9']) = (Number (read x :: Int)) : (lexicalAnalyser xs)
 	| otherwise = (Identifier x) : (lexicalAnalyser xs)
 
-
--- Lexical Analyser Helpers --
+-- Helpers
 
 nextIsEquals :: String -> Bool
 nextIsEquals xs =
@@ -78,6 +81,9 @@ skip :: [String] -> [String]
 skip (x:xs) =
 	xs
 
+char2string :: Char -> String
+char2string x =
+	x : []
 
 myDelimiter :: String -> [String]
 myDelimiter xs =
@@ -85,7 +91,7 @@ myDelimiter xs =
 	--filter (\x -> x /= "")-- 
 	filter (\x -> (not (elem x ["\n","\t","\r"," ","",";"]))) (split (oneOf "<:=>+-/*;\n\r\t ") xs)
 
-
+-- ################################################ --
 
 -- IntVar's --
 
