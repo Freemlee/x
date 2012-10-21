@@ -34,19 +34,6 @@ data Stmt
 
 -}
 
-{- OLD TOKENS
-data Tokens
-	= KeyWord String
-	| Decaration [Char]
-	| Identifier String
-	| BooleanOperator Char
-	| AssignmentOperator String
-	| Comment String
-	| Number Int
-	deriving (Read, Show)
-
--}
-
 -- ################################################ --
 --                 Lexical Analyser                 --
 -- ################################################ --
@@ -54,24 +41,34 @@ data Tokens
 data Tokens
 	= KeyWord String
 	| BooleanOperator String
+	| MathematicalOperator String
 	| EnvAssignmentOperator String
 	| OrdAssignmentOperator String
 	| Number Int
+	| Comment String
 	| Identifier String
 	deriving (Read, Show)
 
 lexicalAnalyser :: [String] -> [Tokens]
 lexicalAnalyser [] = []
 lexicalAnalyser (x:xs)
-	| elem x ["begin","read","write","end"] = (KeyWord x) : (lexicalAnalyser xs)
-	| elem x ["=","<",">"] && nextIsEquals (head xs) = (BooleanOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))
-	| elem x ["<",">"] = (BooleanOperator x) : (lexicalAnalyser xs)
-	| x == ":" && nextIsEquals (head xs) = (EnvAssignmentOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))
-	| x == "=" = (OrdAssignmentOperator x) : (lexicalAnalyser xs)
-	| elem x (map char2string ['0'..'9']) = (Number (read x :: Int)) : (lexicalAnalyser xs)
+	| elem x ["begin","read","write","end","while","do"] = (KeyWord x) : (lexicalAnalyser xs) 				--KeyWord
+	| elem x ["=","<",">"] && nextIsEquals (head xs) = (BooleanOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))	--BooleanOperater
+	| elem x ["<",">"] = (BooleanOperator x) : (lexicalAnalyser xs)								--BooleanOperater
+	| elem x ["*","-","+","/"] = (MathematicalOperator x) : (lexicalAnalyser xs)						--MathematicalOperater
+	| x == ":" && nextIsEquals (head xs) = (EnvAssignmentOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))		--EnvAssignmentOperater
+	| x == "=" = (OrdAssignmentOperator x) : (lexicalAnalyser xs)								--OrdAssignmentOperater
+	| x == "#" =  Comment (unwords (take ((commentDrop xs) - 1) xs)) : lexicalAnalyser (drop (commentDrop xs) xs)		--Comments
+	| elem x (map char2string ['0'..'9']) = (Number (read x :: Int)) : (lexicalAnalyser xs)					--Numbers
 	| otherwise = (Identifier x) : (lexicalAnalyser xs)
 
 -- Helpers
+
+commentDrop :: [String] -> Int
+commentDrop (x:xs) =
+	if x == "#"
+		then 1
+		else 1 + commentDrop xs
 
 nextIsEquals :: String -> Bool
 nextIsEquals xs =
@@ -89,8 +86,10 @@ myDelimiter :: String -> [String]
 myDelimiter xs =
 	-- Delimit the program (removing the delimiters listed in the first argument of splitOneOf and filtering out black (""))
 	--filter (\x -> x /= "")-- 
-	filter (\x -> (not (elem x ["\n","\t","\r"," ","",";"]))) (split (oneOf "<:=>+-/*;\n\r\t ") xs)
+	filter (\x -> (not (elem x ["\n","\t","\r"," ","",";"]))) (split (oneOf "#<:=>+-/*;\n\r\t ") xs)
 
+-- ################################################ --
+-- ################################################ --
 -- ################################################ --
 
 -- IntVar's --
