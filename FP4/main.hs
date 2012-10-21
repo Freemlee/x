@@ -1,12 +1,6 @@
 module Main where
 import Data.List.Split
 
-{-
-let lowers = ['a'..'z']
-let uppers = ['A'..'Z']
-let numbers = [0..9]
-let booleanOperators = ["<",">"]
-let assignmentOperators = "="
 
 data IntExp
   = IVar Var
@@ -16,7 +10,7 @@ data IntExp
   | Mul IntExp IntExp
   | Div IntExp IntExp
   deriving (Read, Show)
-  
+ {-
 data BoolExp
 	 = LT IntExp IntExp
 	 | EQ IntExp IntExp
@@ -35,6 +29,21 @@ data Stmt
 -}
 
 -- ################################################ --
+--                 Tree Builder                     --
+-- ################################################ --
+{-
+treeBuilder :: [Tokens] -> Stmt
+treeBuilder (x:xs)
+	| x == Ident && (head xs) == MathematicalOperater = intExpBuilder -- If it gets tokens of format x * .... for instance
+
+intExpBuilder :: [Tokens] -> IntExp
+intExpBuilder (head:xs) =
+	let x = head, y = (head xs)
+		in if y == MathematicalOperater <|> AssignmentOperater
+			then 
+-}
+
+-- ################################################ --
 --                 Lexical Analyser                 --
 -- ################################################ --
 
@@ -42,8 +51,7 @@ data Tokens
 	= KeyWord String
 	| BooleanOperator String
 	| MathematicalOperator String
-	| EnvAssignmentOperator String
-	| OrdAssignmentOperator String
+	| AssignmentOperator String
 	| Number Int
 	| Comment String
 	| Identifier String
@@ -56,8 +64,8 @@ lexicalAnalyser (x:xs)
 	| elem x ["=","<",">"] && nextIsEquals (head xs) = (BooleanOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))	--BooleanOperater
 	| elem x ["<",">"] = (BooleanOperator x) : (lexicalAnalyser xs)								--BooleanOperater
 	| elem x ["*","-","+","/"] = (MathematicalOperator x) : (lexicalAnalyser xs)						--MathematicalOperater
-	| x == ":" && nextIsEquals (head xs) = (EnvAssignmentOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))		--EnvAssignmentOperater
-	| x == "=" = (OrdAssignmentOperator x) : (lexicalAnalyser xs)								--OrdAssignmentOperater
+	| x == ":" && nextIsEquals (head xs) = (AssignmentOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))		--AssignmentOperater
+	| x == "=" = (AssignmentOperator x) : (lexicalAnalyser xs)								--AssignmentOperater
 	| x == "#" =  Comment (unwords (take ((commentDrop xs) - 1) xs)) : lexicalAnalyser (drop (commentDrop xs) xs)		--Comments
 	| elem x (map char2string ['0'..'9']) = (Number (read x :: Int)) : (lexicalAnalyser xs)					--Numbers
 	| otherwise = (Identifier x) : (lexicalAnalyser xs)
