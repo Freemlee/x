@@ -63,6 +63,8 @@ boolExpEvalHelper op x y
 statementBuilder :: [Tokens] -> Stmt
 statementBuilder ((KeyWord "begin"):(Identifier x):xs) =
 	(Begin x (statementArrayBuilder xs))
+statementBuilder ((KeyWord "begin"):xs) =
+	(Begin [] (statementArrayBuilder xs))
 
 statementArrayBuilder :: [Tokens] -> [Stmt]
 statementArrayBuilder ((KeyWord "end"):xs) = []
