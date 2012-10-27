@@ -2,15 +2,18 @@ module Main where
 import Data.List.Split
 
 
+--data Var = String
+--data Decl = MakeDecl [Var] deriving (Read, Show)
+
 data IntExp
-  = IVar Var
-  | ICon Int
-  | Add IntExp IntExp
-  | Sub IntExp IntExp
-  | Mul IntExp IntExp
-  | Div IntExp IntExp
-  deriving (Read, Show)
- {-
+  	= IVar String
+  	| ICon Int
+  	| Add IntExp IntExp
+  	| Sub IntExp IntExp
+  	| Mul IntExp IntExp
+  	| Div IntExp IntExp
+  	deriving (Read, Show)
+{-
 data BoolExp
 	 = LT IntExp IntExp
 	 | EQ IntExp IntExp
@@ -24,23 +27,67 @@ data Stmt
 	 | Write IntExp
 	 | IfThenElse BoolExp Stmt Stmt
 	 | While BoolExp Stmt
-	 deriving (Read, Show)
+	 deriving (Read, Show) -}
 
--}
 
 -- ################################################ --
 --                 Tree Builder                     --
 -- ################################################ --
 {-
 treeBuilder :: [Tokens] -> Stmt
-treeBuilder (x:xs)
-	| x == Ident && (head xs) == MathematicalOperater = intExpBuilder -- If it gets tokens of format x * .... for instance
+treeBuilder ((I a):xs) =  
 
-intExpBuilder :: [Tokens] -> IntExp
-intExpBuilder (head:xs) =
-	let x = head, y = (head xs)
-		in if y == MathematicalOperater <|> AssignmentOperater
-			then 
+keyWordEval :: String -> [Tokens] -> Stmt
+ketWordEval "begin" (x:xs) = Begin x (treeBuilder xs)
+
+baseIntExpEval :: Tokens -> IntExp
+baseIntExpEval (Identifier x) = (Ivar x)
+baseIntExpEval (Number x) = (Icon x)
+
+opIntExpEval Token -> IntExp -> IntExp
+opIntExpEval (MathematicalOperator "*") x y = Mul x y
+opIntExpEval (MathematicalOperator "-") x y = Sub x y
+opIntExpEval (MathematicalOperator "/") x y = Div x y
+opIntExpEval (MathematicalOperator "+") x y = Add x y
+-}
+
+
+{-
+stateMentBuilder :: [Tokens] -> [Stmt]
+stateMentBuilder ((Keyword "end"):xs) = []
+stateMentBuilder ((Keyword "read"):xs) = (Read (Var (xs!!0)) (IntExpEval (getLineArgs (drop 1 xs))))
+stateMentBuilder ((Keyword "write"):xs) =  (Write (IntExpEval (getLineArgs xs)))
+-}
+
+
+
+intExpEval :: [Tokens] -> IntExp
+intExpEval (x:xs) 
+	| (head xs) == (MathematicalOperator "*") = intExpEvalHelper (Mul (iVarOrICon x) (iVarOrICon (xs!!1))) (drop 2 xs)
+	| (head xs) == (MathematicalOperator "/") = intExpEvalHelper (Div (iVarOrICon x) (iVarOrICon (xs!!1))) (drop 2 xs)
+	| (head xs) == (MathematicalOperator "-") = intExpEvalHelper (Sub (iVarOrICon x) (iVarOrICon (xs!!1))) (drop 2 xs)
+	| (head xs) == (MathematicalOperator "+") = intExpEvalHelper (Add (iVarOrICon x) (iVarOrICon (xs!!1))) (drop 2 xs)
+
+intExpEvalHelper :: IntExp -> [Tokens] -> IntExp
+intExpEvalHelper y [] = y
+intExpEvalHelper y ((MathematicalOperator "*"):xs) = intExpEvalHelper (Mul y (iVarOrICon (head xs))) (drop 1 xs)
+intExpEvalHelper y ((MathematicalOperator "/"):xs) = intExpEvalHelper (Div y (iVarOrICon (head xs))) (drop 1 xs)
+intExpEvalHelper y ((MathematicalOperator "-"):xs) = intExpEvalHelper (Sub y (iVarOrICon (head xs))) (drop 1 xs)
+intExpEvalHelper y ((MathematicalOperator "+"):xs) = intExpEvalHelper (Add y (iVarOrICon (head xs))) (drop 1 xs)
+
+iVarOrICon :: Tokens -> IntExp
+iVarOrICon (Identifier x) = IVar x
+iVarOrICon (Number x) = ICon x
+
+{-
+getLineArgs :: [Tokens] -> [Tokens]
+getLineArgs toks =
+	take (getLineArgsHelper toks) toks
+
+getLineArgsHelper :: [Tokens] -> Int
+getLineArgsHelper (EndOfLine _:_) = 0
+getLineArgsHelper (_:xs) = 1 + getLineArgs xs
+
 -}
 
 -- ################################################ --
@@ -49,13 +96,16 @@ intExpBuilder (head:xs) =
 
 data Tokens
 	= KeyWord String
+	| Array [String]
 	| BooleanOperator String
 	| MathematicalOperator String
 	| AssignmentOperator String
 	| Number Int
 	| Comment String
 	| Identifier String
-	deriving (Read, Show)
+	| EndOfLine String
+	| Parens String
+	deriving (Eq, Read, Show)
 
 lexicalAnalyser :: [String] -> [Tokens]
 lexicalAnalyser [] = []
@@ -66,6 +116,8 @@ lexicalAnalyser (x:xs)
 	| elem x ["*","-","+","/"] = (MathematicalOperator x) : (lexicalAnalyser xs)						--MathematicalOperater
 	| x == ":" && nextIsEquals (head xs) = (AssignmentOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))		--AssignmentOperater
 	| x == "=" = (AssignmentOperator x) : (lexicalAnalyser xs)								--AssignmentOperater
+	| x == ";" = (EndOfLine x) : (lexicalAnalyser xs)
+	| x == ")" || x == "(" = (Parens x) : (lexicalAnalyser xs)
 	| x == "#" =  Comment (unwords (take ((commentDrop xs) - 1) xs)) : lexicalAnalyser (drop (commentDrop xs) xs)		--Comments
 	| elem x (map char2string ['0'..'9']) = (Number (read x :: Int)) : (lexicalAnalyser xs)					--Numbers
 	| otherwise = (Identifier x) : (lexicalAnalyser xs)
@@ -93,8 +145,8 @@ char2string x =
 myDelimiter :: String -> [String]
 myDelimiter xs =
 	-- Delimit the program (removing the delimiters listed in the first argument of splitOneOf and filtering out black (""))
-	--filter (\x -> x /= "")-- 
-	filter (\x -> (not (elem x ["\n","\t","\r"," ","",";"]))) (split (oneOf "#<:=>+-/*;\n\r\t ") xs)
+	-- Filter (\x -> x /= "")-- 
+	filter (\x -> (not (elem x ["\n","\t","\r"," ",""]))) (split (oneOf "#<:=>+-()/*;\n\r\t ") xs)
 
 -- ################################################ --
 -- ################################################ --
@@ -113,7 +165,7 @@ isIntExp str =
     
 main = do
 	 x <- readFile "exampleProg.txt"
-     	 putStr (show (lexicalAnalyser (myDelimiter x))) 
+     	 putStr (show (intExpEval (lexicalAnalyser (myDelimiter x))))
 
 
 
