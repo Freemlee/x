@@ -1,0 +1,74 @@
+import numpy
+import math
+import matplotlib.pyplot as plt
+count = 1
+#f = open('laboratory.dat','r')
+#samples [50][2400]
+filename = ""
+
+def toInt(x):
+	return int(x)
+
+def squares(x):
+	return (x*x)
+
+def sign(x):
+	if x >= 0:
+		return 1
+	else:
+		return 0
+
+def zcrFunc(theLines):
+	i = 1
+	theLines = [0] + map(sign, theLines)
+	newvals = []
+	while i < 2641:
+		newvals.append(theLines[i] - theLines[i-1])
+		i = i + 1
+	newvals = map(abs, newvals)
+	return sums(newvals)
+
+def toFloat(x):
+	return float(x)
+
+def sums(ll):
+	i = 0
+	j = 240
+	listofsums = []
+	while (j < 2640):
+		listofsums.append(sum(ll[i:j]))
+		i = i + 1
+		j = j + 1
+	return listofsums
+
+def mainFunc(fileName):
+	f = open(fileName,'r')
+	lines = f.readlines()
+	#theSum = sum(lines)
+	#print theSum
+	intLines = [0]*240
+	intLines = intLines + map(toInt, lines)
+	energy_temp = map(squares, intLines)
+	magnitude_temp = map(abs, intLines)
+	Z = math.log(numpy.mean(zcrFunc(intLines)))
+	E = math.log(numpy.mean(sums(energy_temp)))
+	M = math.log(numpy.mean(sums(magnitude_temp)))
+	#Z = math.log(map(toFloat,zcr))
+	print filename + "\tE: " + str(E)[0:10] + "\tM: " + str(M)[0:10] + "\tZ: " + str(Z)[0:10]
+
+while (count <= 50):
+	if (count < 10):
+		filename = "silence_speech/silence_0" + str(count) + ".dat"
+	else:
+		filename = "silence_speech/silence_" + str(count) + ".dat"
+	mainFunc(filename)
+	count += 1
+
+count = 1
+while (count <= 50):
+	if (count < 10):
+		filename = "silence_speech/speech_0" + str(count) + ".dat"
+	else:
+		filename = "silence_speech/speech_" + str(count) + ".dat"
+	mainFunc(filename)
+	count += 1
