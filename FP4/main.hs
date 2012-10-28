@@ -2,13 +2,49 @@ module Main where
 import Data.List
 import Data.List.Split
 
+{- 	Garry Sharp
+	0801585s
+	Haskell Interpreter for a Small Custom Language (Garry Script)
+	
+	The following code/documentation is entirely my own work. Other than consulting wiki's or discussing the exercise with peers for general 	 ideas/approaches, the work in its entirity is my own. 
+	
+	IMPORTANT INFORMATION BEFORE COMPILING
 
-data Var = MakeVar String deriving (Read, Show)
+	Before Running please install the Data.List.Split library via cabal (cabal install split), this may require a cabal update to be done first 		(cabal update)
+
+	################################
+	Program Grammar
+	################################
+
+	There are a few pre-requisites for the language which will be detailed below:
+
+		- Each boolean expression must be kept between parenthesis eg. (x + y < 6/x). Boolean expressions are whitespace insensitive
+		- All read and write expressions must be followed by a semi-solon.
+		- Variable names may contain numbers but cannot start with them eg. var5 is okay but 5thVar is not.
+		- Assignment operators can be written as either = or :=
+		- Comments must be surrounded by '#' They may carry onto new lines.
+		- Comments cannot be placed within a statement eg while (x < 7) # comment # begin is not allowed. It must be after each of the 				statements args. In this case: while (x < 7) begin #do something#. This is because internally comments are treated as part of 				a sequence of statements (They are a statement in their own right.
+		- Any statement/s that are part of a while/ifthenelse statement must be surrounded by begin/end blocks
+
+	################################
+	Extensions
+	################################
+
+	Here are a list of the extensions I've added:
+	
+		- Include comments in the code.
+		- Doubles are supported in the AST
+		
+-}
+
+
+data Var = DecVar String deriving (Read, Show)
 data Decl = MakeDecl String deriving (Read, Show)
 
 data IntExp
   	= IVar String
   	| ICon Int
+	| IDoub Double 
   	| Add IntExp IntExp
   	| Sub IntExp IntExp
   	| Mul IntExp IntExp
@@ -24,15 +60,15 @@ data BoolExp
 	 deriving (Read, Show)
 
 data Stmt
-	 = Begin String [Stmt]		-- Change String to Decl
+	 = Begin [String] [Stmt]		-- Change String to Decl
 	 | Assign Var IntExp
 	 | Read Var IntExp
 	 | Write IntExp
 	 | While BoolExp Stmt		-- Orginially a single statement (a begin one I Imagine)
+	 | IfThenElse BoolExp Stmt Stmt
 	 deriving (Read, Show) 
 {-
 	 | IfThenElse BoolExp Stmt Stmt
-	 | While BoolExp Stmt
 	 deriving (Read, Show) 
 -}
 
@@ -61,24 +97,36 @@ boolExpEvalHelper op x y
 -- ******************* --
 
 statementBuilder :: [Tokens] -> Stmt
-statementBuilder ((KeyWord "begin"):(Identifier x):xs) =
+statementBuilder ((KeyWord "begin"):(Array x):xs) =
 	(Begin x (statementArrayBuilder xs))
 statementBuilder ((KeyWord "begin"):xs) =
 	(Begin [] (statementArrayBuilder xs))
+
+
 
 statementArrayBuilder :: [Tokens] -> [Stmt]
 statementArrayBuilder ((KeyWord "end"):xs) = []
 statementArrayBuilder ((KeyWord "begin"):xs) =
 	(statementBuilder ((KeyWord "begin"):xs)) : (statementArrayBuilder (getArgsFrom (KeyWord "end") xs))
+
 statementArrayBuilder ((KeyWord "read"):(Identifier x): xs) = 				-- For a Read Statement
-	(Read (MakeVar x) (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs) --Maybe remove + 1 ??
+	(Read (DecVar x) (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs) --Maybe remove + 1 ??
+
 statementArrayBuilder ((KeyWord "write"):xs) =  			-- For a Write Statement
 	(Write (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
+
 statementArrayBuilder ((Identifier x):(AssignmentOperator y):xs) = 	-- For an Assign Operation
-	(Assign (MakeVar x) (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
-statementArrayBuilder ((KeyWord "while"):xs) =
-	(While (boolExpEval (getArgsTo (Parens ")") xs)) (statementBuilder (getArgsFrom (Parens ")") xs))) : (statementArrayBuilder (getArgsFrom (KeyWord "end") xs))
-	
+	(Assign (DecVar x) (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
+
+statementArrayBuilder ((KeyWord "while"):xs) =				-- Had to change Parens ")" to KeyWord "begin"
+	(While (boolExpEval (getArgsTo (KeyWord "begin") xs)) (statementBuilder (getArgsFrom (Parens ")") xs))) : (statementArrayBuilder (getArgsFrom 	 (KeyWord "end") xs))
+
+statementArrayBuilder ((Comment _):xs) =				-- For a comment
+	statementArrayBuilder xs
+
+statementArrayBuilder ((KeyWord "if"):xs) =				-- For an If then else statement
+	(IfThenElse (boolExpEval (getArgsTo (KeyWord "begin") xs)) (statementBuilder (getArgsFrom (KeyWord "then") xs)) 
+	(statementBuilder (getArgsFrom (KeyWord "else") xs))) : (statementArrayBuilder (getArgsFrom (KeyWord "end") (getArgsFrom (KeyWord "end") xs)))
 
 
 -- ******************* --
@@ -87,25 +135,26 @@ statementArrayBuilder ((KeyWord "while"):xs) =
 
 	-- When given a list of tokens (all of which make up an IntExp) will return an IntExp
 intExpEval :: [Tokens] -> IntExp
-intExpEval (x:[]) = iVarOrICon x
+intExpEval (x:[]) = intExpLeaf x
 intExpEval (x:xs) 
-	| (head xs) == (MathematicalOperator "*") = intExpEvalHelper (Mul (iVarOrICon x) (iVarOrICon (xs!!1))) (drop 2 xs)
-	| (head xs) == (MathematicalOperator "/") = intExpEvalHelper (Div (iVarOrICon x) (iVarOrICon (xs!!1))) (drop 2 xs)
-	| (head xs) == (MathematicalOperator "-") = intExpEvalHelper (Sub (iVarOrICon x) (iVarOrICon (xs!!1))) (drop 2 xs)
-	| (head xs) == (MathematicalOperator "+") = intExpEvalHelper (Add (iVarOrICon x) (iVarOrICon (xs!!1))) (drop 2 xs)
+	| (head xs) == (MathematicalOperator "*") = intExpEvalHelper (Mul (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
+	| (head xs) == (MathematicalOperator "/") = intExpEvalHelper (Div (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
+	| (head xs) == (MathematicalOperator "-") = intExpEvalHelper (Sub (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
+	| (head xs) == (MathematicalOperator "+") = intExpEvalHelper (Add (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
 
 	-- Helper to the above function (allows for intExp's to be part of a bigger intExp) NB. As of yet this doesn't support order of operations
 intExpEvalHelper :: IntExp -> [Tokens] -> IntExp
 intExpEvalHelper y [] = y
-intExpEvalHelper y ((MathematicalOperator "*"):xs) = intExpEvalHelper (Mul y (iVarOrICon (head xs))) (drop 1 xs)
-intExpEvalHelper y ((MathematicalOperator "/"):xs) = intExpEvalHelper (Div y (iVarOrICon (head xs))) (drop 1 xs)
-intExpEvalHelper y ((MathematicalOperator "-"):xs) = intExpEvalHelper (Sub y (iVarOrICon (head xs))) (drop 1 xs)
-intExpEvalHelper y ((MathematicalOperator "+"):xs) = intExpEvalHelper (Add y (iVarOrICon (head xs))) (drop 1 xs)
+intExpEvalHelper y ((MathematicalOperator "*"):xs) = intExpEvalHelper (Mul y (intExpLeaf (head xs))) (drop 1 xs)
+intExpEvalHelper y ((MathematicalOperator "/"):xs) = intExpEvalHelper (Div y (intExpLeaf (head xs))) (drop 1 xs)
+intExpEvalHelper y ((MathematicalOperator "-"):xs) = intExpEvalHelper (Sub y (intExpLeaf (head xs))) (drop 1 xs)
+intExpEvalHelper y ((MathematicalOperator "+"):xs) = intExpEvalHelper (Add y (intExpLeaf (head xs))) (drop 1 xs)
 
 	-- Used for evaluating lead nodes in an intExp tree (determines whether a value is either a number or a variable
-iVarOrICon :: Tokens -> IntExp
-iVarOrICon (Identifier x) = IVar x
-iVarOrICon (Number x) = ICon x
+intExpLeaf :: Tokens -> IntExp
+intExpLeaf (Identifier x) = IVar x
+intExpLeaf (Number x) = ICon x
+intExpLeaf (Floating x) = IDoub x
 
 
 
@@ -160,11 +209,12 @@ getArgsTo y (x:xs)
 
 data Tokens
 	= KeyWord String
-	| Array [String]
+	| Array [String]	 --putStr (show xs)
 	| BooleanOperator String
 	| MathematicalOperator String
 	| AssignmentOperator String
 	| Number Int
+	| Floating Double
 	| Comment String
 	| Identifier String
 	| EndOfLine String
@@ -174,7 +224,7 @@ data Tokens
 lexicalAnalyser :: [String] -> [Tokens]
 lexicalAnalyser [] = []
 lexicalAnalyser (x:xs)
-	| elem x ["begin","read","write","end","while","do"] = (KeyWord x) : (lexicalAnalyser xs) 				--KeyWord
+	| elem x ["begin","read","write","end","while","do","if","then","else"] = (KeyWord x) : (lexicalAnalyser xs) 		--KeyWord
 	| elem x ["=","<",">"] && nextIsEquals (head xs) = (BooleanOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))	--BooleanOperater
 	| elem x ["<",">"] = (BooleanOperator x) : (lexicalAnalyser xs)								--BooleanOperater
 	| elem x ["*","-","+","/"] = (MathematicalOperator x) : (lexicalAnalyser xs)						--MathematicalOperater
@@ -183,10 +233,22 @@ lexicalAnalyser (x:xs)
 	| x == ";" = (EndOfLine x) : (lexicalAnalyser xs)									--End of Line Char
 	| x == ")" || x == "(" = (Parens x) : (lexicalAnalyser xs)								--Parenthesis
 	| x == "#" =  Comment (unwords (take ((commentDrop xs) - 1) xs)) : lexicalAnalyser (drop (commentDrop xs) xs)		--Comments
-	| elem x (map int2string [ 0 .. 1023]) = (Number (read x :: Int)) : (lexicalAnalyser xs)					--Numbers
+	| x == "[" = Array (buildArray xs) : lexicalAnalyser (drop (arrayDrop xs) xs)						--Array declarations
+	| elem (head x) ['0'..'9'] && elem '.' x = (Floating (read x :: Double)) : (lexicalAnalyser xs)				--Floating Point
+	| elem (head x) ['0'..'9'] = (Number (read x :: Int)) : (lexicalAnalyser xs)						--Numbers
 	| otherwise = (Identifier x) : (lexicalAnalyser xs)
 
 -- Helpers
+
+buildArray :: [String] -> [String]
+buildArray ("]":_) = []
+buildArray (x:xs) = x : buildArray xs
+
+arrayDrop :: [String] -> Int
+arrayDrop (x:xs) =
+	if x == "]"
+		then 1
+		else 1 + arrayDrop xs
 
 commentDrop :: [String] -> Int
 commentDrop (x:xs) =
@@ -211,7 +273,7 @@ myDelimiter :: String -> [String]
 myDelimiter xs =
 	-- Delimit the program (removing the delimiters listed in the first argument of splitOneOf and filtering out black (""))
 	-- Filter (\x -> x /= "")-- 
-	filter (\x -> (not (elem x ["\n","\t","\r"," ",""]))) (split (oneOf "#<:=>+-()/*;\n\r\t ") xs)
+	filter (\x -> (not (elem x ["\n","\t","\r"," ",",",""]))) (split (oneOf "#<:=>+-()[]/,*;\n\r\t ") xs)
 
 -- ################################################ --
 -- ################################################ --
@@ -231,7 +293,9 @@ isIntExp str =
 main = do
 	 x <- readFile "exampleProg.txt"
 	 let xs = (lexicalAnalyser (myDelimiter x))
-     	 putStr (show (statementBuilder xs))
+	 putStr ("\n\t\tLexed Tokens\n\n" ++ show xs ++ "\n\n")
+     	 putStr ("\t\tAST\n\n" ++ show (statementBuilder xs) ++ "\n")
+
 
 
 
