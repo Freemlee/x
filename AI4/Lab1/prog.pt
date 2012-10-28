@@ -1,0 +1,121 @@
+import numpy
+import math
+import matplotlib.pyplot as plt
+f = open('laboratory.dat','r')
+i = 0
+tot = 0
+window_size = 0.03
+sample_length = 0.3
+number_of_samples = 2400
+
+energy_normalisation_factor = 350000
+magnitude_normalisation_factor = 60
+
+samples = f.readlines()
+
+sample_rate = (len(samples)/sample_length)
+samples_per_window = int(sample_rate*window_size)
+print 'sample rate:' + str(sample_rate)
+print 'no. samples per window:' + str(samples_per_window)
+
+plt.plot(samples)
+plt.ylabel('Amplitude')
+plt.xlabel('Time (ms)')
+
+munged_samples = [0]*(samples_per_window)
+munged_samples.extend(samples)
+# munged_samples.extend(samples[:(number_of_samples - samples_per_window)])
+
+
+"""
+--------------------------------------------------------
+Calculations for the energy
+---------------------------------------------------------
+"""
+# step 1, square each of the values in the munged list
+munged_samples_squared = []
+
+for a in munged_samples:
+  a = int(a)
+  a = a*a
+  munged_samples_squared.append(a)
+
+# step 2, get the sums of each of the steps
+
+energy_list = []
+i = 0
+while i < number_of_samples:
+  marker = i + samples_per_window
+  energy_list.append(sum(munged_samples_squared[i:marker])/energy_normalisation_factor)
+  i = i + 1
+
+"""
+--------------------------------------------------------------
+--------------------------------------------------------------
+"""
+
+
+"""
+--------------------------------------------------------
+Calculations for the magnitude
+--------------------------------------------------------
+"""
+# step 1, get the absolute for each value in the munged list
+munged_samples_absolute = []
+
+for a in munged_samples:
+  a = int(a)
+  a = abs(a)
+  munged_samples_absolute.append(a)
+
+#step 2, get the sums of each of the steps
+
+magnitude_list = []
+i = 0
+while i < number_of_samples:
+  marker = i + samples_per_window
+  magnitude_list.append(sum(munged_samples_absolute[i:marker])/magnitude_normalisation_factor)
+  i = i + 1
+
+"""
+----------------------------------------------------------
+Calculations for the ZCR
+----------------------------------------------------------
+"""
+#step 1, create sign function
+
+def sign(value):
+  if value >= 0:
+    return 1
+  else:
+    return 0
+
+#step 2
+
+munged_samples = [0]
+munged_binary_samples = [0]*samples_per_window
+munged_samples.extend(samples)
+i = 1
+
+while i < len(munged_samples):
+  munged_binary_samples.append(abs(sign(int(munged_samples[i])) - sign(int(munged_samples[i-1]))))
+  i = i+1
+
+#step 3 (getting the sum)
+
+munged_binary_samples_sums = []
+i = 0
+while i < number_of_samples:
+  marker = i + samples_per_window
+  munged_binary_samples_sums.append(sum(munged_binary_samples[i:marker])*1000)
+  i = i + 1
+
+#print munged_binary_samples_sums
+
+#plt.legend([samples, energy_list, magnitude_list, munged_binary_samples_sums],["Signal","Energy (Normalised)","Magnitude (Normalised)","ZCR (Normalised)"])
+
+plt.ylim([0,300])
+plt.plot(energy_list)
+plt.plot(magnitude_list)
+plt.plot(munged_binary_samples_sums)
+plt.show()
