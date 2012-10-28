@@ -70,11 +70,11 @@ statementArrayBuilder :: [Tokens] -> [Stmt]
 statementArrayBuilder ((KeyWord "end"):xs) = []
 statementArrayBuilder ((KeyWord "begin"):xs) =
 	(statementBuilder ((KeyWord "begin"):xs)) : (statementArrayBuilder (getArgsFrom (KeyWord "end") xs))
-statementArrayBuilder ((KeyWord "read"): xs) = 				-- For a Read Statement
-	(Read (MakeVar "Garry Var") (intExpEval (getLineArgs (drop 1 xs)))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
+statementArrayBuilder ((KeyWord "read"):(Identifier x): xs) = 				-- For a Read Statement
+	(Read (MakeVar x) (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs) --Maybe remove + 1 ??
 statementArrayBuilder ((KeyWord "write"):xs) =  			-- For a Write Statement
 	(Write (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
-statementArrayBuilder ((Identifier x):(AssignmentOperator y):xs) = 	-- For am Assign Operation
+statementArrayBuilder ((Identifier x):(AssignmentOperator y):xs) = 	-- For an Assign Operation
 	(Assign (MakeVar x) (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
 statementArrayBuilder ((KeyWord "while"):xs) =
 	(While (boolExpEval (getArgsTo (Parens ")") xs)) (statementBuilder (getArgsFrom (Parens ")") xs))) : (statementArrayBuilder (getArgsFrom (KeyWord "end") xs))
@@ -183,7 +183,7 @@ lexicalAnalyser (x:xs)
 	| x == ";" = (EndOfLine x) : (lexicalAnalyser xs)									--End of Line Char
 	| x == ")" || x == "(" = (Parens x) : (lexicalAnalyser xs)								--Parenthesis
 	| x == "#" =  Comment (unwords (take ((commentDrop xs) - 1) xs)) : lexicalAnalyser (drop (commentDrop xs) xs)		--Comments
-	| elem x (map char2string ['0'..'9']) = (Number (read x :: Int)) : (lexicalAnalyser xs)					--Numbers
+	| elem x (map int2string [ 0 .. 1023]) = (Number (read x :: Int)) : (lexicalAnalyser xs)					--Numbers
 	| otherwise = (Identifier x) : (lexicalAnalyser xs)
 
 -- Helpers
@@ -201,10 +201,11 @@ nextIsEquals xs =
 skip :: [String] -> [String]
 skip (x:xs) =
 	xs
+	
+int2string :: Int -> String
+int2string x =
+	show x
 
-char2string :: Char -> String
-char2string x =
-	x : []
 
 myDelimiter :: String -> [String]
 myDelimiter xs =
