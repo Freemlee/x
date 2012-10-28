@@ -24,11 +24,11 @@ data BoolExp
 	 deriving (Read, Show)
 
 data Stmt
-	 = Begin String [Stmt]	-- Change String to Decl
+	 = Begin String [Stmt]		-- Change String to Decl
 	 | Assign Var IntExp
 	 | Read Var IntExp
 	 | Write IntExp
-	 | While BoolExp [Stmt]		-- Orginially a single statement (a begin one I Imagine)
+	 | While BoolExp Stmt		-- Orginially a single statement (a begin one I Imagine)
 	 deriving (Read, Show) 
 {-
 	 | IfThenElse BoolExp Stmt Stmt
@@ -76,6 +76,9 @@ statementArrayBuilder ((KeyWord "write"):xs) =  			-- For a Write Statement
 	(Write (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
 statementArrayBuilder ((Identifier x):(AssignmentOperator y):xs) = 	-- For am Assign Operation
 	(Assign (MakeVar x) (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
+statementArrayBuilder ((KeyWord "while"):xs) =
+	(While (boolExpEval (getArgsTo (Parens ")") xs)) (statementBuilder (getArgsFrom (Parens ")") xs))) : (statementArrayBuilder (getArgsFrom (KeyWord "end") xs))
+	
 
 
 -- ******************* --
@@ -145,6 +148,10 @@ getArgsFrom y (x:xs)
 	| x == y = xs
 	| otherwise = (getArgsFrom y xs)
 
+getArgsTo :: Tokens -> [Tokens] -> [Tokens]
+getArgsTo y (x:xs)
+	| x == y = []
+	| otherwise = x : (getArgsTo y xs)
 
 
 -- ################################################ --
