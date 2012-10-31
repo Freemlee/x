@@ -1,5 +1,6 @@
 module Main where
 import Data.List
+import Data.Maybe
 import Data.List.Split
 
 {- 	Garry Sharp
@@ -37,7 +38,8 @@ import Data.List.Split
 		
 -}
 
-
+type NewVar = String
+data Val = Int | Double
 data Var = DecVar String deriving (Read, Show)
 data Decl = MakeDecl String deriving (Read, Show)
 
@@ -274,7 +276,103 @@ myDelimiter xs =
 	-- Delimit the program (removing the delimiters listed in the first argument of splitOneOf and filtering out black (""))
 	-- Filter (\x -> x /= "")-- 
 	filter (\x -> (not (elem x ["\n","\t","\r"," ",",",""]))) (split (oneOf "#<:=>+-()[]/,*;\n\r\t ") xs)
+	
+-- ******************* --
+--     Interpreter	   --
+-- ******************* --
 
+
+type Env = [[(NewVar, Int)]]
+
+--Reduce a BoolExp
+
+reduceBoolExpHelper :: IntExp -> IntExp -> Env -> Bool
+reduceBoolExpHelper x y env
+	|(isNothing (evaluateIntExp x env)) == True = False
+	|(isNothing (evaluateIntExp y env)) == True = False
+	|otherwise = True
+
+reduceBoolExp :: BoolExp -> Env -> Maybe Bool
+reduceBoolExp (ILT x y) env = do
+	if (reduceBoolExpHelper x y env) == True
+		then Just ((fromJust (evaluateIntExp x env)) < (fromJust (evaluateIntExp y env)))
+		else Nothing
+reduceBoolExp (ILTEQ x y) env = do
+	if (reduceBoolExpHelper x y env) == True
+		then Just ((fromJust (evaluateIntExp x env)) <= (fromJust (evaluateIntExp y env)))
+		else Nothing
+reduceBoolExp (IEQ x y) env = do
+	if (reduceBoolExpHelper x y env) == True
+		then Just ((fromJust (evaluateIntExp x env)) == (fromJust (evaluateIntExp y env)))
+		else Nothing
+reduceBoolExp (IGT x y) env = do
+	if (reduceBoolExpHelper x y env) == True
+		then Just ((fromJust (evaluateIntExp x env)) > (fromJust (evaluateIntExp y env)))
+		else Nothing
+reduceBoolExp (IGTEQ x y) env = do
+	if (reduceBoolExpHelper x y env) == True
+		then Just ((fromJust (evaluateIntExp x env)) >= (fromJust (evaluateIntExp y env)))
+		else Nothing
+
+--Reduce an IntExp
+evaluateIntExp :: IntExp -> Env -> Maybe Int
+evaluateIntExp (ICon x) _ = Just x
+evaluateIntExp (IVar x) myenv = 
+	if isNothing(mylookup x myenv)
+		then Nothing
+		else mylookup x myenv
+evaluateIntExp (Mul x y) myenv = do
+	let x' = evaluateIntExp x myenv
+	let y' = evaluateIntExp y myenv
+		in
+			if (isNothing x') || (isNothing y')
+				then Nothing
+				else Just (fromJust(x') * fromJust(y'))
+evaluateIntExp (Add x y) myenv = do
+	let x' = evaluateIntExp x myenv
+	let y' = evaluateIntExp y myenv
+		in
+			if (isNothing x') || (isNothing y')
+				then Nothing
+				else Just (fromJust(x') + fromJust(y'))
+
+evaluateIntExp (Div x y) myenv = do
+	let x' = evaluateIntExp x myenv
+	let y' = evaluateIntExp y myenv
+		in
+			if (isNothing x') || (isNothing y')
+				then Nothing
+				else Just (div (fromJust(x')) (fromJust(y')))
+
+evaluateIntExp (Sub x y) myenv = do
+	let x' = evaluateIntExp x myenv
+	let y' = evaluateIntExp y myenv
+		in
+			if (isNothing x') || (isNothing y')
+				then Nothing
+				else Just (fromJust(x') - fromJust(y'))
+		
+-- Get a value from the environment
+mylookup :: String -> Env -> Maybe Int
+mylookup x [] = Nothing
+mylookup x ([]:zs) =
+	mylookup x zs
+mylookup x ((y:ys):zs) 
+	| x == (fst y) = Just (snd y)
+	| otherwise = mylookup x (ys:zs)
+
+{-
+exampleMaybe :: Int -> [Int] -> IO()
+exampleMaybe x y 
+	|isJust(exampleMaybeHelper x y) = do putStr ((show x) ++ " was found in the list of items")
+	|otherwise = do putStr ((show x) ++ " ain't there...")
+
+exampleMaybeHelper :: Int -> [Int] -> Maybe Int 
+exampleMaybeHelper x xs =
+	if (elem x xs)
+		then Just x
+		else Nothing
+		-}
 -- ################################################ --
 -- ################################################ --
 -- ################################################ --
@@ -293,8 +391,10 @@ isIntExp str =
 main = do
 	 x <- readFile "exampleProg.txt"
 	 let xs = (lexicalAnalyser (myDelimiter x))
-	 putStr ("\n\t\tLexed Tokens\n\n" ++ show xs ++ "\n\n")
-     	 putStr ("\t\tAST\n\n" ++ show (statementBuilder xs) ++ "\n")
+	 let theEnv = [[("a",9),("b",4)],[("c",20),("d",1)],[("e",16)]] :: Env
+	 --putStr ("\n\t\tLexed Tokens\n\n" ++ show xs ++ "\n\n")
+     --putStr ("\t\tAST\n\n" ++ show (statementBuilder xs) ++ "\n")
+	 print (reduceBoolExp (boolExpEval xs) theEnv)
 
 
 
