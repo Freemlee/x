@@ -229,6 +229,7 @@ lexicalAnalyser (x:xs)
 	| elem x ["begin","read","write","end","while","do","if","then","else"] = (KeyWord x) : (lexicalAnalyser xs) 		--KeyWord
 	| elem x ["=","<",">"] && nextIsEquals (head xs) = (BooleanOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))	--BooleanOperater
 	| elem x ["<",">"] = (BooleanOperator x) : (lexicalAnalyser xs)								--BooleanOperater
+		-- Maybe add for times equals
 	| elem x ["*","-","+","/"] = (MathematicalOperator x) : (lexicalAnalyser xs)						--MathematicalOperater
 	| x == ":" && nextIsEquals (head xs) = (AssignmentOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))		--AssignmentOperater
 	| x == "=" = (AssignmentOperator x) : (lexicalAnalyser xs)								--AssignmentOperater
@@ -282,71 +283,86 @@ myDelimiter xs =
 -- ******************* --
 
 
-type Env = [[(NewVar, Int)]]
+type Env = [SubEnv]
+type SubEnv = [(NewVar, Int)]
+
+--Interpret Statements (for begin blocks)
+{-
+interpret :: Stmt -> Env -> IO()
+interpret (Begin decs stmts) =
+
+
+interpretStatement :: Stmt -> Env -> IO()
+interpretStatement (Write x) env = do
+	if (isJust (reduceIntExp x env))
+		then putStr (show (fromJust(reduceIntExp x env)))
+		else putStr ("could not be resolved")
+-}			
 
 --Reduce a BoolExp
 
 reduceBoolExpHelper :: IntExp -> IntExp -> Env -> Bool
 reduceBoolExpHelper x y env
-	|(isNothing (evaluateIntExp x env)) == True = False
-	|(isNothing (evaluateIntExp y env)) == True = False
+	|(isNothing (reduceIntExp x env)) == True = False
+	|(isNothing (reduceIntExp y env)) == True = False
 	|otherwise = True
 
 reduceBoolExp :: BoolExp -> Env -> Maybe Bool
 reduceBoolExp (ILT x y) env = do
 	if (reduceBoolExpHelper x y env) == True
-		then Just ((fromJust (evaluateIntExp x env)) < (fromJust (evaluateIntExp y env)))
+		then Just ((fromJust (reduceIntExp x env)) < (fromJust (reduceIntExp y env)))
 		else Nothing
 reduceBoolExp (ILTEQ x y) env = do
 	if (reduceBoolExpHelper x y env) == True
-		then Just ((fromJust (evaluateIntExp x env)) <= (fromJust (evaluateIntExp y env)))
+		then Just ((fromJust (reduceIntExp x env)) <= (fromJust (reduceIntExp y env)))
 		else Nothing
 reduceBoolExp (IEQ x y) env = do
 	if (reduceBoolExpHelper x y env) == True
-		then Just ((fromJust (evaluateIntExp x env)) == (fromJust (evaluateIntExp y env)))
+		then Just ((fromJust (reduceIntExp x env)) == (fromJust (reduceIntExp y env)))
 		else Nothing
 reduceBoolExp (IGT x y) env = do
 	if (reduceBoolExpHelper x y env) == True
-		then Just ((fromJust (evaluateIntExp x env)) > (fromJust (evaluateIntExp y env)))
+		then Just ((fromJust (reduceIntExp x env)) > (fromJust (reduceIntExp y env)))
 		else Nothing
 reduceBoolExp (IGTEQ x y) env = do
 	if (reduceBoolExpHelper x y env) == True
-		then Just ((fromJust (evaluateIntExp x env)) >= (fromJust (evaluateIntExp y env)))
+		then Just ((fromJust (reduceIntExp x env)) >= (fromJust (reduceIntExp y env)))
 		else Nothing
 
 --Reduce an IntExp
-evaluateIntExp :: IntExp -> Env -> Maybe Int
-evaluateIntExp (ICon x) _ = Just x
-evaluateIntExp (IVar x) myenv = 
+
+reduceIntExp :: IntExp -> Env -> Maybe Int
+reduceIntExp (ICon x) _ = Just x
+reduceIntExp (IVar x) myenv = 
 	if isNothing(mylookup x myenv)
 		then Nothing
 		else mylookup x myenv
-evaluateIntExp (Mul x y) myenv = do
-	let x' = evaluateIntExp x myenv
-	let y' = evaluateIntExp y myenv
+reduceIntExp (Mul x y) myenv = do
+	let x' = reduceIntExp x myenv
+	let y' = reduceIntExp y myenv
 		in
 			if (isNothing x') || (isNothing y')
 				then Nothing
 				else Just (fromJust(x') * fromJust(y'))
-evaluateIntExp (Add x y) myenv = do
-	let x' = evaluateIntExp x myenv
-	let y' = evaluateIntExp y myenv
+reduceIntExp (Add x y) myenv = do
+	let x' = reduceIntExp x myenv
+	let y' = reduceIntExp y myenv
 		in
 			if (isNothing x') || (isNothing y')
 				then Nothing
 				else Just (fromJust(x') + fromJust(y'))
 
-evaluateIntExp (Div x y) myenv = do
-	let x' = evaluateIntExp x myenv
-	let y' = evaluateIntExp y myenv
+reduceIntExp (Div x y) myenv = do
+	let x' = reduceIntExp x myenv
+	let y' = reduceIntExp y myenv
 		in
 			if (isNothing x') || (isNothing y')
 				then Nothing
 				else Just (div (fromJust(x')) (fromJust(y')))
 
-evaluateIntExp (Sub x y) myenv = do
-	let x' = evaluateIntExp x myenv
-	let y' = evaluateIntExp y myenv
+reduceIntExp (Sub x y) myenv = do
+	let x' = reduceIntExp x myenv
+	let y' = reduceIntExp y myenv
 		in
 			if (isNothing x') || (isNothing y')
 				then Nothing
@@ -360,19 +376,38 @@ mylookup x ([]:zs) =
 mylookup x ((y:ys):zs) 
 	| x == (fst y) = Just (snd y)
 	| otherwise = mylookup x (ys:zs)
+	
+-- Update the environment
+myupdate :: String -> Int -> Env -> Env
+myupdate x y (z:zs) =
+	if isNothing(mylookup x (z:zs))					-- Checks to see if it needs to add or update a variable/
+		then (myupdateNew x y z):zs
+		else myupdateExisting x y (z:zs)
+		
+myupdateNew :: String -> Int -> SubEnv -> SubEnv	-- Adds a new variable to the current scope (head of the environment)
+myupdateNew x y z =
+	(x,y):z
 
-{-
-exampleMaybe :: Int -> [Int] -> IO()
-exampleMaybe x y 
-	|isJust(exampleMaybeHelper x y) = do putStr ((show x) ++ " was found in the list of items")
-	|otherwise = do putStr ((show x) ++ " ain't there...")
+myupdateExisting :: String -> Int -> Env -> Env		-- Updates the first variable that it comes across (most recent scope)
+myupdateExisting x y [] = [[(x,y)]] 
+myupdateExisting x y (z:zs) = 
+	if (localEnvExists x z)							-- Necessary to stop all variables in all scopes being changes is x used several times.
+		then ((myupdateExistingHelper x y z) : zs)
+		else (z : (myupdateExisting x y zs))
+	
+localEnvExists :: String -> SubEnv -> Bool		
+localEnvExists x [] = False
+localEnvExists x (y:ys) =
+	if x == (fst y)
+		then True
+		else False
+		
+myupdateExistingHelper :: String -> Int -> SubEnv -> SubEnv		-- Loops through the scopes (SubEnv) and returns an updated scope (SubEnv)
+myupdateExistingHelper x y [] = []
+myupdateExistingHelper x y (z:zs)
+	| x == (fst z) = (x,y) : zs
+	| otherwise = z : (myupdateExistingHelper x y zs)
 
-exampleMaybeHelper :: Int -> [Int] -> Maybe Int 
-exampleMaybeHelper x xs =
-	if (elem x xs)
-		then Just x
-		else Nothing
-		-}
 -- ################################################ --
 -- ################################################ --
 -- ################################################ --
@@ -391,10 +426,11 @@ isIntExp str =
 main = do
 	 x <- readFile "exampleProg.txt"
 	 let xs = (lexicalAnalyser (myDelimiter x))
+	 putStr ("\n\t Program Tokenised..\n" ++ (show xs) ++ "\n")
 	 let theEnv = [[("a",9),("b",4)],[("c",20),("d",1)],[("e",16)]] :: Env
-	 --putStr ("\n\t\tLexed Tokens\n\n" ++ show xs ++ "\n\n")
-     --putStr ("\t\tAST\n\n" ++ show (statementBuilder xs) ++ "\n")
-	 print (reduceBoolExp (boolExpEval xs) theEnv)
+	 let testStmt = head (statementArrayBuilder xs)
+	 --interpretStatement testStmt theEnv
+	 putStr "Cheese"
 
 
 
