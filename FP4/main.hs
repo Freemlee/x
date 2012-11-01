@@ -40,7 +40,7 @@ import Data.List.Split
 
 type NewVar = String
 data Val = Int | Double
-data Var = DecVar String deriving (Read, Show)
+type Var = String
 data Decl = MakeDecl String deriving (Read, Show)
 
 data IntExp
@@ -112,13 +112,13 @@ statementArrayBuilder ((KeyWord "begin"):xs) =
 	(statementBuilder ((KeyWord "begin"):xs)) : (statementArrayBuilder (getArgsFrom (KeyWord "end") xs))
 
 statementArrayBuilder ((KeyWord "read"):(Identifier x): xs) = 				-- For a Read Statement
-	(Read (DecVar x) (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs) --Maybe remove + 1 ??
+	(Read x (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs) --Maybe remove + 1 ??
 
 statementArrayBuilder ((KeyWord "write"):xs) =  			-- For a Write Statement
 	(Write (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
 
 statementArrayBuilder ((Identifier x):(AssignmentOperator y):xs) = 	-- For an Assign Operation
-	(Assign (DecVar x) (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
+	(Assign x (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
 
 statementArrayBuilder ((KeyWord "while"):xs) =				-- Had to change Parens ")" to KeyWord "begin"
 	(While (boolExpEval (getArgsTo (KeyWord "begin") xs)) (statementBuilder (getArgsFrom (Parens ")") xs))) : (statementArrayBuilder (getArgsFrom 	 (KeyWord "end") xs))
@@ -287,17 +287,37 @@ type Env = [SubEnv]
 type SubEnv = [(NewVar, Int)]
 
 --Interpret Statements (for begin blocks)
-{-
+
+
+processDecsHelper :: [String] -> SubEnv
+processDecsHelper [] = []
+processDecsHelper (x:xs) =
+	(x,0) : processDecsHelper xs
+
 interpret :: Stmt -> Env -> IO()
-interpret (Begin decs stmts) =
+interpret (Begin decs stmts) [] =
+	interpretStatements stmts ((processDecsHelper decs) : [])
+interpret (Begin decs stmts) env =
+	interpretStatements stmts ((processDecsHelper decs) : env)
+	
 
-
-interpretStatement :: Stmt -> Env -> IO()
-interpretStatement (Write x) env = do
+interpretStatements :: [Stmt] -> Env -> IO()
+interpretStatements [] env = return()
+interpretStatements ((Write x):stmts) env = do								-- For a write Statement
 	if (isJust (reduceIntExp x env))
-		then putStr (show (fromJust(reduceIntExp x env)))
-		else putStr ("could not be resolved")
--}			
+		then do
+			putStrLn (show (fromJust(reduceIntExp x env)))
+			interpretStatements stmts env
+		else putStrLn ("Error in write statement")	
+interpretStatements ((Read x y):stmts) env = do								-- For a read Statement
+	if (isJust (reduceIntExp y env))
+		then do 
+			interpretStatements stmts (myupdate x (fromJust(reduceIntExp y env)) env) 
+			putStrLn (show x)
+			putStrLn  (show (fromJust (reduceIntExp y env)))
+			putStrLn (show(myupdate x (fromJust(reduceIntExp y env)) env))
+		else putStrLn ("Error in read statement")
+
 
 --Reduce a BoolExp
 
@@ -383,6 +403,7 @@ myupdate x y (z:zs) =
 	if isNothing(mylookup x (z:zs))					-- Checks to see if it needs to add or update a variable/
 		then (myupdateNew x y z):zs
 		else myupdateExisting x y (z:zs)
+	
 		
 myupdateNew :: String -> Int -> SubEnv -> SubEnv	-- Adds a new variable to the current scope (head of the environment)
 myupdateNew x y z =
@@ -428,9 +449,10 @@ main = do
 	 let xs = (lexicalAnalyser (myDelimiter x))
 	 putStr ("\n\t Program Tokenised..\n" ++ (show xs) ++ "\n")
 	 let theEnv = [[("a",9),("b",4)],[("c",20),("d",1)],[("e",16)]] :: Env
-	 let testStmt = head (statementArrayBuilder xs)
-	 --interpretStatement testStmt theEnv
-	 putStr "Cheese"
+	 let testStmt = (statementBuilder xs)
+	 putStr("\n\t AST Built..\n" ++ (show testStmt) ++ "\n")
+
+	 interpret testStmt []
 
 
 
