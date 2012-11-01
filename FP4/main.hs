@@ -307,6 +307,7 @@ interpretStatements ((Write x):stmts) env = do								-- For a write Statement
 	if (isJust (reduceIntExp x env))
 		then do
 			putStrLn (show (fromJust(reduceIntExp x env)))
+			putStrLn $ show env
 			interpretStatements stmts env
 		else putStrLn ("Error in write statement")	
 interpretStatements ((Read x y):stmts) env = do								-- For a read Statement
@@ -319,6 +320,35 @@ interpretStatements ((Assign x y):stmts) env = do								-- For an assign Statem
 		then 
 			interpretStatements stmts (myupdate x (fromJust(reduceIntExp y env)) env) 
 		else putStrLn ("Error in read statement")
+interpretStatements ((Begin x y):stmts) (z:zs) = do
+	interpret (Begin x y) (z:zs)
+	interpretStatements stmts (z:zs)
+interpretStatements ((IfThenElse boolexp stmt1 stmt2):stmts) env = do
+	if isJust(reduceBoolExp boolexp env)
+		then
+			if (fromJust(reduceBoolExp boolexp env))
+				then do
+					interpret stmt1 env
+					interpretStatements stmts env
+				else do 
+					interpret stmt2 env
+					interpretStatements stmts env
+		else
+			putStrLn ("Error in If Then-Else-statement")
+			
+{- will work with a bit of work. Environment needs to be updated for while and if-then-else statements
+
+interpretStatements ((While boolexp st):stmt) env = do
+	if isJust(reduceBoolExp boolexp env)
+		then
+			if (fromJust (reduceBoolExp boolexp env))
+				then do 
+					interpret st env
+					interpretStatement ((While boolexp st):stmt) 
+				else interpretStatements stmt env
+		else
+			putStrLn ("Error in while loop")
+-}
 
 
 --Reduce a BoolExp
