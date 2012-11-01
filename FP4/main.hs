@@ -421,7 +421,7 @@ localEnvExists x [] = False
 localEnvExists x (y:ys) =
 	if x == (fst y)
 		then True
-		else False
+		else localEnvExists x ys
 		
 myupdateExistingHelper :: String -> Int -> SubEnv -> SubEnv		-- Loops through the scopes (SubEnv) and returns an updated scope (SubEnv)
 myupdateExistingHelper x y [] = []
@@ -451,8 +451,9 @@ main = do
 	 let theEnv = [[("a",9),("b",4)],[("c",20),("d",1)],[("e",16)]] :: Env
 	 let testStmt = (statementBuilder xs)
 	 putStr("\n\t AST Built..\n" ++ (show testStmt) ++ "\n")
-
-	 interpret testStmt []
+	 putStrLn $ show theEnv
+	 putStrLn $ show (myupdate "b" 17 theEnv)
+	 --interpret testStmt []
 
 
 
