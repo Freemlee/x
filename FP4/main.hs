@@ -2,6 +2,7 @@ module Main where
 import Data.List
 import Data.Maybe
 import Data.List.Split
+import System.IO.Unsafe
 
 {- 	Garry Sharp
 	0801585s
@@ -26,6 +27,7 @@ import Data.List.Split
 		- Comments must be surrounded by '#' They may carry onto new lines.
 		- Comments cannot be placed within a statement eg while (x < 7) # comment # begin is not allowed. It must be after each of the 				statements args. In this case: while (x < 7) begin #do something#. This is because internally comments are treated as part of 				a sequence of statements (They are a statement in their own right.
 		- Any statement/s that are part of a while/ifthenelse statement must be surrounded by begin/end blocks
+		- Variables that are declared at the top of the begin block
 
 	################################
 	Extensions
@@ -64,15 +66,12 @@ data BoolExp
 data Stmt
 	 = Begin [String] [Stmt]		-- Change String to Decl
 	 | Assign Var IntExp
-	 | Read Var IntExp
+	 | Read Var
 	 | Write IntExp
 	 | While BoolExp Stmt		-- Orginially a single statement (a begin one I Imagine)
 	 | IfThenElse BoolExp Stmt Stmt
 	 deriving (Read, Show) 
-{-
-	 | IfThenElse BoolExp Stmt Stmt
-	 deriving (Read, Show) 
--}
+
 
 -- ################################################ --
 --                 Tree Builder                     --
@@ -112,7 +111,7 @@ statementArrayBuilder ((KeyWord "begin"):xs) =
 	(statementBuilder ((KeyWord "begin"):xs)) : (statementArrayBuilder (getArgsFrom (KeyWord "end") xs))
 
 statementArrayBuilder ((KeyWord "read"):(Identifier x): xs) = 				-- For a Read Statement
-	(Read x (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs) --Maybe remove + 1 ??
+	(Read x) : statementArrayBuilder xs 	--Maybe remove + 1 ??
 
 statementArrayBuilder ((KeyWord "write"):xs) =  			-- For a Write Statement
 	(Write (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
@@ -120,10 +119,16 @@ statementArrayBuilder ((KeyWord "write"):xs) =  			-- For a Write Statement
 statementArrayBuilder ((Identifier x):(AssignmentOperator y):xs) = 	-- For an Assign Operation
 	(Assign x (intExpEval (getLineArgs xs))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
 
+statementArrayBuilder ((Identifier x):(IncOperator y):xs) =		-- For an Inc Operator
+	(Assign x (intExpEval((Identifier x) : (MathematicalOperator y) :(getLineArgs xs)))) : statementArrayBuilder (drop ((getLineArgsHelper xs) + 1) xs)
+
 statementArrayBuilder ((KeyWord "while"):xs) =				-- Had to change Parens ")" to KeyWord "begin"
 	(While (boolExpEval (getArgsTo (KeyWord "begin") xs)) (statementBuilder (getArgsFrom (Parens ")") xs))) : (statementArrayBuilder (getArgsFrom 	 (KeyWord "end") xs))
 
 statementArrayBuilder ((Comment _):xs) =				-- For a comment
+	statementArrayBuilder xs
+
+statementArrayBuilder ((EndOfLine _):xs) =
 	statementArrayBuilder xs
 
 statementArrayBuilder ((KeyWord "if"):xs) =				-- For an If then else statement
@@ -215,6 +220,7 @@ data Tokens
 	| BooleanOperator String
 	| MathematicalOperator String
 	| AssignmentOperator String
+	| IncOperator String
 	| Number Int
 	| Floating Double
 	| Comment String
@@ -229,7 +235,7 @@ lexicalAnalyser (x:xs)
 	| elem x ["begin","read","write","end","while","do","if","then","else"] = (KeyWord x) : (lexicalAnalyser xs) 		--KeyWord
 	| elem x ["=","<",">"] && nextIsEquals (head xs) = (BooleanOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))	--BooleanOperater
 	| elem x ["<",">"] = (BooleanOperator x) : (lexicalAnalyser xs)								--BooleanOperater
-		-- Maybe add for times equals
+	| elem x ["*","-","+","/"] && nextIsEquals (head xs) = (IncOperator x) : (lexicalAnalyser (skip xs)) 			--Operators like +=
 	| elem x ["*","-","+","/"] = (MathematicalOperator x) : (lexicalAnalyser xs)						--MathematicalOperater
 	| x == ":" && nextIsEquals (head xs) = (AssignmentOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))		--AssignmentOperater
 	| x == "=" = (AssignmentOperator x) : (lexicalAnalyser xs)								--AssignmentOperater
@@ -294,35 +300,49 @@ processDecsHelper [] = []
 processDecsHelper (x:xs) =
 	(x,0) : processDecsHelper xs
 
-interpret :: Stmt -> Env -> IO()
+interpret :: Stmt -> Env -> IO Env
 interpret (Begin decs stmts) [] =
 	interpretStatements stmts ((processDecsHelper decs) : [])
 interpret (Begin decs stmts) env =
 	interpretStatements stmts ((processDecsHelper decs) : env)
 	
 
-interpretStatements :: [Stmt] -> Env -> IO()
-interpretStatements [] env = return()
+interpretStatements :: [Stmt] -> Env -> IO Env
+interpretStatements [] env = do
+	return $ drop 1 env
+
 interpretStatements ((Write x):stmts) env = do								-- For a write Statement
 	if (isJust (reduceIntExp x env))
 		then do
 			putStrLn (show (fromJust(reduceIntExp x env)))
-			putStrLn $ show env
 			interpretStatements stmts env
-		else putStrLn ("Error in write statement")	
-interpretStatements ((Read x y):stmts) env = do								-- For a read Statement
+		else do 
+			putStrLn "Error in write statement"
+			return env
+
+interpretStatements ((Read x):stmts) env = do								-- For a read Statement
+	putStrLn ("Variable "++(show x)++ " is equal to: ")
+	y <- getLine
+	putStrLn ""
+	let intExpY = intExpEval(lexicalAnalyser(myDelimiter y))
+	if isJust(reduceIntExp intExpY env)
+		then interpretStatements stmts (myupdate x (fromJust(reduceIntExp intExpY env)) env) 
+		else do
+			putStrLn ("Error in read statement") 
+			return (myupdate x (fromJust(reduceIntExp intExpY env)) env)
+
+interpretStatements ((Assign x y):stmts) env = do							-- For an assign Statement (same as read atm)
 	if (isJust (reduceIntExp y env))
 		then 
 			interpretStatements stmts (myupdate x (fromJust(reduceIntExp y env)) env) 
-		else putStrLn ("Error in read statement")
-interpretStatements ((Assign x y):stmts) env = do								-- For an assign Statement (same as read atm)
-	if (isJust (reduceIntExp y env))
-		then 
-			interpretStatements stmts (myupdate x (fromJust(reduceIntExp y env)) env) 
-		else putStrLn ("Error in read statement")
+		else do
+			putStrLn ("Error in read statement")
+			return (myupdate x (fromJust(reduceIntExp y env)) env) 
+
 interpretStatements ((Begin x y):stmts) (z:zs) = do
-	interpret (Begin x y) (z:zs)
-	interpretStatements stmts (z:zs)
+	--putStrLn "Env : " ++ (show (unsafePerformIO (interpret (Begin x y) (z:zs))))
+	interpretStatements stmts (unsafePerformIO (interpret (Begin x y) (z:zs)))
+
 interpretStatements ((IfThenElse boolexp stmt1 stmt2):stmts) env = do
 	if isJust(reduceBoolExp boolexp env)
 		then
@@ -333,22 +353,22 @@ interpretStatements ((IfThenElse boolexp stmt1 stmt2):stmts) env = do
 				else do 
 					interpret stmt2 env
 					interpretStatements stmts env
-		else
+		else do
 			putStrLn ("Error in If Then-Else-statement")
-			
-{- will work with a bit of work. Environment needs to be updated for while and if-then-else statements
+			return env
+
+{- will work with a bit of work. Environment needs to be updated for while and if-then-else statements -}
 
 interpretStatements ((While boolexp st):stmt) env = do
 	if isJust(reduceBoolExp boolexp env)
 		then
 			if (fromJust (reduceBoolExp boolexp env))
 				then do 
-					interpret st env
-					interpretStatement ((While boolexp st):stmt) 
-				else interpretStatements stmt env
-		else
+					interpretStatements ((While boolexp st):stmt) (unsafePerformIO (interpret st env))--updated env
+				else interpretStatements stmt env--updated env
+		else do
 			putStrLn ("Error in while loop")
--}
+			return env
 
 
 --Reduce a BoolExp
@@ -477,15 +497,20 @@ isIntExp str =
        else False
     
 main = do
+	 putStrLn "Welcome to the Garry Script Interpreter v.1.0"
 	 x <- readFile "exampleProg.txt"
+	 putStrLn "\tFile Read..\n"
+	 putStrLn x
 	 let xs = (lexicalAnalyser (myDelimiter x))
-	 putStr ("\n\t Program Tokenised..\n" ++ (show xs) ++ "\n")
+	 putStr ("\nProgram Tokenised...\n\n" ++ (show xs) ++ "\n")
 	 let theEnv = [[("a",9),("b",4)],[("c",20),("d",1)],[("e",16)]] :: Env
 	 let testStmt = (statementBuilder xs)
-	 putStr("\n\t AST Built..\n" ++ (show testStmt) ++ "\n")
-	 --putStrLn $ show theEnv
-	 --putStrLn $ show (myupdate "b" 17 theEnv)
+	 putStr("\nAST Built...\n\n" ++ (show testStmt) ++ "\n")
+	 putStrLn ".......\n.......\n"
+	 putStrLn "\nInitial Environment set to null..."
+	 putStrLn "Preparing to execute...\n"
 	 interpret testStmt []
+	 putStrLn "\nThank you for using Garry Script. Have a wonderful day!\n"
 
 
 
