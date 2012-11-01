@@ -311,11 +311,13 @@ interpretStatements ((Write x):stmts) env = do								-- For a write Statement
 		else putStrLn ("Error in write statement")	
 interpretStatements ((Read x y):stmts) env = do								-- For a read Statement
 	if (isJust (reduceIntExp y env))
-		then do 
+		then 
 			interpretStatements stmts (myupdate x (fromJust(reduceIntExp y env)) env) 
-			putStrLn (show x)
-			putStrLn  (show (fromJust (reduceIntExp y env)))
-			putStrLn (show(myupdate x (fromJust(reduceIntExp y env)) env))
+		else putStrLn ("Error in read statement")
+interpretStatements ((Assign x y):stmts) env = do								-- For an assign Statement (same as read atm)
+	if (isJust (reduceIntExp y env))
+		then 
+			interpretStatements stmts (myupdate x (fromJust(reduceIntExp y env)) env) 
 		else putStrLn ("Error in read statement")
 
 
@@ -451,9 +453,9 @@ main = do
 	 let theEnv = [[("a",9),("b",4)],[("c",20),("d",1)],[("e",16)]] :: Env
 	 let testStmt = (statementBuilder xs)
 	 putStr("\n\t AST Built..\n" ++ (show testStmt) ++ "\n")
-	 putStrLn $ show theEnv
-	 putStrLn $ show (myupdate "b" 17 theEnv)
-	 --interpret testStmt []
+	 --putStrLn $ show theEnv
+	 --putStrLn $ show (myupdate "b" 17 theEnv)
+	 interpret testStmt []
 
 
 
