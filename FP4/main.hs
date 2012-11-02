@@ -53,6 +53,7 @@ data IntExp
   	| Sub IntExp IntExp
   	| Mul IntExp IntExp
   	| Div IntExp IntExp
+	| Mod IntExp IntExp
   	deriving (Read, Show)
 
 data BoolExp
@@ -70,6 +71,7 @@ data Stmt
 	 | Write IntExp
 	 | While BoolExp Stmt		-- Orginially a single statement (a begin one I Imagine)
 	 | IfThenElse BoolExp Stmt Stmt
+	 | Print String
 	 deriving (Read, Show) 
 
 
@@ -125,15 +127,20 @@ statementArrayBuilder ((Identifier x):(IncOperator y):xs) =		-- For an Inc Opera
 statementArrayBuilder ((KeyWord "while"):xs) =				-- Had to change Parens ")" to KeyWord "begin"
 	(While (boolExpEval (getArgsTo (KeyWord "begin") xs)) (statementBuilder (getArgsFrom (Parens ")") xs))) : (statementArrayBuilder (getArgsFrom 	 (KeyWord "end") xs))
 
-statementArrayBuilder ((Comment _):xs) =				-- For a comment
-	statementArrayBuilder xs
-
-statementArrayBuilder ((EndOfLine _):xs) =
-	statementArrayBuilder xs
-
 statementArrayBuilder ((KeyWord "if"):xs) =				-- For an If then else statement
 	(IfThenElse (boolExpEval (getArgsTo (KeyWord "begin") xs)) (statementBuilder (getArgsFrom (KeyWord "then") xs)) 
 	(statementBuilder (getArgsFrom (KeyWord "else") xs))) : (statementArrayBuilder (getArgsFrom (KeyWord "end") (getArgsFrom (KeyWord "end") xs)))
+
+statementArrayBuilder ((KeyWord "print"):(StringConst x):xs) =
+	(Print x) : (statementArrayBuilder xs)
+statementArrayBuilder ((KeyWord "printLn"):(StringConst x):xs) =
+	(Print ("\n" ++ x ++ "\n")) : (statementArrayBuilder xs)
+
+statementArrayBuilder ((Comment _):xs) =				-- For a comment
+	statementArrayBuilder xs
+
+statementArrayBuilder ((EndOfLine _):xs) =				-- For an EOL char
+	statementArrayBuilder xs
 
 
 -- ******************* --
@@ -148,6 +155,7 @@ intExpEval (x:xs)
 	| (head xs) == (MathematicalOperator "/") = intExpEvalHelper (Div (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
 	| (head xs) == (MathematicalOperator "-") = intExpEvalHelper (Sub (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
 	| (head xs) == (MathematicalOperator "+") = intExpEvalHelper (Add (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
+	| (head xs) == (MathematicalOperator "%") = intExpEvalHelper (Mod (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
 
 	-- Helper to the above function (allows for intExp's to be part of a bigger intExp) NB. As of yet this doesn't support order of operations
 intExpEvalHelper :: IntExp -> [Tokens] -> IntExp
@@ -156,6 +164,7 @@ intExpEvalHelper y ((MathematicalOperator "*"):xs) = intExpEvalHelper (Mul y (in
 intExpEvalHelper y ((MathematicalOperator "/"):xs) = intExpEvalHelper (Div y (intExpLeaf (head xs))) (drop 1 xs)
 intExpEvalHelper y ((MathematicalOperator "-"):xs) = intExpEvalHelper (Sub y (intExpLeaf (head xs))) (drop 1 xs)
 intExpEvalHelper y ((MathematicalOperator "+"):xs) = intExpEvalHelper (Add y (intExpLeaf (head xs))) (drop 1 xs)
+intExpEvalHelper y ((MathematicalOperator "%"):xs) = intExpEvalHelper (Mod y (intExpLeaf (head xs))) (drop 1 xs)
 
 	-- Used for evaluating lead nodes in an intExp tree (determines whether a value is either a number or a variable
 intExpLeaf :: Tokens -> IntExp
@@ -227,21 +236,24 @@ data Tokens
 	| Identifier String
 	| EndOfLine String
 	| Parens String
+	| StringConst String
 	deriving (Eq, Read, Show)
 
 lexicalAnalyser :: [String] -> [Tokens]
 lexicalAnalyser [] = []
 lexicalAnalyser (x:xs)
 	| elem x ["begin","read","write","end","while","do","if","then","else"] = (KeyWord x) : (lexicalAnalyser xs) 		--KeyWord
+	| elem x ["printLn","print"] = (KeyWord x) : (lexicalAnalyser xs) 		--KeyWord
 	| elem x ["=","<",">"] && nextIsEquals (head xs) = (BooleanOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))	--BooleanOperater
 	| elem x ["<",">"] = (BooleanOperator x) : (lexicalAnalyser xs)								--BooleanOperater
 	| elem x ["*","-","+","/"] && nextIsEquals (head xs) = (IncOperator x) : (lexicalAnalyser (skip xs)) 			--Operators like +=
-	| elem x ["*","-","+","/"] = (MathematicalOperator x) : (lexicalAnalyser xs)						--MathematicalOperater
+	| elem x ["*","-","+","/","%"] = (MathematicalOperator x) : (lexicalAnalyser xs)					--MathematicalOperater
 	| x == ":" && nextIsEquals (head xs) = (AssignmentOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))		--AssignmentOperater
 	| x == "=" = (AssignmentOperator x) : (lexicalAnalyser xs)								--AssignmentOperater
 	| x == ";" = (EndOfLine x) : (lexicalAnalyser xs)									--End of Line Char
 	| x == ")" || x == "(" = (Parens x) : (lexicalAnalyser xs)								--Parenthesis
 	| x == "#" =  Comment (unwords (take ((commentDrop xs) - 1) xs)) : lexicalAnalyser (drop (commentDrop xs) xs)		--Comments
+	| x == "\"" = StringConst (unwords (take ((stringDrop xs) - 1) xs)) : lexicalAnalyser (drop (stringDrop xs) xs)		--String Constants
 	| x == "[" = Array (buildArray xs) : lexicalAnalyser (drop (arrayDrop xs) xs)						--Array declarations
 	| elem (head x) ['0'..'9'] && elem '.' x = (Floating (read x :: Double)) : (lexicalAnalyser xs)				--Floating Point
 	| elem (head x) ['0'..'9'] = (Number (read x :: Int)) : (lexicalAnalyser xs)						--Numbers
@@ -265,6 +277,12 @@ commentDrop (x:xs) =
 		then 1
 		else 1 + commentDrop xs
 
+stringDrop :: [String] -> Int
+stringDrop (x:xs) =
+	if x == "\""
+		then 1
+		else 1 + stringDrop xs
+
 nextIsEquals :: String -> Bool
 nextIsEquals xs =
 	if (head xs) == '=' then True else False
@@ -282,7 +300,7 @@ myDelimiter :: String -> [String]
 myDelimiter xs =
 	-- Delimit the program (removing the delimiters listed in the first argument of splitOneOf and filtering out black (""))
 	-- Filter (\x -> x /= "")-- 
-	filter (\x -> (not (elem x ["\n","\t","\r"," ",",",""]))) (split (oneOf "#<:=>+-()[]/,*;\n\r\t ") xs)
+	filter (\x -> (not (elem x ["\n","\t","\r"," ",",",""]))) (split (oneOf "#<:=>+-\"()[]/%,*;\n\r\t ") xs)
 	
 -- ******************* --
 --     Interpreter	   --
@@ -357,8 +375,6 @@ interpretStatements ((IfThenElse boolexp stmt1 stmt2):stmts) env = do
 			putStrLn ("Error in If Then-Else-statement")
 			return env
 
-{- will work with a bit of work. Environment needs to be updated for while and if-then-else statements -}
-
 interpretStatements ((While boolexp st):stmt) env = do
 	if isJust(reduceBoolExp boolexp env)
 		then
@@ -369,6 +385,11 @@ interpretStatements ((While boolexp st):stmt) env = do
 		else do
 			putStrLn ("Error in while loop")
 			return env
+
+interpretStatements ((Print x):stmts) env = do								-- For a write Statement
+	putStr x
+	interpretStatements stmts env
+
 
 
 --Reduce a BoolExp
@@ -409,6 +430,7 @@ reduceIntExp (IVar x) myenv =
 	if isNothing(mylookup x myenv)
 		then Nothing
 		else mylookup x myenv
+
 reduceIntExp (Mul x y) myenv = do
 	let x' = reduceIntExp x myenv
 	let y' = reduceIntExp y myenv
@@ -416,6 +438,7 @@ reduceIntExp (Mul x y) myenv = do
 			if (isNothing x') || (isNothing y')
 				then Nothing
 				else Just (fromJust(x') * fromJust(y'))
+
 reduceIntExp (Add x y) myenv = do
 	let x' = reduceIntExp x myenv
 	let y' = reduceIntExp y myenv
@@ -439,6 +462,14 @@ reduceIntExp (Sub x y) myenv = do
 			if (isNothing x') || (isNothing y')
 				then Nothing
 				else Just (fromJust(x') - fromJust(y'))
+
+reduceIntExp (Mod x y) myenv = do
+	let x' = reduceIntExp x myenv
+	let y' = reduceIntExp y myenv
+		in
+			if (isNothing x') || (isNothing y')
+				then Nothing
+				else Just (mod (fromJust(x')) (fromJust(y')))
 		
 -- Get a value from the environment
 mylookup :: String -> Env -> Maybe Int
