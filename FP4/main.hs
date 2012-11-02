@@ -3,6 +3,7 @@ import Data.List
 import Data.Maybe
 import Data.List.Split
 import System.IO.Unsafe
+import GHC.Float
 
 {- 	Garry Sharp
 	0801585s
@@ -303,40 +304,44 @@ myDelimiter xs =
 	filter (\x -> (not (elem x ["\n","\t","\r"," ",",",""]))) (split (oneOf "#<:=>+-\"()[]/%,*;\n\r\t ") xs)
 	
 -- ******************* --
---     Interpreter	   --
+--     Interpreter     --
 -- ******************* --
 
-
 type Env = [SubEnv]
-type SubEnv = [(NewVar, Int)]
+type SubEnv = [(NewVar, MyVal)]
+data MyVal 
+	= IntVal Int 
+	| DoubVal Double 
+	deriving (Read, Show)
 
 --Interpret Statements (for begin blocks)
-
 
 processDecsHelper :: [String] -> SubEnv
 processDecsHelper [] = []
 processDecsHelper (x:xs) =
-	(x,0) : processDecsHelper xs
+	(x,IntVal 0) : processDecsHelper xs
 
 interpret :: Stmt -> Env -> IO Env
 interpret (Begin decs stmts) [] =
 	interpretStatements stmts ((processDecsHelper decs) : [])
 interpret (Begin decs stmts) env =
 	interpretStatements stmts ((processDecsHelper decs) : env)
-	
 
 interpretStatements :: [Stmt] -> Env -> IO Env
 interpretStatements [] env = do
 	return $ drop 1 env
 
-interpretStatements ((Write x):stmts) env = do								-- For a write Statement
-	if (isJust (reduceIntExp x env))
-		then do
-			putStrLn (show (fromJust(reduceIntExp x env)))
-			interpretStatements stmts env
-		else do 
-			putStrLn "Error in write statement"
-			return env
+interpretStatements ((Write x):stmts) env = do	
+	let x' = reduceIntExp x env in							-- For a write Statement
+		if (isJust x')
+			then do
+				if isDoub (fromJust x')
+					then putStrLn (show (getDoub(fromJust x')))
+					else putStrLn (show (getInt(fromJust x')))
+				interpretStatements stmts env
+			else do 
+				putStrLn "Error in write statement"
+				return env
 
 interpretStatements ((Read x):stmts) env = do								-- For a read Statement
 	putStrLn ("Variable "++(show x)++ " is equal to: ")
@@ -403,29 +408,30 @@ reduceBoolExpHelper x y env
 reduceBoolExp :: BoolExp -> Env -> Maybe Bool
 reduceBoolExp (ILT x y) env = do
 	if (reduceBoolExpHelper x y env) == True
-		then Just ((fromJust (reduceIntExp x env)) < (fromJust (reduceIntExp y env)))
+		then Just ((getDoub(fromJust (reduceIntExp x env))) < (getDoub(fromJust (reduceIntExp y env))))
 		else Nothing
 reduceBoolExp (ILTEQ x y) env = do
 	if (reduceBoolExpHelper x y env) == True
-		then Just ((fromJust (reduceIntExp x env)) <= (fromJust (reduceIntExp y env)))
+		then Just ((getDoub(fromJust (reduceIntExp x env))) <= (getDoub(fromJust (reduceIntExp y env))))
 		else Nothing
 reduceBoolExp (IEQ x y) env = do
 	if (reduceBoolExpHelper x y env) == True
-		then Just ((fromJust (reduceIntExp x env)) == (fromJust (reduceIntExp y env)))
+		then Just ((getDoub(fromJust (reduceIntExp x env))) == (getDoub(fromJust (reduceIntExp y env))))
 		else Nothing
 reduceBoolExp (IGT x y) env = do
 	if (reduceBoolExpHelper x y env) == True
-		then Just ((fromJust (reduceIntExp x env)) > (fromJust (reduceIntExp y env)))
+		then Just ((getDoub(fromJust (reduceIntExp x env))) > (getDoub(fromJust (reduceIntExp y env))))
 		else Nothing
 reduceBoolExp (IGTEQ x y) env = do
 	if (reduceBoolExpHelper x y env) == True
-		then Just ((fromJust (reduceIntExp x env)) >= (fromJust (reduceIntExp y env)))
+		then Just ((getDoub(fromJust(reduceIntExp x env))) >=  (getDoub(fromJust (reduceIntExp y env))))
 		else Nothing
 
 --Reduce an IntExp
 
-reduceIntExp :: IntExp -> Env -> Maybe Int
-reduceIntExp (ICon x) _ = Just x
+reduceIntExp :: IntExp -> Env -> Maybe MyVal
+reduceIntExp (ICon x) _ = Just (IntVal x)
+reduceIntExp (IDoub x) _ = Just (DoubVal x)
 reduceIntExp (IVar x) myenv = 
 	if isNothing(mylookup x myenv)
 		then Nothing
@@ -437,7 +443,10 @@ reduceIntExp (Mul x y) myenv = do
 		in
 			if (isNothing x') || (isNothing y')
 				then Nothing
-				else Just (fromJust(x') * fromJust(y'))
+				else 
+					if ( (isDoub (fromJust x')) || (isDoub (fromJust y')))	--If either value is a double then return a double
+						then Just (DoubVal ((getDoub (fromJust(x'))) * (getDoub (fromJust(y')))))
+						else Just (IntVal ((getInt (fromJust(x'))) * (getInt (fromJust(y')))))
 
 reduceIntExp (Add x y) myenv = do
 	let x' = reduceIntExp x myenv
@@ -445,7 +454,10 @@ reduceIntExp (Add x y) myenv = do
 		in
 			if (isNothing x') || (isNothing y')
 				then Nothing
-				else Just (fromJust(x') + fromJust(y'))
+				else 
+					if ( (isDoub (fromJust x')) || (isDoub (fromJust y')))	--If either value is a double then return a double
+						then Just (DoubVal ((getDoub (fromJust(x'))) + (getDoub (fromJust(y')))))
+						else Just (IntVal ((getInt (fromJust(x'))) + (getInt (fromJust(y')))))
 
 reduceIntExp (Div x y) myenv = do
 	let x' = reduceIntExp x myenv
@@ -453,7 +465,7 @@ reduceIntExp (Div x y) myenv = do
 		in
 			if (isNothing x') || (isNothing y')
 				then Nothing
-				else Just (div (fromJust(x')) (fromJust(y')))
+				else Just (DoubVal ((getDoub(fromJust(x'))) / (getDoub(fromJust(y')))))
 
 reduceIntExp (Sub x y) myenv = do
 	let x' = reduceIntExp x myenv
@@ -461,7 +473,10 @@ reduceIntExp (Sub x y) myenv = do
 		in
 			if (isNothing x') || (isNothing y')
 				then Nothing
-				else Just (fromJust(x') - fromJust(y'))
+				else 
+					if ( (isDoub (fromJust x')) || (isDoub (fromJust y')))	--If either value is a double then return a double
+						then Just (DoubVal ((getDoub (fromJust(x'))) - (getDoub (fromJust(y')))))
+						else Just (IntVal ((getInt (fromJust(x'))) - (getInt (fromJust(y')))))
 
 reduceIntExp (Mod x y) myenv = do
 	let x' = reduceIntExp x myenv
@@ -469,10 +484,22 @@ reduceIntExp (Mod x y) myenv = do
 		in
 			if (isNothing x') || (isNothing y')
 				then Nothing
-				else Just (mod (fromJust(x')) (fromJust(y')))
+				else 
+					if ( (isDoub (fromJust x')) || (isDoub (fromJust y')))
+						then Nothing
+						else Just (IntVal (mod (getInt(fromJust(x'))) (getInt(fromJust(y')))))
+
+getInt :: MyVal -> Int
+getInt (IntVal x) = x
+getDoub :: MyVal -> Double
+getDoub (DoubVal x) = x
+getDoub (IntVal x) = int2Double x
+isDoub :: MyVal -> Bool
+isDoub (IntVal _) = False
+isDoub (DoubVal _) = True
 		
 -- Get a value from the environment
-mylookup :: String -> Env -> Maybe Int
+mylookup :: String -> Env -> Maybe MyVal
 mylookup x [] = Nothing
 mylookup x ([]:zs) =
 	mylookup x zs
@@ -481,21 +508,21 @@ mylookup x ((y:ys):zs)
 	| otherwise = mylookup x (ys:zs)
 	
 -- Update the environment
-myupdate :: String -> Int -> Env -> Env
+myupdate :: String -> MyVal -> Env -> Env
 myupdate x y (z:zs) =
 	if isNothing(mylookup x (z:zs))					-- Checks to see if it needs to add or update a variable/
 		then (myupdateNew x y z):zs
 		else myupdateExisting x y (z:zs)
 	
 		
-myupdateNew :: String -> Int -> SubEnv -> SubEnv	-- Adds a new variable to the current scope (head of the environment)
+myupdateNew :: String -> MyVal -> SubEnv -> SubEnv	-- Adds a new variable to the current scope (head of the environment)
 myupdateNew x y z =
 	(x,y):z
 
-myupdateExisting :: String -> Int -> Env -> Env		-- Updates the first variable that it comes across (most recent scope)
+myupdateExisting :: String -> MyVal -> Env -> Env		-- Updates the first variable that it comes across (most recent scope)
 myupdateExisting x y [] = [[(x,y)]] 
 myupdateExisting x y (z:zs) = 
-	if (localEnvExists x z)							-- Necessary to stop all variables in all scopes being changes is x used several times.
+	if (localEnvExists x z)					-- Necessary to stop all variables in all scopes being changes is x used several times.
 		then ((myupdateExistingHelper x y z) : zs)
 		else (z : (myupdateExisting x y zs))
 	
@@ -505,12 +532,16 @@ localEnvExists x (y:ys) =
 	if x == (fst y)
 		then True
 		else localEnvExists x ys
+
 		
-myupdateExistingHelper :: String -> Int -> SubEnv -> SubEnv		-- Loops through the scopes (SubEnv) and returns an updated scope (SubEnv)
+myupdateExistingHelper :: String -> MyVal -> SubEnv -> SubEnv		-- Loops through the scopes (SubEnv) and returns an updated scope (SubEnv)
 myupdateExistingHelper x y [] = []
-myupdateExistingHelper x y (z:zs)
-	| x == (fst z) = (x,y) : zs
-	| otherwise = z : (myupdateExistingHelper x y zs)
+myupdateExistingHelper x (IntVal y) (z:zs)
+	| x == (fst z) = (x,(IntVal y)) : zs
+	| otherwise = z : (myupdateExistingHelper x (IntVal y) zs)
+myupdateExistingHelper x (DoubVal y) (z:zs)
+	| x == (fst z) = (x,(DoubVal y)) : zs
+	| otherwise = z : (myupdateExistingHelper x (DoubVal y) zs)
 
 -- ################################################ --
 -- ################################################ --
@@ -534,7 +565,6 @@ main = do
 	 putStrLn x
 	 let xs = (lexicalAnalyser (myDelimiter x))
 	 putStr ("\nProgram Tokenised...\n\n" ++ (show xs) ++ "\n")
-	 let theEnv = [[("a",9),("b",4)],[("c",20),("d",1)],[("e",16)]] :: Env
 	 let testStmt = (statementBuilder xs)
 	 putStr("\nAST Built...\n\n" ++ (show testStmt) ++ "\n")
 	 putStrLn ".......\n.......\n"
