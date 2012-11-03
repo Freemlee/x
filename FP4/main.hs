@@ -22,13 +22,18 @@ import GHC.Float
 	There are a few pre-requisites for the language which will be detailed below:
 
 		- Each boolean expression must be kept between parenthesis eg. (x + y < 6/x). Boolean expressions are whitespace insensitive
+		- Operation keywords must be in the lower case.
 		- All read and write expressions must be followed by a semi-solon.
 		- Variable names may contain numbers but cannot start with them eg. var5 is okay but 5thVar is not.
 		- Assignment operators can be written as either = or :=
 		- Comments must be surrounded by '#' They may carry onto new lines.
-		- Comments cannot be placed within a statement eg while (x < 7) # comment # begin is not allowed. It must be after each of the 				statements args. In this case: while (x < 7) begin #do something#. This is because internally comments are treated as part of 				a sequence of statements (They are a statement in their own right.
+		- Comments cannot be placed within a statement eg while (x < 7) # comment # begin is not allowed. It must be after each of the 				
+		    statements args. In this case: while (x < 7) begin #do something#. This is because internally comments are treated as part of 				
+		    a sequence of statements (They are a statement in their own right.
 		- Any statement/s that are part of a while/ifthenelse statement must be surrounded by begin/end blocks
-		- Variables that are declared at the top of the begin block
+		- Variables that are declared at the top of the begin block.
+		- If a variable name is reused and declared within a begin block then a new variable of that name is added for that scope. Making the original variable
+			unreachable until the program leaves the begin block.
 
 	################################
 	Extensions
@@ -37,8 +42,90 @@ import GHC.Float
 	Here are a list of the extensions I've added:
 	
 		- Include comments in the code.
-		- Doubles are supported in the AST
+		- Doubles values are now supported.
+		- Print out sting literals.
+		- Cross type calculations (multiply an int with an int will return an int. Any operation using a double will always return a double)
+		- The same variable can be equal to two different types
+		- Some syntactic sugar x *= 3 for instace (equivalent to x = x * 3)
+		- Less than OR EQUAL TO and Greater than OR EQUAL TO
+		- Modulus functions and power functions have been added
 		
+	################################
+	Sample Programs
+	################################
+	
+	------------------------------------------------
+	
+	begin [a,b]
+	#Basic Comparator#
+	
+	read value_1;
+	read value_2;
+	a = 0;
+			if (value_1 < value_2) 
+				then begin
+					printLn "value_1 was less than the value_2 ;)"
+				end
+				else begin
+					printLn "value_1 was greater than the value_2 ;)"
+				end
+	end;
+	
+	--------------------------------------------
+	
+	begin [a,f,b,c]
+	#Calculate the value of x^y#
+	
+	read x;
+	read y;
+	print "The value of x^y is: "
+	write x^y;
+	end;
+	
+	----------------------------------------------
+	
+	begin 
+	#Alternative to the above (might only work with integer values. Try changing the code..)#
+	
+	read x;
+	read y;
+	counter = 0;
+	newval = 1;
+	while (counter < y)
+		begin
+			newval *= x;
+			counter += 1;
+		end
+	print "The value of x^y is: "
+	write newval;
+	end;
+	
+	-----------------------------------------------------------
+	
+	begin 
+	#Calculate fibonacci numbers up to a limit#
+	
+	read limit;
+	
+	val1 = 0;
+	val2 = 1;
+	
+	write val1;
+	write val2;
+	
+	while (val2 < limit)
+	begin
+		temp = val2;
+		val2 += val1;
+		val1 = temp;
+		write val2;
+	end
+	end;
+	
+	---------------
+	Enjoy
+	---------------
+	
 -}
 
 type NewVar = String
@@ -55,6 +142,7 @@ data IntExp
   	| Mul IntExp IntExp
   	| Div IntExp IntExp
 	| Mod IntExp IntExp
+	| Pow IntExp IntExp
   	deriving (Read, Show)
 
 data BoolExp
@@ -151,12 +239,14 @@ statementArrayBuilder ((EndOfLine _):xs) =				-- For an EOL char
 	-- When given a list of tokens (all of which make up an IntExp) will return an IntExp
 intExpEval :: [Tokens] -> IntExp
 intExpEval (x:[]) = intExpLeaf x
+intExpEval ((MathematicalOperator "-"):x:[]) = intExpEval ((Number 0):(MathematicalOperator "-"):x:[])
 intExpEval (x:xs) 
 	| (head xs) == (MathematicalOperator "*") = intExpEvalHelper (Mul (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
 	| (head xs) == (MathematicalOperator "/") = intExpEvalHelper (Div (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
 	| (head xs) == (MathematicalOperator "-") = intExpEvalHelper (Sub (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
 	| (head xs) == (MathematicalOperator "+") = intExpEvalHelper (Add (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
 	| (head xs) == (MathematicalOperator "%") = intExpEvalHelper (Mod (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
+	| (head xs) == (MathematicalOperator "^") = intExpEvalHelper (Pow (intExpLeaf x) (intExpLeaf (xs!!1))) (drop 2 xs)
 
 	-- Helper to the above function (allows for intExp's to be part of a bigger intExp) NB. As of yet this doesn't support order of operations
 intExpEvalHelper :: IntExp -> [Tokens] -> IntExp
@@ -166,6 +256,7 @@ intExpEvalHelper y ((MathematicalOperator "/"):xs) = intExpEvalHelper (Div y (in
 intExpEvalHelper y ((MathematicalOperator "-"):xs) = intExpEvalHelper (Sub y (intExpLeaf (head xs))) (drop 1 xs)
 intExpEvalHelper y ((MathematicalOperator "+"):xs) = intExpEvalHelper (Add y (intExpLeaf (head xs))) (drop 1 xs)
 intExpEvalHelper y ((MathematicalOperator "%"):xs) = intExpEvalHelper (Mod y (intExpLeaf (head xs))) (drop 1 xs)
+intExpEvalHelper y ((MathematicalOperator "^"):xs) = intExpEvalHelper (Pow y (intExpLeaf (head xs))) (drop 1 xs)
 
 	-- Used for evaluating lead nodes in an intExp tree (determines whether a value is either a number or a variable
 intExpLeaf :: Tokens -> IntExp
@@ -226,7 +317,7 @@ getArgsTo y (x:xs)
 
 data Tokens
 	= KeyWord String
-	| Array [String]	 --putStr (show xs)
+	| Array [String]	 												--putStr (show xs)
 	| BooleanOperator String
 	| MathematicalOperator String
 	| AssignmentOperator String
@@ -248,7 +339,7 @@ lexicalAnalyser (x:xs)
 	| elem x ["=","<",">"] && nextIsEquals (head xs) = (BooleanOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))	--BooleanOperater
 	| elem x ["<",">"] = (BooleanOperator x) : (lexicalAnalyser xs)								--BooleanOperater
 	| elem x ["*","-","+","/"] && nextIsEquals (head xs) = (IncOperator x) : (lexicalAnalyser (skip xs)) 			--Operators like +=
-	| elem x ["*","-","+","/","%"] = (MathematicalOperator x) : (lexicalAnalyser xs)					--MathematicalOperater
+	| elem x ["*","-","+","/","%","^"] = (MathematicalOperator x) : (lexicalAnalyser xs)					--MathematicalOperater
 	| x == ":" && nextIsEquals (head xs) = (AssignmentOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))		--AssignmentOperater
 	| x == "=" = (AssignmentOperator x) : (lexicalAnalyser xs)								--AssignmentOperater
 	| x == ";" = (EndOfLine x) : (lexicalAnalyser xs)									--End of Line Char
@@ -256,10 +347,23 @@ lexicalAnalyser (x:xs)
 	| x == "#" =  Comment (unwords (take ((commentDrop xs) - 1) xs)) : lexicalAnalyser (drop (commentDrop xs) xs)		--Comments
 	| x == "\"" = StringConst (unwords (take ((stringDrop xs) - 1) xs)) : lexicalAnalyser (drop (stringDrop xs) xs)		--String Constants
 	| x == "[" = Array (buildArray xs) : lexicalAnalyser (drop (arrayDrop xs) xs)						--Array declarations
-	| elem (head x) ['0'..'9'] && elem '.' x = (Floating (read x :: Double)) : (lexicalAnalyser xs)				--Floating Point
-	| elem (head x) ['0'..'9'] = (Number (read x :: Int)) : (lexicalAnalyser xs)						--Numbers
+	| isNumber x 0 && elem '.' x = (Floating (read x :: Double)) : (lexicalAnalyser xs)				--Floating Point
+	| isNumber x 0 = (Number (read x :: Int)) : (lexicalAnalyser xs)						--Numbers
 	| otherwise = (Identifier x) : (lexicalAnalyser xs)
 
+isNumber :: String -> Int -> Bool
+isNumber [] x = 
+	if (x <= 1)
+		then True
+		else False
+isNumber (x:xs) y =
+	if elem x ['0'..'9'] 
+		then isNumber xs y
+		else
+			if x == '.' 
+				then isNumber xs (y+1)
+				else False
+				
 -- Helpers
 
 buildArray :: [String] -> [String]
@@ -301,7 +405,7 @@ myDelimiter :: String -> [String]
 myDelimiter xs =
 	-- Delimit the program (removing the delimiters listed in the first argument of splitOneOf and filtering out black (""))
 	-- Filter (\x -> x /= "")-- 
-	filter (\x -> (not (elem x ["\n","\t","\r"," ",",",""]))) (split (oneOf "#<:=>+-\"()[]/%,*;\n\r\t ") xs)
+	filter (\x -> (not (elem x ["\n","\t","\r"," ",",",""]))) (split (oneOf "#<:=>^+-\"()[]/%,*;\n\r\t ") xs)
 	
 -- ******************* --
 --     Interpreter     --
@@ -359,7 +463,7 @@ interpretStatements ((Assign x y):stmts) env = do							-- For an assign Stateme
 		then 
 			interpretStatements stmts (myupdate x (fromJust(reduceIntExp y env)) env) 
 		else do
-			putStrLn ("Error in read statement")
+			putStrLn ("Error in assign statement")
 			return (myupdate x (fromJust(reduceIntExp y env)) env) 
 
 interpretStatements ((Begin x y):stmts) (z:zs) = do
@@ -436,6 +540,17 @@ reduceIntExp (IVar x) myenv =
 	if isNothing(mylookup x myenv)
 		then Nothing
 		else mylookup x myenv
+		
+reduceIntExp (Pow x y) myenv = do
+	let x' = reduceIntExp x myenv
+	let y' = reduceIntExp y myenv
+		in
+			if (isNothing x') || (isNothing y')
+				then Nothing
+				else 
+					if ( (isDoub (fromJust x')) || (isDoub (fromJust y')))	--If either value is a double then return a double
+						then Just (DoubVal ((getDoub (fromJust(x'))) ** (getDoub (fromJust(y')))))
+						else Just (IntVal ((getInt (fromJust(x'))) ^ (getInt (fromJust(y')))))
 
 reduceIntExp (Mul x y) myenv = do
 	let x' = reduceIntExp x myenv
@@ -559,19 +674,27 @@ isIntExp str =
        else False
     
 main = do
-	 putStrLn "Welcome to the Garry Script Interpreter v.1.0"
-	 x <- readFile "exampleProg.txt"
+	 putStrLn "\nWelcome to the Garry Script Interpreter v.1.0\n"
+	 putStrLn "Please type in the filename you would like to interpret:"
+	 filename <- getLine
+	 x <- readFile filename
 	 putStrLn "\tFile Read..\n"
 	 putStrLn x
 	 let xs = (lexicalAnalyser (myDelimiter x))
 	 putStr ("\nProgram Tokenised...\n\n" ++ (show xs) ++ "\n")
 	 let testStmt = (statementBuilder xs)
-	 putStr("\nAST Built...\n\n" ++ (show testStmt) ++ "\n")
-	 putStrLn ".......\n.......\n"
+	 putStr("\nAST Built...\n\n" ++ (show testStmt) ++ "\n\n")
+	 --putStrLn ".......\n.......\n"
 	 putStrLn "\nInitial Environment set to null..."
 	 putStrLn "Preparing to execute...\n"
 	 interpret testStmt []
-	 putStrLn "\nThank you for using Garry Script. Have a wonderful day!\n"
+	 putStrLn "Finished interpreting, would you like to interpret again? y/n"
+	 resp <- getLine
+	 if (resp == "y")
+		then main
+		else do
+			putStrLn "\nThank you for using Garry Script v1.0. Have a wonderful day!\n"
+			return()
 
 
 
