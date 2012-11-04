@@ -151,6 +151,10 @@ data BoolExp
 	 | IEQ IntExp IntExp
 	 | IGT IntExp IntExp
 	 | IGTEQ IntExp IntExp
+	 | And BoolExp BoolExp
+	 | Or BoolExp BoolExp
+	 | Not BoolExp
+	 | BooleanLiteral Bool
 	 deriving (Read, Show)
 
 data Stmt
@@ -171,9 +175,57 @@ data Stmt
 -- Building up Bool --
 -- ******************* --
 
-boolExpEval :: [Tokens] -> BoolExp -- Boolean Expressions must be between parenthesis. 2 IntExp's separated by a BooleanOperator
-boolExpEval (_:xs) =
-	boolExpEvalHelper (getBoolArgsHelper2 xs) (intExpEval (getBoolArgs xs)) (intExpEval (getParensArgs(drop ((getBoolArgsHelper xs) + 1) xs)))
+getBoolExpArgs :: [Tokens] -> [Tokens]
+getBoolExpArgs (x:xs)
+	| x == (SpecialBoolean "|") 
+		|| x == (SpecialBoolean "&") 
+		|| x == (SpecialBoolean "!") 
+		|| x == (Parens ")") = []
+	| otherwise = x:(getBoolExpArgs xs)
+
+getBoolExpArgsCount :: [Tokens] -> Int
+getBoolExpArgsCount (x:xs)
+	| x == (SpecialBoolean "|") 
+		|| x == (SpecialBoolean "&") 
+		|| x == (SpecialBoolean "!") 
+		|| x == (Parens ")") = 1
+	| otherwise = 1 + (getBoolExpArgsCount xs)
+
+--isLastBoolExp :: [Tokens] -> Bool
+--isLastBoolExp (Parens ")":[]) = True
+
+
+isSimple :: [Tokens] -> Bool
+isSimple xs 
+	= if elem (SpecialBoolean "&") xs
+	  || elem (SpecialBoolean "!") xs
+	  || elem (SpecialBoolean "|") xs
+		then False
+		else True
+
+getSpecialBoolean :: [Tokens] -> String
+getSpecialBoolean (x:xs)
+	| x == (SpecialBoolean "&") =  "&"
+	| x == (SpecialBoolean "|") = "|"
+	| otherwise = getSpecialBoolean xs
+
+boolExpEval :: [Tokens] -> BoolExp
+boolExpEval (x:xs)
+	| isSimple xs = boolExpEvalSimple $ getBoolExpArgs xs
+	| (head xs) == (SpecialBoolean "!") = Not (boolExpEval xs)
+	| getSpecialBoolean xs == "&" = And (boolExpEvalSimple $ getBoolArgs xs) (boolExpEval $ drop ((getBoolArgsHelper xs) - 1) xs)
+	| getSpecialBoolean xs == "|" = Or (boolExpEvalSimple $ getBoolArgs xs) (boolExpEval $ drop ((getBoolArgsHelper xs) - 1) xs)
+
+boolExpEvalSimple :: [Tokens] -> BoolExp -- Boolean Expressions must be between parenthesis. 2 IntExp's separated by a BooleanOperator
+boolExpEvalSimple (BooleanConst "true":_) = BooleanLiteral True
+boolExpEvalSimple (BooleanConst "false":_) = BooleanLiteral False
+boolExpEvalSimple xs =
+	boolExpEvalHelper (getBoolOperator xs) (intExpEval(getBoolIntExpToks1 xs)) (intExpEval(dropLast (getBoolIntExpToks2 xs)))
+
+{-
+dropLast :: [Tokens] -> [Tokens]
+dropLast (x:[]) = []
+dropLast (x:xs) = x : dropLast xs -}
 
 boolExpEvalHelper :: String -> IntExp -> IntExp -> BoolExp
 boolExpEvalHelper op x y 
@@ -182,6 +234,8 @@ boolExpEvalHelper op x y
 	| op == "==" = IEQ x y
 	| op == ">=" = IGTEQ x y
 	| op == ">" = IGT x y
+
+
 
 
 -- ******************* --
@@ -292,17 +346,38 @@ getBoolArgs :: [Tokens] -> [Tokens]
 getBoolArgs toks =
 	take (getBoolArgsHelper toks) toks
 
-getBoolArgsHelper :: [Tokens] -> Int
-getBoolArgsHelper ((BooleanOperator _):_) = 0
+getBoolArgsHelper :: [Tokens] -> Int				--Gets the NUMBER of tokens up to the boolean operator (used in drop)
+getBoolArgsHelper ((SpecialBoolean _):_) = 1			-- Was BooleanOperator
 getBoolArgsHelper (_:xs) = 1 + getBoolArgsHelper xs
 
-getBoolArgsHelper2 :: [Tokens] -> String
-getBoolArgsHelper2 ((BooleanOperator x):xs) = x
-getBoolArgsHelper2 (_:xs) = getBoolArgsHelper2 xs
+getBoolOperator :: [Tokens] -> String				--Gets string representation of the boolean operator
+getBoolOperator ((BooleanOperator x):xs) = x
+getBoolOperator (_:xs) = getBoolOperator xs
+
+getBoolIntExpToks1 :: [Tokens] -> [Tokens]			--Gets intExp relevant tokens before boolean operator
+getBoolIntExpToks1 ((BooleanOperator _):_) = []
+getBoolIntExpToks1 (x:xs) =
+	x : getBoolIntExpToks1 xs 
+
+dropLast :: [Tokens] -> [Tokens]
+dropLast [] = []
+dropLast ((Parens ")"):xs) = []
+dropLast ((SpecialBoolean _):xs) = []
+dropLast (x:xs) = x : dropLast xs
+
+getBoolIntExpToks2 :: [Tokens] -> [Tokens]			--Gets intExp relevant tokens after boolean operator
+getBoolIntExpToks2 ((BooleanOperator _):xs) = xs
+getBoolIntExpToks2 ((Parens ")"):xs) = xs
+getBoolIntExpToks2 (x:xs) = getBoolIntExpToks2 xs
 
 getArgsFrom :: Tokens -> [Tokens] -> [Tokens]
 getArgsFrom y (x:xs) 
 	| x == y = xs
+	| otherwise = (getArgsFrom y xs)
+
+getArgsFromInclusive :: Tokens -> [Tokens] -> [Tokens]
+getArgsFromInclusive y (x:xs) 
+	| x == y = (x:xs)
 	| otherwise = (getArgsFrom y xs)
 
 getArgsTo :: Tokens -> [Tokens] -> [Tokens]
@@ -319,6 +394,8 @@ data Tokens
 	= KeyWord String
 	| Array [String]	 												--putStr (show xs)
 	| BooleanOperator String
+	| SpecialBoolean String
+	| BooleanConst String
 	| MathematicalOperator String
 	| AssignmentOperator String
 	| IncOperator String
@@ -335,7 +412,9 @@ lexicalAnalyser :: [String] -> [Tokens]
 lexicalAnalyser [] = []
 lexicalAnalyser (x:xs)
 	| elem x ["begin","read","write","end","while","do","if","then","else"] = (KeyWord x) : (lexicalAnalyser xs) 		--KeyWord
-	| elem x ["printLn","print"] = (KeyWord x) : (lexicalAnalyser xs) 		--KeyWord
+	| elem x ["printLn","print"] = (KeyWord x) : (lexicalAnalyser xs) 							--KeyWord
+	| elem x ["true","false"] = (BooleanConst x) : (lexicalAnalyser xs)							--Boolean Constant
+	| x == "|" || x == "&" || x == "!" = (SpecialBoolean x)	: (lexicalAnalyser xs)								--
 	| elem x ["=","<",">"] && nextIsEquals (head xs) = (BooleanOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))	--BooleanOperater
 	| elem x ["<",">"] = (BooleanOperator x) : (lexicalAnalyser xs)								--BooleanOperater
 	| elem x ["*","-","+","/"] && nextIsEquals (head xs) = (IncOperator x) : (lexicalAnalyser (skip xs)) 			--Operators like +=
@@ -405,7 +484,7 @@ myDelimiter :: String -> [String]
 myDelimiter xs =
 	-- Delimit the program (removing the delimiters listed in the first argument of splitOneOf and filtering out black (""))
 	-- Filter (\x -> x /= "")-- 
-	filter (\x -> (not (elem x ["\n","\t","\r"," ",",",""]))) (split (oneOf "#<:=>^+-\"()[]/%,*;\n\r\t ") xs)
+	filter (\x -> (not (elem x ["\n","\t","\r"," ",",",""]))) (split (oneOf "#<:=>^+-&|!\"()[]/%,*;\n\r\t ") xs)
 	
 -- ******************* --
 --     Interpreter     --
@@ -510,6 +589,24 @@ reduceBoolExpHelper x y env
 	|otherwise = True
 
 reduceBoolExp :: BoolExp -> Env -> Maybe Bool
+reduceBoolExp (BooleanLiteral True) _ = Just True
+reduceBoolExp (BooleanLiteral False) _ = Just False
+
+reduceBoolExp (And x y) env =
+	if isJust (reduceBoolExp x env) && isJust (reduceBoolExp y env)
+		then Just $ (fromJust (reduceBoolExp x env)) && (fromJust (reduceBoolExp y env))
+		else Nothing
+
+reduceBoolExp (Or x y) env =
+	if isJust (reduceBoolExp x env) || isJust (reduceBoolExp y env)
+		then Just $ (fromJust (reduceBoolExp x env)) || (fromJust (reduceBoolExp y env))
+		else Nothing
+
+reduceBoolExp (Not x) env =
+	if isJust (reduceBoolExp x env)
+		then Just $ not (fromJust (reduceBoolExp x env))
+		else Nothing
+
 reduceBoolExp (ILT x y) env = do
 	if (reduceBoolExpHelper x y env) == True
 		then Just ((getDoub(fromJust (reduceIntExp x env))) < (getDoub(fromJust (reduceIntExp y env))))
@@ -625,12 +722,12 @@ mylookup x ((y:ys):zs)
 -- Update the environment
 myupdate :: String -> MyVal -> Env -> Env
 myupdate x y (z:zs) =
-	if isNothing(mylookup x (z:zs))					-- Checks to see if it needs to add or update a variable/
+	if isNothing(mylookup x (z:zs))				-- Checks to see if it needs to add or update a variable/
 		then (myupdateNew x y z):zs
 		else myupdateExisting x y (z:zs)
 	
 		
-myupdateNew :: String -> MyVal -> SubEnv -> SubEnv	-- Adds a new variable to the current scope (head of the environment)
+myupdateNew :: String -> MyVal -> SubEnv -> SubEnv		-- Adds a new variable to the current scope (head of the environment)
 myupdateNew x y z =
 	(x,y):z
 
