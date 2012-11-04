@@ -157,6 +157,8 @@ data BoolExp
 	 | BooleanLiteral Bool
 	 deriving (Read, Show)
 
+data Proc = MakeProc String Stmt
+
 data Stmt
 	 = Begin [String] [Stmt]		-- Change String to Decl
 	 | Assign Var IntExp
@@ -171,6 +173,22 @@ data Stmt
 -- ################################################ --
 --                 Tree Builder                     --
 -- ################################################ --
+
+buildFunctionEnvironment :: [Tokens] -> [(String,Stmt)]
+buildFunctionEnvironment ((KeyWord "def"):xs) =
+	 funcBuilder ((KeyWord "def"):xs) : buildFunctionEnvironment(getArgsFrom(KeyWord "endproc") xs)
+buildFunctionEnvironment xs = []
+
+funcBuilder :: [Tokens] -> (String,Stmt)
+funcBuilder ((KeyWord "def"):(Identifier x):xs) =
+	(x,statementBuilder xs)
+
+existFunctions :: [Tokens] -> Bool
+existFunctions xs =
+	if elem (KeyWord "def") xs
+		then True
+		else False
+
 -- ******************* --
 -- Building up Bool --
 -- ******************* --
@@ -234,9 +252,6 @@ boolExpEvalHelper op x y
 	| op == "==" = IEQ x y
 	| op == ">=" = IGTEQ x y
 	| op == ">" = IGT x y
-
-
-
 
 -- ******************* --
 -- Building up Stmts --
@@ -412,9 +427,9 @@ lexicalAnalyser :: [String] -> [Tokens]
 lexicalAnalyser [] = []
 lexicalAnalyser (x:xs)
 	| elem x ["begin","read","write","end","while","do","if","then","else"] = (KeyWord x) : (lexicalAnalyser xs) 		--KeyWord
-	| elem x ["printLn","print"] = (KeyWord x) : (lexicalAnalyser xs) 							--KeyWord
+	| elem x ["printLn","print","def","endproc"] = (KeyWord x) : (lexicalAnalyser xs) 					--KeyWord
 	| elem x ["true","false"] = (BooleanConst x) : (lexicalAnalyser xs)							--Boolean Constant
-	| x == "|" || x == "&" || x == "!" = (SpecialBoolean x)	: (lexicalAnalyser xs)								--
+	| x == "|" || x == "&" || x == "!" = (SpecialBoolean x)	: (lexicalAnalyser xs)						--Special Boolean
 	| elem x ["=","<",">"] && nextIsEquals (head xs) = (BooleanOperator (x ++ (head xs))) : (lexicalAnalyser (skip xs))	--BooleanOperater
 	| elem x ["<",">"] = (BooleanOperator x) : (lexicalAnalyser xs)								--BooleanOperater
 	| elem x ["*","-","+","/"] && nextIsEquals (head xs) = (IncOperator x) : (lexicalAnalyser (skip xs)) 			--Operators like +=
