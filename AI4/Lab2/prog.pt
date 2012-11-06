@@ -2,8 +2,7 @@ import numpy
 import math
 import matplotlib.pyplot as plt
 count = 1
-#f = open('laboratory.dat','r')
-#samples [50][2400]
+
 filename = ""
 
 def toInt(x):
@@ -53,9 +52,15 @@ def mainFunc(fileName):
 	Z = math.log(numpy.mean(zcrFunc(intLines)))
 	E = math.log(numpy.mean(sums(energy_temp)))
 	M = math.log(numpy.mean(sums(magnitude_temp)))
+	listofenergy.append(E)
+	listofmags.append(M)
+	listofzcr.append(Z)
 	#Z = math.log(map(toFloat,zcr))
 	print filename + "\tE: " + str(E)[0:10] + "\tM: " + str(M)[0:10] + "\tZ: " + str(Z)[0:10]
 
+listofenergy = [] 
+listofmags = [] 
+listofzcr = []
 while (count <= 50):
 	if (count < 10):
 		filename = "silence_speech/silence_0" + str(count) + ".dat"
@@ -72,3 +77,15 @@ while (count <= 50):
 		filename = "silence_speech/speech_" + str(count) + ".dat"
 	mainFunc(filename)
 	count += 1
+
+count = 0
+while (count < 100):
+	plt.figure(0)
+	plt.scatter(listofenergy[count],listofmags[count])
+	plt.figure(1)
+	plt.scatter(listofenergy[count],listofzcr[count])
+	plt.figure(2)
+	plt.scatter(listofmags[count],listofzcr[count])
+	count += 1
+
+plt.show()
