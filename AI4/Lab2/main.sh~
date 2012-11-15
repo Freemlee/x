@@ -1,0 +1,3 @@
+python prog.pt > averages.txt
+echo "The Averages\n"
+cat averages.txt

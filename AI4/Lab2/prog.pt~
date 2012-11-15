@@ -201,6 +201,7 @@ while (count < 10):
 			print "Guess for ENERGY " + str(count) + "-" + str(i) + " is SILENCE"
 		else:
 			print "Guess for ENERGY " + str(count) + "-" + str(i) + " is UNKNOWN"
+		i += 1
 	#MAGNITUDE
 		if diff_percent_similar_speech_m < diff_percent_similar_silence_m and diff_percent_similar_speech_m < 1:
 			print "Guess for MAGNITUDE " + str(count) + "-" + str(i) + " is SPEECH"
@@ -208,6 +209,7 @@ while (count < 10):
 			print "Guess for MAGNITUDE " + str(count) + "-" + str(i) + " is SILENCE"
 		else:
 			print "Guess for MAGNITUDE " + str(count) + "-" + str(i) + " is UNKNOWN"
+		i += 1
 	#ZCR
 		if diff_percent_similar_speech_z < diff_percent_similar_silence_z and diff_percent_similar_speech_z < 1:
 			print "Guess for ZCR " + str(count) + "-" + str(i) + " is SPEECH"
