@@ -1,0 +1,366 @@
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.11.12)  22 NOV 2012 13:52
+entering extended mode
+**essay_1.tex
+("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.tex"
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
+abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
+croatian, czech, danish, dutch, esperanto, estonian, farsi, finnish, french, ga
+lician, german, german-x-2009-06-19, greek, gujarati, hindi, hungarian, iceland
+ic, indonesian, interlingua, irish, italian, kannada, kurmanji, lao, latin, lat
+vian, lithuanian, malayalam, marathi, mongolian, mongolianlmc, monogreek, ngerm
+an, ngerman-x-2009-06-19, nynorsk, oriya, panjabi, pinyin, polish, portuguese, 
+romanian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, swis
+sgerman, tamil, telugu, turkish, turkmen, ukenglish, ukrainian, uppersorbian, u
+senglishmax, welsh, loaded.
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\article.cls"
+Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\size12.clo"
+File: size12.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\synttree\synttree.sty"
+\MTr@level=\count87
+\MTr@numchildren=\count88
+\MTr@maxlevel=\count89
+\MTr@mybranchmult=\count90
+\MTr@labelbox=\box26
+\MTr@treebox=\box27
+\MTr@treev=\count91
+\MTr@treew=\count92
+\MTr@treeheight=\count93
+\MTr@treedepth=\count94
+\MTr@branchmult=\count95
+\MTr@labeldepth=\count96
+\MTr@labelheight=\count97
+\MTr@labelhalfwidth=\count98
+\MTr@morex=\count99
+\MTr@parenty=\count100
+\MTr@picwidth=\count101
+\MTr@picheight=\count102
+\MTr@templength=\skip43
+\MTr@loopcnta=\count103
+\MTr@tempcnta=\count104
+\MTr@tempcntb=\count105
+\MTr@tempcntc=\count106
+\MTr@branchheight=\count107
+\MTr@trianglemultright=\count108
+\MTr@trianglemultleft=\count109
+\MTr@lineoffset=\count110
+\MTr@minheight=\skip44
+\MTr@childsidesep=\count111
+\MTr@childattachsep=\count112
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\longtable.sty"
+Package: longtable 2004/02/01 v4.11 Multi-page Table package (DPC)
+\LTleft=\skip45
+\LTright=\skip46
+\LTpre=\skip47
+\LTpost=\skip48
+\LTchunksize=\count113
+\LTcapwidth=\dimen103
+\LT@head=\box28
+\LT@firsthead=\box29
+\LT@foot=\box30
+\LT@lastfoot=\box31
+\LT@cols=\count114
+\LT@rows=\count115
+\c@LT@tables=\count116
+\c@LT@chunks=\count117
+\LT@p@ftn=\toks14
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\geometry\geometry.sty"
+Package: geometry 2010/09/12 v5.6 Page Geometry
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks15
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty"
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty"
+Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty"
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count118
+\Gm@cntv=\count119
+\c@Gm@tempcnt=\count120
+\Gm@bindingoffset=\dimen104
+\Gm@wd@mp=\dimen105
+\Gm@odd@mp=\dimen106
+\Gm@even@mp=\dimen107
+\Gm@layoutwidth=\dimen108
+\Gm@layoutheight=\dimen109
+\Gm@layouthoffset=\dimen110
+\Gm@layoutvoffset=\dimen111
+\Gm@dimlist=\toks16
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\geometry\geometry.cfg"))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\trig.sty"
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count121
+))
+\Gin@req@height=\dimen112
+\Gin@req@width=\dimen113
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\float\float.sty"
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count122
+\float@exts=\toks17
+\float@box=\box32
+\@float@everytoks=\toks18
+\@floatcapt=\box33
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\wrapfig\wrapfig.sty"
+\wrapoverhang=\dimen114
+\WF@size=\dimen115
+\c@WF@wrappedlines=\count123
+\WF@box=\box34
+\WF@everypar=\toks19
+Package: wrapfig 2003/01/31  v 3.6
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\lipsum\lipsum.sty"
+Package: lipsum 2011/04/14 v1.2 150 paragraphs of Lorem Ipsum dummy text
+\c@lips@count=\count124
+)
+("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.aux")
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(89.62709pt, 418.25368pt, 89.6271pt)
+* v-part:(T,H,B)=(101.40665pt, 591.5302pt, 152.11pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=418.25368pt
+* \textheight=591.5302pt
+* \oddsidemargin=17.3571pt
+* \evensidemargin=17.3571pt
+* \topmargin=-7.86334pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=12.0pt
+* \footskip=30.0pt
+* \marginparwidth=44.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count125
+\scratchdimen=\dimen116
+\scratchbox=\box35
+\nofMPsegments=\count126
+\nofMParguments=\count127
+\everyMPshowfont=\toks20
+\MPscratchCnt=\count128
+\MPscratchDim=\dimen117
+\MPnumerator=\count129
+\makeMPintoPDFobject=\count130
+\everyMPtoPDFconversion=\toks21
+)
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 64.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 64.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 64.
+ [1
+
+{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] [1]
+("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.toc")
+\tf@toc=\write3
+ [2]
+Underfull \hbox (badness 10000) in paragraph at lines 111--114
+
+ []
+
+[3] <./Pictures/placeholder.png, id=20, 281.05pt x 170.6375pt>
+File: ./Pictures/placeholder.png Graphic file (type png)
+
+<use ./Pictures/placeholder.png>
+Package pdftex.def Info: ./Pictures/placeholder.png used on input line 130.
+(pdftex.def)             Requested size: 209.12683pt x 126.97015pt.
+\MTr@childibox=\box36
+\MTr@childix=\count131
+\MTr@childiy=\count132
+\MTr@childiv=\count133
+\MTr@childiw=\count134
+\MTr@childiheight=\count135
+\MTr@childidepth=\count136
+\MTr@childibranchmult=\count137
+\MTr@childipicheight=\count138
+\MTr@childitriangle=\count139
+\MTr@childiibox=\box37
+\MTr@childiix=\count140
+\MTr@childiiy=\count141
+\MTr@childiiv=\count142
+\MTr@childiiw=\count143
+\MTr@childiiheight=\count144
+\MTr@childiidepth=\count145
+\MTr@childiibranchmult=\count146
+\MTr@childiipicheight=\count147
+\MTr@childiitriangle=\count148
+ [4 <C:/Users/Gaz's Laptop/Projects/x/SCS/Sample/Pictures/placeholder.png>]
+<./Pictures/senna-prost.jpg, id=24, 401.5pt x 259.97125pt>
+File: ./Pictures/senna-prost.jpg Graphic file (type jpg)
+
+<use ./Pictures/senna-prost.jpg>
+Package pdftex.def Info: ./Pictures/senna-prost.jpg used on input line 170.
+(pdftex.def)             Requested size: 188.21288pt x 121.86916pt.
+ [5]
+Underfull \hbox (badness 1057) in paragraph at lines 175--176
+\OT1/cmr/m/n/12 the re-sult-ing events. Fig-ure 2 fa-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
+[]|\OT1/cmr/m/n/12 Unpredicatable me-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
+\OT1/cmr/m/n/12 chan-i-cal fail-ure
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 190--190
+[]|\OT1/cmr/m/n/12 Unpredicatable me-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 190--190
+\OT1/cmr/m/n/12 chan-i-cal fail-ure
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 199--199
+[]\OT1/cmr/m/n/12 Reduced steer-ing re-sults in
+ []
+
+
+Underfull \hbox (badness 4792) in paragraph at lines 199--199
+\OT1/cmr/m/n/12 driver, caus-ing ei-ther a
+ []
+
+
+Underfull \hbox (badness 3536) in paragraph at lines 199--199
+\OT1/cmr/m/n/12 crash or the driver the
+ []
+
+
+Underfull \hbox (badness 7851) in paragraph at lines 210--210
+[]|\OT1/cmr/m/n/12 Spectator move-ment
+ []
+
+
+Underfull \hbox (badness 1337) in paragraph at lines 210--210
+\OT1/cmr/m/n/12 out-side of per-mit-ted
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--217
+[]|\OT1/cmr/m/n/12 Statistical feed-back
+ []
+
+
+Underfull \hbox (badness 2409) in paragraph at lines 227--228
+[]\OT1/cmr/m/n/12 Drivers abil-ity to han-dle an
+ []
+
+
+Overfull \hbox (72.99039pt too wide) in alignment at lines 180--248
+ [] [] [] 
+ []
+
+[6 <C:/Users/Gaz's Laptop/Projects/x/SCS/Sample/Pictures/senna-prost.jpg>]
+[7] [8] [9]
+Underfull \hbox (badness 1205) in paragraph at lines 285--285
+[]\OT1/cmr/m/n/12 Interface & In-
+ []
+
+[10] [11] ("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.aux") ) 
+Here is how much of TeX's memory you used:
+ 2150 strings out of 494045
+ 29517 string characters out of 3145947
+ 199260 words of memory out of 3000000
+ 5439 multiletter control sequences out of 15000+200000
+ 11006 words of font info for 38 fonts, out of 3000000 for 9000
+ 715 hyphenation exceptions out of 8191
+ 27i,8n,23p,1370b,260s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Prog
+ram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Progra
+m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program 
+Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Program F
+iles (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program File
+s (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files (
+x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
+Output written on essay_1.pdf (12 pages, 152189 bytes).
+PDF statistics:
+ 67 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+

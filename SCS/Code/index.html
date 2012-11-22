@@ -1,0 +1,155 @@
+<!DOCTYPE = html>
+<html>
+<head>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="jcanvas.js"></script>
+	<script type="text/javascript" src="index.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="index.css" />
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" type="text/css" media="all" />
+</head>
+<body>
+
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">Unpredicatable mechanical failure resulting in halting of vehicle</a></li>
+        <li><a href="#tabs-2">Unpredicatable mechanical failure without vehicle stop</a></li>
+        <li><a href="#tabs-3">Incorrect tyre fitting in pit lane</a></li>
+		<li><a href="#tabs-4">Speeding in pit lane</a></li>
+        <li><a href="#tabs-5">Spectator movement outside of permitted area</a></li>	
+		<li><a href="#tabs-6">Statistical feedback (ECT) broken</a></li>
+		<li><a href="#tabs-7">Team radio broken</a></li>
+		<li><a href="#tabs-8">Poorly executed overtaking manouever</a></li>
+		<li><a href="#tabs-9">Punctured tyre</a></li>
+		<li><a href="#tabs-10">Safety car mechanical failure</a></li>
+		<li><a href="#tabs-11">Minor driver fatigue</a></li>
+		<li><a href="#tabs-12">Major driver fatigue</a></li>
+		<li><a href="#tabs-13">False start</a></li>
+		<li><a href="#tabs-14">Terrorist attack</a></li>
+		
+    </ul>
+    <div id="tabs-1">
+        <h2>Unpredicatable mechanical failure resulting in halting of vehicle</h2>
+        <p>
+			Number of Exit Roads<input id="exit-roads" type="text"><br><br>
+			Team radio working<input id="team-radio" type="checkbox"><br><br>
+			<input type="button" action="" value="Get local RPN" /><br><br>
+		</p>
+    </div>
+    <div id="tabs-2">
+        <h2>Unpredicatable mechanical failure without vehicle stop</h2>
+        <p>Some text</p>
+    </div>    
+	<div id="tabs-3">
+        <h2>Incorrect tyre fitting in pit lane</h2>
+        <p>
+			Pit lane speed limit imposed <input id="pit-limits" type="checkbox" /><br><br>
+			Adheres to FIA pit lane regulations <input id="pit-regs" type="checkbox" /><br><br>
+		</p>
+    </div>    
+	<div id="tabs-4">
+        <h2>Speeding in pit lane</h2>
+        <p>
+			Pit lane speed limit imposed <input id="pit-limits2" type="checkbox" /><br><br>
+		</p>
+    </div> 
+	<div id="tabs-5">
+        <h2>Spectator movement outside of permitted area</h2>
+        <p class="tab-body">
+			<div class="formItem"><div class="formLabel">Marshalls guarding areas that people cannot access</div> <input id="marshalls-deployed" class="formInput" type="checkbox" /></div>
+			<div class="formItem"><div class="formLabel">Clearly cordorned off area where spectators cannot go</div><input id="restricted-zones" class="formInput" type="checkbox" /></div>
+			<div class="formItem"><div class="formLabel">Spectators allowed on starting grid</div><input id="spectators-grid" class="formInput" type="checkbox" /></div>
+			<div class="formItem"><div class="formLabel">Are there at least 150 security officials and 130 medics/first aiders/doctors</div><input id="medics-available" class="formInput" type="checkbox" /></div>
+			<div class="formItem"><div class="formLabel">Do track conditions adhere to the FIA regulations</div><input id="track-regs" class="formInput" type="checkbox" /></div>
+		</p>
+    </div> 
+	<div id="tabs-6">
+        <h2>Statistical feedback (ECT) broken</h2>
+        <p>Terrorist Probability etc.</p>
+	</div> 
+	<div id="tabs-7">
+        <h2>Team radio broken</h2>
+        <p>Terrorist Probability etc.</p>
+	</div> 
+	<div id="tabs-8">
+        <h2>Poorly executed overtaking manouever</h2>
+        <p>Terrorist Probability etc.</p>
+	</div> 
+	<div id="tabs-9">
+        <h2>Punctured tyre</h2>
+        <p>Terrorist Probability etc.</p>
+	</div> 
+	<div id="tabs-10">
+        <h2>Safety car mechanical failure</h2>
+        <p>Terrorist Probability etc.</p>
+	</div> 
+	<div id="tabs-11">
+        <h2>Minor driver fatigue</h2>
+        <p>Terrorist Probability etc.</p>
+	</div> 
+	<div id="tabs-12">
+        <h2>Major driver fatigue</h2>
+        <p>Terrorist Probability etc.</p>
+	</div> 
+	<div id="tabs-13">
+        <h2>False start</h2>
+        <p><em>This is an unpredicatable event, Formula 1 start procedures involve igniting 5 red lights and then extinguishing them.
+				there is a pause of a random length between 4 and 14 seconds reducing the chances of a driver making a premature manouever based on a guess of when
+				the lights will be extinguished. Click<a href="http://www.formula1.com/inside_f1/understanding_the_sport/5299.html"> here </a> to see the full regulations</em></p>
+	</div> 
+	
+	<div id="tabs-14">
+        <h2>Terrorist Attack</h2>
+        <p>
+			<div class="formItem"><div class="formLabel">Terror Alert Level</div> <input id="terror-alert" class="formInput" type="text" /></div>
+			<div class="formItem"><div class="formLabel">Number of credible threats received</div><input id="terror-threats" class="formInput" type="text" /></div>
+			<div class="formItem"><div class="formLabel">Have you followed local government/police advice regarding terror attacks at the event</div><input id="terror-police" class="formInput" type="checkbox" /></div>
+		</p>
+	</div> 
+	
+</div>
+<!--
+<div id="controls">
+<input id="go-button" type="button" class="ui-widget" value="Go" />
+<input id="refresh-button" type="button" class="ui-widget" value="Refresh" />
+<input id="reset-button" type="button" class="ui-widget" value="Reset" />
+<input id="print-report-button" type="button" class="ui-widget" value="Print Report" />
+</div>
+-->
+<canvas id="riskMatrix" width="1000px" height="500px">
+</canvas>
+
+
+
+
+
+<!-- Regulations -->
+<div id="PitRegs" class="regs" style="visibility:hidden">
+PIT ENTRY, PIT LANE AND PIT EXIT
+23.1 The section of track between the first safety car line and the beginning of the pit lane will be designated the Ågpit entryÅh.
+23.2 The section of track between the end of the pit lane and the second safety car line will be designated the Ågpit exitÅh.
+23.3 The pit lane will be divided into two lanes, the lane closest to the pit wall will be designated the "fast lane" and may be no more than 3.5 metres wide, the lane closest to the garages will be designated the "inner lane".
+Other than when cars are at the end of the pit lane under Articles 38.2 and 41.5, the inner lane is the only area where any work can be carried out on a car. However, no work may be carried out in the fast lane if it is likely to hinder other cars attempting to leave the pit lane.
+23.4 The FIA will allocate garages and an area in the pit lane on a strictly equal basis where each
+team may work and, within each of these designated garage areas, one position where pit stops during both practice and the race may be carried out.
+23.5 Powered devices which assist in lifting any part of a car are forbidden in the pit lane during a race.
+23.6 Unless a car is pushed from the grid at any time during the start procedure, cars may only be driven from the teamÅfs designated garage area to the end of the pit lane.
+Any car(s) driven to the end of the pit lane prior to the start or reÅ]start of a practice session, or any car(s) required to stop at the pit exit during a safety car period, must form up in a line in the fast lane and leave in the order they got there unless another car is unduly delayed.
+23.7 Any driver that is required to start the race from the pit lane may not drive his car from his teamÅfs designated garage area until the 15 minute signal has been given and must stop in a line in the fast lane.
+Under these circumstances working in the fast lane will be permitted but any such work is restricted to :
+a) Starting the engine and any directly associated preparation.
+b) The fitting or removal of permitted cooling and heating devices.
+c) Changes made for driver comfort.
+d) Changing wheels.
+When cars are permitted to leave the pit lane they must do so in the order that was established under Article 38.2 unless another car is unduly delayed. At all times drivers must follow the directions of the marshals.
+23.8 Other than drying, sweeping or any tyre rubber left when cars leave their pit stop position, competitors may not attempt to enhance the grip of the surface in the pit lane unless a problem has been clearly identified and a solution agreed to by the FIA safety delegate.
+23.9 Competitors must not paint lines on any part of the pit lane.
+23.10 Other than under 23.7 above no equipment may be left in the fast lane.
+23.11 Team personnel are only allowed in the pit lane immediately before they are required to work on a car and must withdraw as soon as the work is complete.
+23.12 It is the responsibility of the competitor to release his car after a pit stop only when it is safe to
+do so. The competitor must also provide a means of clearly establishing, when being viewed from the front of the car, when that car was released.
+23.13 Under exceptional circumstances the race director may ask for the pit entry to be closed during the race for safety reasons. At such times drivers may only enter the pit lane in order for essential and entirely evident repairs to be carried out to the car.
+</div>
+</body>
+</html>
