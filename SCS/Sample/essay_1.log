@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.11.12)  22 NOV 2012 13:52
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.11.12)  22 NOV 2012 16:34
 entering extended mode
 **essay_1.tex
 ("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.tex"
@@ -223,18 +223,25 @@ LaTeX Font Info:    ... okay on input line 40.
 \everyMPtoPDFconversion=\toks21
 )
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 64.
+(Font)              <12> on input line 65.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 64.
+(Font)              <8> on input line 65.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 64.
+(Font)              <6> on input line 65.
  [1
 
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] [1]
-("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.toc")
+("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.toc"
+! Misplaced alignment tab character &.
+<argument> \numberline {3}Findings &
+                                     Conclusions
+l.16 ...\numberline {3}Findings & Conclusions}{11}
+                                                  
+? 
+)
 \tf@toc=\write3
  [2]
-Underfull \hbox (badness 10000) in paragraph at lines 111--114
+Underfull \hbox (badness 10000) in paragraph at lines 112--115
 
  []
 
@@ -242,7 +249,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 111--114
 File: ./Pictures/placeholder.png Graphic file (type png)
 
 <use ./Pictures/placeholder.png>
-Package pdftex.def Info: ./Pictures/placeholder.png used on input line 130.
+Package pdftex.def Info: ./Pictures/placeholder.png used on input line 131.
 (pdftex.def)             Requested size: 209.12683pt x 126.97015pt.
 \MTr@childibox=\box36
 \MTr@childix=\count131
@@ -269,84 +276,91 @@ Package pdftex.def Info: ./Pictures/placeholder.png used on input line 130.
 File: ./Pictures/senna-prost.jpg Graphic file (type jpg)
 
 <use ./Pictures/senna-prost.jpg>
-Package pdftex.def Info: ./Pictures/senna-prost.jpg used on input line 170.
+Package pdftex.def Info: ./Pictures/senna-prost.jpg used on input line 171.
 (pdftex.def)             Requested size: 188.21288pt x 121.86916pt.
  [5]
-Underfull \hbox (badness 1057) in paragraph at lines 175--176
+Underfull \hbox (badness 1057) in paragraph at lines 176--177
 \OT1/cmr/m/n/12 the re-sult-ing events. Fig-ure 2 fa-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 183--183
+Underfull \hbox (badness 10000) in paragraph at lines 184--184
 []|\OT1/cmr/m/n/12 Unpredicatable me-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 183--183
+Underfull \hbox (badness 10000) in paragraph at lines 184--184
 \OT1/cmr/m/n/12 chan-i-cal fail-ure
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 190--190
+Underfull \hbox (badness 10000) in paragraph at lines 191--191
 []|\OT1/cmr/m/n/12 Unpredicatable me-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 190--190
+Underfull \hbox (badness 10000) in paragraph at lines 191--191
 \OT1/cmr/m/n/12 chan-i-cal fail-ure
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 199--199
+Underfull \hbox (badness 10000) in paragraph at lines 200--200
 []\OT1/cmr/m/n/12 Reduced steer-ing re-sults in
  []
 
 
-Underfull \hbox (badness 4792) in paragraph at lines 199--199
+Underfull \hbox (badness 4792) in paragraph at lines 200--200
 \OT1/cmr/m/n/12 driver, caus-ing ei-ther a
  []
 
 
-Underfull \hbox (badness 3536) in paragraph at lines 199--199
+Underfull \hbox (badness 3536) in paragraph at lines 200--200
 \OT1/cmr/m/n/12 crash or the driver the
  []
 
 
-Underfull \hbox (badness 7851) in paragraph at lines 210--210
+Underfull \hbox (badness 7851) in paragraph at lines 211--211
 []|\OT1/cmr/m/n/12 Spectator move-ment
  []
 
 
-Underfull \hbox (badness 1337) in paragraph at lines 210--210
+Underfull \hbox (badness 1337) in paragraph at lines 211--211
 \OT1/cmr/m/n/12 out-side of per-mit-ted
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 217--217
+Underfull \hbox (badness 10000) in paragraph at lines 218--218
 []|\OT1/cmr/m/n/12 Statistical feed-back
  []
 
 
-Underfull \hbox (badness 2409) in paragraph at lines 227--228
+Underfull \hbox (badness 2409) in paragraph at lines 228--229
 []\OT1/cmr/m/n/12 Drivers abil-ity to han-dle an
  []
 
 
-Overfull \hbox (72.99039pt too wide) in alignment at lines 180--248
+Overfull \hbox (72.99039pt too wide) in alignment at lines 181--249
  [] [] [] 
  []
 
 [6 <C:/Users/Gaz's Laptop/Projects/x/SCS/Sample/Pictures/senna-prost.jpg>]
 [7] [8] [9]
-Underfull \hbox (badness 1205) in paragraph at lines 285--285
+Underfull \hbox (badness 1205) in paragraph at lines 286--286
 []\OT1/cmr/m/n/12 Interface & In-
  []
 
-[10] [11] ("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.aux") ) 
+[10]
+! Misplaced alignment tab character &.
+<argument> Findings &
+                      Conclusions
+l.304 \section{Findings & Conclusions}
+                                      
+? 
+[11] [12] ("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.aux") ) 
 Here is how much of TeX's memory you used:
  2150 strings out of 494045
  29517 string characters out of 3145947
- 199260 words of memory out of 3000000
+ 200260 words of memory out of 3000000
  5439 multiletter control sequences out of 15000+200000
  11006 words of font info for 38 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
@@ -358,9 +372,9 @@ Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Program F
 iles (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program File
 s (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files (
 x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on essay_1.pdf (12 pages, 152189 bytes).
+Output written on essay_1.pdf (13 pages, 153789 bytes).
 PDF statistics:
- 67 PDF objects out of 1000 (max. 8388607)
+ 71 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  11 words of extra memory for PDF output out of 10000 (max. 10000000)
 

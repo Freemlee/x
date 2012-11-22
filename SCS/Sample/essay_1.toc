@@ -13,3 +13,6 @@
 \contentsline {subsection}{\numberline {2.6}Evaluation}{9}
 \contentsline {subsubsection}{\numberline {2.6.1}Significant Changes to the System}{10}
 \contentsline {subsubsection}{\numberline {2.6.2}Effectiveness of the Tool}{10}
+\contentsline {section}{\numberline {3}Findings & Conclusions}{11}
+\contentsline {subsection}{\numberline {3.1}Further Development}{11}
+\contentsline {subsection}{\numberline {3.2}Conclusive Summary}{12}
