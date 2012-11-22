@@ -71,6 +71,7 @@ listofenergy = []
 listofmags = [] 
 listofzcr = []
 
+print "\n"
 while (count <= 50):
 	if (count < 10):
 		filename1 = "silence_speech/silence_0" + str(count) + ".dat"
@@ -84,14 +85,27 @@ while (count <= 50):
 
 count = 0
 while (count < 100):
+
 	plt.figure(0)
-	plt.scatter(listofenergy[count],listofmags[count])
+	plt.scatter(listofenergy[count],listofmags[count],s=10,c='y')
+	plt.scatter(listofenergy[count+1],listofmags[count+1],s=10,c='b')
+	plt.set_xlabel("Energy")
+	plt.set_ylabel("Magnitude")
+
 	plt.figure(1)
-	plt.scatter(listofenergy[count],listofzcr[count])
+	plt.scatter(listofenergy[count],listofzcr[count],s=10,c='y')
+	plt.scatter(listofenergy[count+1],listofzcr[count+1],s=10,c='b')
+	plt.set_xlabel("Energy")
+	plt.set_ylabel("ZCR")
+	
 	plt.figure(2)
-	plt.scatter(listofmags[count],listofzcr[count])
-	count += 1
-#plt.show()
+	plt.scatter(listofmags[count],listofzcr[count],s=10,c='y')
+	plt.scatter(listofmags[count+1],listofzcr[count+1],s=10,c='b')
+	plt.set_xlabel("Magnitude")
+	plt.set_ylabel("ZCR")
+
+	count += 2
+plt.show()
 
 k = 10
 
@@ -157,18 +171,18 @@ while (count < 10):
 	train_speech_zcr_var = getVariance(training_speech_mean_zcr, training_speech_zcr)
 	train_silence_zcr_var = getVariance(training_silence_mean_zcr, training_silence_zcr)
 
-	print "training speech mean energy: " + str(training_speech_mean_energy) + "\ttraining speech variance energy: " + str(train_speech_energy_var)
-	print "training silence mean energy: " + str(training_silence_mean_energy) + "\ttraining silence variance energy: " + str(train_silence_energy_var)
+	print "------------------- Test Iteration " + str(count) + "-------------------\n\n"
 
-	print "training speech mean mags: " + str(training_speech_mean_mags) + "\ttraining speech variance mags: " + str(train_speech_mags_var)
-	print "training silence mean mags: " + str(training_silence_mean_mags) + "\ttraining silence variance mags: " + str(train_silence_mags_var)
+	print "training speech mean energy: " + str(training_speech_mean_energy)[:9] + "\t\ttraining speech variance energy: " + str(train_speech_energy_var)[:9]
+	print "training silence mean energy: " + str(training_silence_mean_energy)[:9] + "\t\ttraining silence variance energy: " + str(train_silence_energy_var)[:9] + "\n"
 
-	print "training speech mean zcr: " + str(training_speech_mean_zcr) + "\ttraining speech variance zcr: " + str(train_speech_zcr_var)
-	print "training silence mean zcr: " + str(training_silence_mean_zcr) + "\ttraining silence variance zcr: " + str(train_silence_zcr_var) + "\n"
+	print "training speech mean mags: " + str(training_speech_mean_mags)[:9] + "\t\ttraining speech variance mags: " + str(train_speech_mags_var)[:9]
+	print "training silence mean mags: " + str(training_silence_mean_mags)[:9] + "\t\ttraining silence variance mags: " + str(train_silence_mags_var)[:9] +"\n"
+
+	print "training speech mean zcr: " + str(training_speech_mean_zcr)[:9] + "\t\ttraining speech variance zcr: " + str(train_speech_zcr_var)[:9]
+	print "training silence mean zcr: " + str(training_silence_mean_zcr)[:9] + "\t\ttraining silence variance zcr: " + str(train_silence_zcr_var)[:9] + "\n"
 	
 	i = 0;
-
-	#testing for energy
 	
 	while (i < 10):
 
@@ -194,31 +208,53 @@ while (count < 10):
 		diff_percent_similar_speech_z = (diff_speech_z/train_speech_zcr_var)
 		diff_percent_similar_silence_z = (diff_silence_z/train_silence_zcr_var)
 
+		guess = 0;
+		energy_guess = ""
+		mags_guess = ""
+		zcr_guess = ""
+
 	#ENERGY
 		if diff_percent_similar_speech_e < diff_percent_similar_silence_e and diff_percent_similar_speech_e < 1:
-			print "Guess for ENERGY " + str(count) + "-" + str(i) + " is SPEECH"
+			energy_guess = "speech"
 		elif ((diff_percent_similar_silence_e < diff_percent_similar_speech_e) and (diff_percent_similar_silence_e < 1)):
-			print "Guess for ENERGY " + str(count) + "-" + str(i) + " is SILENCE"
+			energy_guess = "silence"
 		else:
-			print "Guess for ENERGY " + str(count) + "-" + str(i) + " is UNKNOWN"
-		i += 1
+			energy_guess = "unknown"
+		print "Guess for ENERGY \t" + str(count) + "-" + str(i) + " is \t" + energy_guess.upper()
+
 	#MAGNITUDE
 		if diff_percent_similar_speech_m < diff_percent_similar_silence_m and diff_percent_similar_speech_m < 1:
-			print "Guess for MAGNITUDE " + str(count) + "-" + str(i) + " is SPEECH"
+			mags_guess = "speech"
 		elif ((diff_percent_similar_silence_m < diff_percent_similar_speech_m) and (diff_percent_similar_silence_m < 1)):
-			print "Guess for MAGNITUDE " + str(count) + "-" + str(i) + " is SILENCE"
+			mags_guess = "silence"
 		else:
-			print "Guess for MAGNITUDE " + str(count) + "-" + str(i) + " is UNKNOWN"
-		i += 1
+			mags_guess = "unknown"
+		print "Guess for MAGNITUDE \t" + str(count) + "-" + str(i) + " is \t" + mags_guess.upper()
 	#ZCR
 		if diff_percent_similar_speech_z < diff_percent_similar_silence_z and diff_percent_similar_speech_z < 1:
-			print "Guess for ZCR " + str(count) + "-" + str(i) + " is SPEECH"
+			zcr_guess = "speech"
 		elif ((diff_percent_similar_silence_z < diff_percent_similar_speech_z) and (diff_percent_similar_silence_z < 1)):
-			print "Guess for ZCR " + str(count) + "-" + str(i) + " is SILENCE"
+			zcr_guess = "silence"
 		else:
-			print "Guess for ZCR " + str(count) + "-" + str(i) + " is UNKNOWN\n"
+			zcr_guess = "unknown"
+		print "Guess for ZCR \t\t" + str(count) + "-" + str(i) + " is \t" + zcr_guess.upper()
+		
+	#FINAL
+		final_guess = "FAIL"
+		if (energy_guess == mags_guess and energy_guess == "unknown"):
+			final_guess = zcr_guess
+		elif (energy_guess == zcr_guess and energy_guess == "unknown"):
+			final_guess = mags_guess
+		elif (mags_guess == zcr_guess and mags_guess == "unknown"):
+			final_guess = energy_guess
+		elif (energy_guess == mags_guess or energy_guess == zcr_guess):
+			final_guess = energy_guess
+		elif (mags_guess == zcr_guess):
+			final_guess = mags_guess
+		else:
+			final_guess = "unknown"
+		print "Final Guess is \t\t" + str(count) + "-" + str(i) + " is \t" + final_guess.upper() + "\n"
 		i += 1
-	
 	count += 1
 
 
