@@ -75,5 +75,4 @@ $(document).ready(function(){
 		i += 1;
 		globalx += 100;
 	}
-	plotMarker(9,9);
 });

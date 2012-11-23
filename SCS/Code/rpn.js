@@ -30,13 +30,8 @@ $(document).ready(function(){
 		$('#severity').text(severity);
 		$('#occurance').text("2");
 		$('#detect').text(detect);
-		if ((severity * detect) > globRpn){
-			globDetr = detect;
-			globSev = severity;
-			globRpn = globDetr * globSev;
-		}
 		$('#rpn').text(severity * 2 * detect);
-		plotMarker(globDetr, globSev);
+		plotMarker(detect, severity);
 	});
 	
 	$('#rpn3').click(function(){
@@ -53,13 +48,8 @@ $(document).ready(function(){
 		$('#occurance').text("2");
 		$('#detect').text("2");
 		$('#rpn').text(severity * 2 * 2);
-		
-		if ((severity * 2) > globRpn){
-			globDetr = 2;
-			globSev = severity;
-			globRpn = globDetr * globSev;
-		}
-		plotMarker(globDetr, globSev);
+		plotMarker(2, severity);
+
 	});
 	
 	$('#rpn4').click(function(){
@@ -72,13 +62,8 @@ $(document).ready(function(){
 		$('#occurance').text("2");
 		$('#detect').text("2");
 		$('#rpn').text(severity * 2 * 2);
-		
-		if ((severity * 2) > globRpn){
-			globDetr = 2;
-			globSev = severity;
-			globRpn = globDetr * globSev;
-		}
-		plotMarker(globDetr, globSev);
+		plotMarker(2, severity);
+
 	});
 	
 	$('#rpn5').click(function(){
@@ -110,13 +95,7 @@ $(document).ready(function(){
 		$('#occurance').text(occur);
 		$('#detect').text(detect);
 		$('#rpn').text(severity * occur * detect);
-		
-		if ((severity * detect) > globRpn){
-			globDetr = detect;
-			globSev = severity;
-			globRpn = globDetr * globSev;
-		}
-		plotMarker(globDetr, globSev);
+		plotMarker(detect, severity);
 	});
 	
 	$('#rpn6').click(function(){
@@ -206,13 +185,7 @@ $(document).ready(function(){
 		$('#occurance').text(occur);
 		$('#detect').text(detect);
 		$('#rpn').text(occur * severity * detect);
-		
-		if ((severity * detect) > globRpn){
-			globDetr = detect;
-			globSev = severity;
-			globRpn = globDetr * globSev;
-		}
-		plotMarker(globDetr, globSev);
+		plotMarker(detect, severity);
 	});
 	
 	$('#rpn13').click(function(){
@@ -266,12 +239,7 @@ $(document).ready(function(){
 		$('#occurance').text(occur);
 		$('#detect').text(detect);
 		$('#rpn').text(occur * severity * detect);
-		
-		if ((severity * detect) > globRpn){
-			globDetr = detect;
-			globSev = severity;
-			globRpn = globDetr * globSev;
-		}
-		plotMarker(globDetr, globSev);
+
+		plotMarker(detect, severity);
 	});
 });
