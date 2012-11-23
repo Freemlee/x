@@ -53,7 +53,7 @@
 \textsc{\Large Safety Critical Systems 4}\\[0.5cm] % Major heading such as course name
 
 \HRule \\[0.4cm]
-{ \huge \bfseries Safety Analysis Tool\\ for a Formula 1 Race }\\[0.4cm] % Title of your document
+{ \huge \bfseries Safety Analysis Tool\\ for a Foruma 1 Race }\\[0.4cm] % Title of your document
 \HRule \\[1.5cm]
 
 \begin{minipage}{0.4\textwidth}
@@ -109,15 +109,15 @@ This tool aims to objectively quantify the risks involved at any specific race b
 
 \section{Introduction to Safety in Formula 1} % Major section
 
-We will examine what has happened in previous Formula 1 events, the consequences of some of these events as well as
+We will examine what has happened in previous Foruma 1 events, the consequences of some of these events as well as
 continuing innovations in safety in the sport. The governing body of Formula 1 is the FIA (Federation Internationale de l'Automobile), who are a very well known name in Formula 1 and all motorsport throughout the world. The responsibility of the safety of the drivers and other members of the Formula 1 team is their responsibility. Nowadays, and all of their regulations for the current season can be found on their website {\bf FIA reference}.\\
 Example citation \cite{Figueredo:2009dg}.\\
 
 %------------------------------------------------
 
-\subsection{Summary of Previous Diasters} % Sub-section
+\subsection{Summary of Previous Disaters} % Sub-section
 
-Formula 1 has had the misfortune of being littered with disastrous past events, a look at a list of fatalities illustrates how fierce the sport can be (see appendix A). It should be noted that in modern Formula 1 events, safety is something that is taken very seriously. The FIA have an ever expanding list of regulations to ensure that the safety of their events is the best it can be.
+Formula 1 has had the misfortune of being littered with disastourous past events, a look at a list of fatalities illustrates how fierce the sport can be (see appendix A). It should be noted that in modern Formula 1 events, safety is something that is taken very seriously. The FIA have an ever expanding list of regulations to ensure that the safety of their events is the best it can be.
 
 %------------------------------------------------
 
@@ -146,17 +146,17 @@ Any seasoned formula 1 fan will tell you that no two races are ever the same, th
 
 \subsection{Tool Description}
 
-I've elected to use the FMECA technique in the development of the tool, the tool will examine a series of failure modes and after entering certain values, output to a risk matrix the Risk Probability Number. The values required to calculate the RPN (The severity, occurrence and detection rates) will be acquired by calculating user input. There will also be a slight amount of cross over between failure modes (for instance if one of the Electronica Control Units or ECUs breaks in a formula 1 car, then the chances of being forewarned of catastrophic engine failure is drastically reduced), for this reason an overall rating will be given which better reflects the probability of an overall accident. The tool also features an ability to view all of the FIA regulations relating to a microcosm of Formula 1 safety, such a pit lane regulations.
+I've elected to use the FMECA technique in the development of the tool, the tool will examine a series of failure modes and after entering certain values, output to a risk matrix the Risk Probablility Number. The values required to calculate the RPN (The severity, occurance and detection rates) will be acquired by calculating user input. There will also be a slight amount of cross over between failure modes (for instance if one of the Electronica Control Units or ECUs breaks in a formula 1 car, then the chances of being forewarned of catastrophic engine failure is drastically reduced), for this reason an overall rating will be given which better reflects the probablilty of an overall accident. The tool also features an ability to view all of the FIA regulations relating to a microcosm of foruma 1 safety, such a pit lane regulations.
 
 \subsection{Block Diagrams}
 
-Block diagrams are a very good tool for determining the weak aspects of a system that may be instrumatal in realising a failure mode. However, for the tool that I developed I decided to omit the diagrams as I felt that the tool is too general to make any substantial gains from the inclusion of the diagrams. In my evaluation section, I discuss the concept of further development of the system to include more failure modes and better numerical analysis in determining the RPN. Should the failure modes be further developed. In this scenario when trying to identify ALL of the safety concerns and failure modes, the usage of block diagrams would aid greatly, however, as I am merely trying to encapsulate a broader spectrum of the main failure modes, the usage of block diagrams seems inapproapriate.
+Placeholder for block diagrams
 
 \subsection{Failure modes}
 
-Please refer to the appendices to see a full list of Failure Modes and Effects that have been incorporated into the tool.
+Place table here
 
-\subsection{Unpredictable Events \& Human Factors} % Sub-section
+\subsection{Unpredicable Events \& Human Factors} % Sub-section
 
 
 \begin{wrapfigure}{l}{0.50\textwidth} % Inline image example
@@ -166,8 +166,83 @@ Please refer to the appendices to see a full list of Failure Modes and Effects t
 \parbox{7cm}{\caption{Aryton Senna deliberately runs Alain Prost off the track at Suzuka in the 1990 Japan Grand Prix}}
 \end{wrapfigure}
 
-It is not always the case in Formula 1 events that the drivers necessarily reflect the risks involved in their racing style. Even after performing a thorough FMECA risk assessment, should a driver or a member of the public exercise a pre-mediated stunt (or simply do something entirely stupid) then there are only certain provisions that can be put in place to handle the resulting events. Figure 2 famously shows Aryton Senna crashing into Alain Prost after feeling cheated that he did not start on the correct side of the track. Although neither driver was injured and safety provisions had been put in place, other than the FIA changing the grid block positions, their is not a lot that they could have done to have prevented the crash. This level of recklessness is not uncommon in formula 1. Indeed a false start by Romain Grojean at Spa this season created a similar crash where he instantly caused three cars (including his own) to be retired straight away. The FIA punished him accordingly and he received a race ban.
+It is not always the case in Formula 1 events that the drivers necessarily reflect the risks involved in their racing style. Even after performing a throurough FMECA risk assessment, should a driver or a member of the public exercise a pre-mediated stunt (or simply do something entirely stupid) then there are only certain provisions that can be put in place to handle the resulting events. Figure 2 famously shows Aryton Senna crashing into Alain Prost after feeling cheated that he did not start on the correct side of the track. Although neither driver was injured and safety provisions had been put in place, other than the FIA changing the grid block positions, their is not a lot that they could have done to have prevented the crash. This level of recklessness is not uncommon in formula 1. Indeed a false start by Romain Grojean at Spa this season created a similar crash where he instantly caused three cars (including his own) to be retired straight away. The FIA punished him accordingly and he received a race ban. Please see Appendix %?
+for a full list of failure modes:
 
+\begin{center}
+	\begin{longtable}{p{4cm} | p{6cm}| p{6cm}}
+		Failure Mode & Local Effect/s & Overall Effect/s \\
+		\hline \hline
+		Unpredicatable mechanical failure resulting in halting of vehicle & 
+			\begin{description} \item{Causes vehicle to veer off track} \item{Whiplash is caused to the driver} \item{Crash with other nearby drivers}
+			\end{description} & 
+			\begin{description} \item{Fill in} \item{Fill in} \item{Fill in}
+			\end{description}\\ \hline
+
+
+		Unpredicatable mechanical failure without vehicle stop &
+			\begin{description} \item{Fill in} \item{Fill in} \item{Fill in}
+			\end{description} & 
+			\begin{description} \item{Fill in} \item{Fill in} \item{Fill in}
+			\end{description}\\ \hline
+
+		Incorrect tyre fitting in pit lane &
+			\begin{description} \item{Tyre come loose, reducing steering} \item{Tyre comes off completely}
+			\end{description} & 
+			\begin{description} \item{Reduced steering results in a bad manouever by the driver, causing either a crash or the driver the beach the car} \item{Car retires in the outer pit lane, obstructing traffic}
+			\end{description}\\ \hline
+
+
+		Speeding in pit lane & %This could enhance the effect of a crash as a result of an incorrect tyre fitting
+			\begin{description} \item{Less time to react to sudden activity change in the outer pit lane} \item{Harder to judge entry speed into inner pit lane}
+			\end{description} & 
+			\begin{description} \item{Increased liklihood of a crash (especially in the event of the above failure mode)}
+			\end{description}\\ \hline
+
+
+		Spectator movement outside of permitted area &
+			\begin{description} \item{Less time to react to sudden activity change in the outer pit lane} \item{Harder to judge entry speed into inner pit lane}
+			\end{description} & 
+			\begin{description} \item{Increased liklihood of a crash (especially in the event of the above failure mode)}
+			\end{description}\\ \hline
+
+
+		Statistical feedback (ECT) broken &
+			\begin{description} \item{Little or no meanful feedback from car to team}
+			\end{description} & 
+			\begin{description} \item{Much harder to predict engine failure, tyre failure or any other mechanical failure, resulting in a decreased detection factor for failure modes based on physical attributes of the car}
+			\end{description}\\ \hline
+
+
+		Team radio broken &
+			\begin{description} \item{Little or no meaningful information exchanged between the driver and team}
+			\end{description} & 
+			\begin{description} \item{Drivers ability to handle an event (such as avoiding debris further down the track) is reduced due to lack of communication}
+			\end{description}\\ \hline
+
+
+		Poorly executed overtaking manouever &
+			\begin{description} \item{Structural damage to car creating debris} \item{Crash into another drive} \item{Car veers off track}}
+			\end{description} & 
+			\begin{description} \item{Drivers ability to handle an event (such as avoiding debris further down the track) is reduced due to lack of communication}
+			\end{description}\\ \hline
+
+		Punctured tyre \\ \hline
+
+
+		Safety car mechanical failure \\ \hline
+
+
+		Minor driver fatigue \\ \hline
+
+
+		Major driver fatigue \\ \hline
+
+
+		False start \\ \hline
+		
+	\end{longtable}
+\end{center}
 
 %------------------------------------------------
 
@@ -187,7 +262,7 @@ In addition to the regulations that the FIA produce, each of the teams is expect
 
 \section{Evaluation}
 
-Due to the scale and nature of Formula 1 events, it would be extremely difficult to do any practical testing of the system. That does not, however, not mean that general testing regarding the method and techniques cannot be performed. A reasonable way of going about the evaluation of the system would be to compare and contrast it to existing systems, and by careful examination of results, make a conclusion based on the accuracy of the system. It should be noted that initial sanity testing against a similar system resulted in a significant change of code, meaning that the version submitted is actually version 3 (with two major re-writes prior to this version), this means that some of the points made in this system have already been changed and will not be visible for 
+Due to the scale and nature of Formula 1 events, it would be extremely difficult to do any practical testing of the system. That does not, however, not mean that general testing regarding the method and techniques cannot be performed. A reasonable way of going about the evaluation of the system would be to compare and contrast it to existing systems, and by careful examination of results, make a conculsion based on the accuracy of the system. It should be noted that initial sanity testing against a similar system resulted in a significant change of code, meaning that the version submitted is actually version 3 (with two major re-writes prior to this version), this means that some of the points made in this system have already been changed and will not be visible for 
 
 \subsubsection{The bathtub failure model}
 There are restrictions placed on the number of cars, engines and gearboxes that each driver may use, this can have an impact on the stability of the car. Each team is allowed no more than two cars at a time and should a new car be used between qualifying and the race, the driver of that car will start the race from the pit lane. Each driver is allowed at most eight engines per season and one gearbox per five races. The bathtub failure model (also known as the bathtub curve) is a model that explains the failure rate of hardware as a function of time illustrating that there is a high failure rate at the start of usage (known as the break in phase) and also towards the end of its life (known as the wear out phase). The tool that has been developed does not account for the changes in gearboxes or engines during the season due to time constraints.
@@ -206,9 +281,9 @@ Criticality Analysis & The initial system also did not feature any criticality a
 
 \subsubsection{Effectiveness of the Tool}
 
-The tool in general seems to function as desired (basic black box testing showed that it output the correct values when given an input certain input set). What still remains unclear is how well the system would function should it be employed in the safety critical analysis of a Formula 1 event. As this system focusses on the broader idea of Formula 1 driver safety and not a particular aspect of it, it has been very difficult to go into detail that, in a real race, would be sufficient enough to perform a serious and accurate test. The current list of FIA regulations spans many pages, with each racing team adhering to these instructions as well as taking their own safety precautions. Although my tool addresses a subset of each of the safety aspects of a formula 1 race (spectator positioning, pit lane procedures, racing maneuvers etc), it does not go as deep as to asses the criticality of each FIA regulation, and as such, cannot possibly claim to be more substantial than the already existing system. That said, in terms of providing a summary (which could be used when presenting a general and overall danger at an event) I would claim that my tool is quite effective. I think its greatest strength is when used in conjunction with another tool or the general regulatory FIA risk assessment, but not as the primary tool in safety analysis.
+The tool in general seems to function as desired (basic black box testing showed that it output the correct values when given an input certain input set). What still remains unclear is how well the system would function should it be employed in the safety critical analysis of a Foruma 1 event. As this system focusses on the broader idea of Fromula 1 driver safety and not a particular aspect of it, it has been very difficult to go into detail that, in a real race, would be sufficient enough to perform a serious and accurate test. The current list of FIA regulations spans many many pages, with each racing team adhering to these instructions as well as taking their own safety precautions. Although my tool addresses a subset of each of the safety aspects of a formula 1 race (spectator positioning, pit lane procedures, racing manouevers etc), it does not go as deep as to asses the criticality of each FIA regulation, and as such, cannot possibly claim to be more substantial than the already existing system. That said, in terms of providing a summary (which could be used when presenting a general and overall danger at an event) I would claim that my tool is quite effective. I think its greatest strength is when used in conjuntion with another tool or the general regulatory FIA risk assessment, but not as the primary tool in safety analysis.
 
-Another factor to consider is that lots of the numbers used to generate the RPNs are constructed using intuition and research where available. For instance, it would be very logical to presume that the detectability of a brake failure would be more likely should the brakes be checked before the race. However, as a system which attempts to output quantitative data, it is very difficult to say indefinitely that this increases the detectability by a factor of x. As a fan of Formula 1 I have used values (where applicable) that I believe to be close to what the actual values would be. This means that any RPN that is output to the risk matrix is not entirely accurate, rather, an approximation of the likelihood of an event against its detectability.
+Another factor to consider is that lots of the numbers used to generate the RPNs are constructed using inituition and research where available. For instance, it would be very logical to presume that the detecability of a brake failure would be more likely should the brakes be checked before the race. However, as a system which attempts to output quantitative data, it is very difficult to say indefinitely that this increases the detectability by a factor of x. As a fan of Formula 1 I have used values (where applicable) that I believe to be close to what the actual values would be. This means that any RPN that is output to the risk matrix is not entirely accurate, rather, an approximation of the liklihood of an event against its detectability.
 
 
 %Highlight that it would never realistically get used. FIA are a v.large and responsible organisation. Safety in F1 has already increased significantly
@@ -219,13 +294,13 @@ Another factor to consider is that lots of the numbers used to generate the RPNs
 
 \section{Findings \& Conclusions}
 \subsection{Further Development}
-In my opinion, there are two ways in which the system can be made to be more accurate. Firstly, the inclusion of more failure modes would allow for more in-depth analysis and would almost certainly highlight new safety concerns. Secondly the addition of real statistical data in the RPN engine would make the values calculated much more accurate. Due to time constraints, mining this data proved insurmountable to the functioning of the system, so intuitive values were used.
+In my opinion, there are two ways in which the system can be made to be more accurate
 \subsection{Conclusive Summary}
-Overall, testers found that the system does a good job of illustrating the safety concerns of a Formula 1 race along with providing insight as to how performing certain actions or adding certain failsafe measures, can mitigate the risks. In this regard they system is a complete success (see above for how it could be further improved). However, I do not feel that by today's strict Formula 1 standards, that my tool would aid organisers of an event. Whilst researching safety and safety history in Formula 1. I very quickly learned what a large field it is
+
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
-\newpage
+
 \begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
 
 \bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
@@ -235,7 +310,7 @@ Figueredo, A.~J. and Wolf, P. S.~A. (2009).
 \newblock {\em Human Nature}, 20:317--330.
  
 \end{thebibliography}
-\newpage
+
 \appendix
 \section{Formula 1 Deaths}
 \begin{center}
