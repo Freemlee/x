@@ -117,15 +117,13 @@ Example citation \cite{Figueredo:2009dg}.\\
 
 \subsection{Summary of Previous Disaters} % Sub-section
 
-\lipsum[1] % Dummy text
+Formula 1 has had the misfortune of being littered with disastourous past events, a look at a list of fatalities illustrates how fierce the sport can be (see appendix A). It should be noted that in modern Formula 1 events, safety is something that is taken very seriously. The FIA have an ever expanding list of regulations to ensure that the safety of their events is the best it can be.
 
 %------------------------------------------------
 
 \subsection{Preventative Measures Taken} % Sub-section
 \subsubsection{In General}
-\lipsum[2] % Dummy text
 \subsubsection{For the 2012 Season}
-\lipsum[3] % Dummy text
 
 \begin{figure}[H] % Example image
 \center{\includegraphics[width=0.5\linewidth]{placeholder}}
@@ -135,11 +133,6 @@ Example citation \cite{Figueredo:2009dg}.\\
 
 %------------------------------------------------
 
-\subsubsection{Subsubsection 2} % Sub-sub-section
-
-\lipsum[4] % Dummy text
-
-\synttree[A[B][C]]
 
 %----------------------------------------------------------------------------------------
 %	MAJOR SECTION 1
@@ -173,9 +166,8 @@ Place table here
 \parbox{7cm}{\caption{Aryton Senna deliberately runs Alain Prost off the track at Suzuka in the 1990 Japan Grand Prix}}
 \end{wrapfigure}
 
-It is not always the case in Formula 1 events that the drivers necessarily reflect the risks involved in their racing style. Even after performing a throurough FMECA risk assessment, should a driver or a member of the public exercise a pre-mediated stunt (or simply do something entirely stupid) then there are only certain provisions that can be put in place to handle the resulting events. Figure 2 famously shows Aryton Senna crashing into Alain Prost after feeling cheated that he did not start on the correct side of the track. Although neither driver was injured and safety provisions had been put in place, other than the FIA changing the grid block positions, their is not a lot that they could have done to have prevented the crash. This level of recklessness is not uncommon in formula 1. Indeed a false start by Romain Grojean at Spa this season created a similar crash where he instantly caused three cars (including his own) to be retired straight away. The FIA punished him accordingly and he received a race ban. 
-
-Failure Modes:
+It is not always the case in Formula 1 events that the drivers necessarily reflect the risks involved in their racing style. Even after performing a throurough FMECA risk assessment, should a driver or a member of the public exercise a pre-mediated stunt (or simply do something entirely stupid) then there are only certain provisions that can be put in place to handle the resulting events. Figure 2 famously shows Aryton Senna crashing into Alain Prost after feeling cheated that he did not start on the correct side of the track. Although neither driver was injured and safety provisions had been put in place, other than the FIA changing the grid block positions, their is not a lot that they could have done to have prevented the crash. This level of recklessness is not uncommon in formula 1. Indeed a false start by Romain Grojean at Spa this season created a similar crash where he instantly caused three cars (including his own) to be retired straight away. The FIA punished him accordingly and he received a race ban. Please see Appendix %?
+for a full list of failure modes:
 
 \begin{center}
 	\begin{longtable}{p{4cm} | p{6cm}| p{6cm}}
@@ -229,8 +221,11 @@ Failure Modes:
 			\end{description}\\ \hline
 
 
-		Poorly executed overtaking manouever \\ \hline
-
+		Poorly executed overtaking manouever &
+			\begin{description} \item{Structural damage to car creating debris} \item{Crash into another drive} \item{Car veers off track}}
+			\end{description} & 
+			\begin{description} \item{Drivers ability to handle an event (such as avoiding debris further down the track) is reduced due to lack of communication}
+			\end{description}\\ \hline
 
 		Punctured tyre \\ \hline
 
@@ -253,28 +248,24 @@ Failure Modes:
 
 %------------------------------------------------
 
-\subsection{Subsubsection 3} % Sub-sub-section
+\subsection{Further Information} % Sub-sub-section
+\subsubsection{Team Responsibility}
+In addition to the regulations that the FIA produce, each of the teams is expected to perform their own safety analysis and fully test their cars before driving, this, however, does not always mean that the vehicle is safe. For instance, this season Lewis Hamilton's McLaren MP4-27 broke unexpectedly 3 times causing him to retire from the races. It is, therefore, very important to understand that despite extensive testing from teams, that there is still (an albeit reduced) risk of unexpected failure.
 
-\begin{description} % Numbered list example
-
-\item[First] \hfill \\
-\lipsum[9] % Dummy text
-
-\item[Second] \hfill \\
-\lipsum[10] % Dummy text
-
-\item[Third] \hfill \\
-\lipsum[11] % Dummy text
-
-\end{description} 
-
+\begin{center}
+\includegraphics[width=0.7\linewidth]{bathtub}
+\parbox{10cm}{\caption{Bathtub model showing hardware life cycle as a function of time}}
+\end{center}
 %----------------------------------------------------------------------------------------
 %	EVALUATION
 %----------------------------------------------------------------------------------------
 
-\subsection{Evaluation}
+\section{Evaluation}
 
 Due to the scale and nature of Formula 1 events, it would be extremely difficult to do any practical testing of the system. That does not, however, not mean that general testing regarding the method and techniques cannot be performed. A reasonable way of going about the evaluation of the system would be to compare and contrast it to existing systems, and by careful examination of results, make a conculsion based on the accuracy of the system. It should be noted that initial sanity testing against a similar system resulted in a significant change of code, meaning that the version submitted is actually version 3 (with two major re-writes prior to this version), this means that some of the points made in this system have already been changed and will not be visible for 
+
+\subsubsection{The bathtub failure model}
+There are restrictions placed on the number of cars, engines and gearboxes that each driver may use, this can have an impact on the stability of the car. Each team is allowed no more than two cars at a time and should a new car be used between qualifying and the race, the driver of that car will start the race from the pit lane. Each driver is allowed at most eight engines per season and one gearbox per five races. The bathtub failure model (also known as the bathtub curve) is a model that explains the failure rate of hardware as a function of time illustrating that there is a high failure rate at the start of usage (known as the break in phase) and also towards the end of its life (known as the wear out phase). The tool that has been developed does not account for the changes in gearboxes or engines during the season due to time constraints.
 
 \subsubsection{Significant Changes to the System}
 
@@ -319,6 +310,64 @@ Figueredo, A.~J. and Wolf, P. S.~A. (2009).
 \newblock {\em Human Nature}, 20:317--330.
  
 \end{thebibliography}
+
+\appendix
+\section{Formula 1 Deaths}
+\begin{center}
+\begin{longtable}{p{8cm} p{4cm}}
+Name & Date of Death \\
+\hline \\
+Cameron Earl (UK)&June 18, 1952 \\
+ Chet Miller (USA)&May 15, 1953\\
+ Charles de Tornaco (BEL)&September 18, 1953\\
+ Onofre Marimón (ARG)&July 31, 1954\\
+ Mario Alborghetti (ITA)&April 11, 1955\\
+ Manny Ayulo (USA)&May 16, 1955\\
+ Bill Vukovich (USA)&May 30, 1955\\
+ Eugenio Castellotti (ITA)&March 14, 1957\\
+ Keith Andrews (USA)&May 15, 1957\\
+ Pat O'Connor (USA)&May 30, 1958\\
+ Luigi Musso (ITA)&July 6, 1958\\
+ Peter Collins (UK)&August 3, 1958\\
+ Stuart Lewis-Evans (UK)&September 19, 1958\\
+ Jerry Unser, Jr. (USA)&May 17, 1959\\
+ Bob Cortner (USA)&May 19, 1959\\
+ Harry Schell (USA)&May 13, 1960\\
+ Chris Bristow (UK)&June 19, 1960\\
+ Alan Stacey (UK)&June 19, 1960\\
+ Shane Summers (UK)&June 1, 1961\\
+ Giulio Cabianca (ITA)&June 15, 1961\\
+ Wolfgang von Trips (GER)&September 10, 1961\\
+ Ricardo Rodríguez (MEX)&November 1, 1962\\
+ Gary Hocking (Rhodesia and Nyasaland)&December 21, 1962\\
+ Carel Godin de Beaufort (NED)&August 2, 1964\\
+ John Taylor (UK)[C]&August 7, 1966\\
+ Lorenzo Bandini (ITA)[D]&May 7, 1967\\
+ Bob Anderson (UK)&August 14, 1967\\
+ Jo Schlesser (FRA)&July 7, 1968\\
+ Gerhard Mitter (GER)&August 2, 1969\\
+ Martin Brain (UK)&May 25, 1970\\
+ Piers Courage (UK)&June 7, 1970\\
+ Jochen Rindt (AUT)&September 5, 1970\\
+ Jo Siffert (SUI)&October 24, 1971\\
+ Roger Williamson (UK)&July 29, 1973\\
+ François Cevert (FRA)&October 6, 1973\\
+ Peter Revson (USA)&March 30, 1974\\
+ Helmuth Koinigg (AUT)&October 6, 1974\\
+ Mark Donohue (USA)&August 19, 1975\\
+ Tom Pryce (UK)[E]&March 5, 1977\\
+ Brian McGuire (AUS)&August 29, 1977\\
+ Ronnie Peterson (SWE)[F]&September 10, 1978\\
+ Patrick Depailler (FRA)&August 1, 1980\\
+ Gilles Villeneuve (CAN)&May 8, 1982\\
+ Riccardo Paletti (ITA)&June 13, 1982\\
+ Elio de Angelis (ITA)&May 15, 1986\\
+ Roland Ratzenberger (AUT)&April 30, 1994\\
+ Ayrton Senna (BRA)&May 1, 1994\\
+ John Dawson-Damer (UK)&June 24, 2000\\
+ Fritz Glatz (AUT)&July 14, 2002\\
+\end{longtable}
+\end{center}
 
 %----------------------------------------------------------------------------------------
 

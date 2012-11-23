@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.11.12)  22 NOV 2012 16:34
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.11.12)  23 NOV 2012 03:19
 entering extended mode
 **essay_1.tex
 ("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.tex"
@@ -233,9 +233,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] [1]
 ("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.toc"
 ! Misplaced alignment tab character &.
-<argument> \numberline {3}Findings &
+<argument> \numberline {4}Findings &
                                      Conclusions
-l.16 ...\numberline {3}Findings & Conclusions}{11}
+l.17 ...\numberline {4}Findings & Conclusions}{11}
                                                   
 ? 
 )
@@ -245,136 +245,159 @@ Underfull \hbox (badness 10000) in paragraph at lines 112--115
 
  []
 
-[3] <./Pictures/placeholder.png, id=20, 281.05pt x 170.6375pt>
+<./Pictures/placeholder.png, id=17, 281.05pt x 170.6375pt>
 File: ./Pictures/placeholder.png Graphic file (type png)
 
 <use ./Pictures/placeholder.png>
-Package pdftex.def Info: ./Pictures/placeholder.png used on input line 131.
+Package pdftex.def Info: ./Pictures/placeholder.png used on input line 129.
 (pdftex.def)             Requested size: 209.12683pt x 126.97015pt.
-\MTr@childibox=\box36
-\MTr@childix=\count131
-\MTr@childiy=\count132
-\MTr@childiv=\count133
-\MTr@childiw=\count134
-\MTr@childiheight=\count135
-\MTr@childidepth=\count136
-\MTr@childibranchmult=\count137
-\MTr@childipicheight=\count138
-\MTr@childitriangle=\count139
-\MTr@childiibox=\box37
-\MTr@childiix=\count140
-\MTr@childiiy=\count141
-\MTr@childiiv=\count142
-\MTr@childiiw=\count143
-\MTr@childiiheight=\count144
-\MTr@childiidepth=\count145
-\MTr@childiibranchmult=\count146
-\MTr@childiipicheight=\count147
-\MTr@childiitriangle=\count148
- [4 <C:/Users/Gaz's Laptop/Projects/x/SCS/Sample/Pictures/placeholder.png>]
-<./Pictures/senna-prost.jpg, id=24, 401.5pt x 259.97125pt>
+ [3 <C:/Users/Gaz's Laptop/Projects/x/SCS/Sample/Pictures/placeholder.png>]
+<./Pictures/senna-prost.jpg, id=21, 401.5pt x 259.97125pt>
 File: ./Pictures/senna-prost.jpg Graphic file (type jpg)
 
 <use ./Pictures/senna-prost.jpg>
-Package pdftex.def Info: ./Pictures/senna-prost.jpg used on input line 171.
+Package pdftex.def Info: ./Pictures/senna-prost.jpg used on input line 164.
 (pdftex.def)             Requested size: 188.21288pt x 121.86916pt.
- [5]
-Underfull \hbox (badness 1057) in paragraph at lines 176--177
+
+Underfull \hbox (badness 1057) in paragraph at lines 169--171
 \OT1/cmr/m/n/12 the re-sult-ing events. Fig-ure 2 fa-
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 184--184
+[4 <C:/Users/Gaz's Laptop/Projects/x/SCS/Sample/Pictures/senna-prost.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 176--176
 []|\OT1/cmr/m/n/12 Unpredicatable me-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 184--184
+Underfull \hbox (badness 10000) in paragraph at lines 176--176
 \OT1/cmr/m/n/12 chan-i-cal fail-ure
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 191--191
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
 []|\OT1/cmr/m/n/12 Unpredicatable me-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 191--191
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
 \OT1/cmr/m/n/12 chan-i-cal fail-ure
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 200--200
+Underfull \hbox (badness 10000) in paragraph at lines 192--192
 []\OT1/cmr/m/n/12 Reduced steer-ing re-sults in
  []
 
 
-Underfull \hbox (badness 4792) in paragraph at lines 200--200
+Underfull \hbox (badness 4792) in paragraph at lines 192--192
 \OT1/cmr/m/n/12 driver, caus-ing ei-ther a
  []
 
 
-Underfull \hbox (badness 3536) in paragraph at lines 200--200
+Underfull \hbox (badness 3536) in paragraph at lines 192--192
 \OT1/cmr/m/n/12 crash or the driver the
  []
 
 
-Underfull \hbox (badness 7851) in paragraph at lines 211--211
+Underfull \hbox (badness 7851) in paragraph at lines 203--203
 []|\OT1/cmr/m/n/12 Spectator move-ment
  []
 
 
-Underfull \hbox (badness 1337) in paragraph at lines 211--211
+Underfull \hbox (badness 1337) in paragraph at lines 203--203
 \OT1/cmr/m/n/12 out-side of per-mit-ted
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 218--218
+Underfull \hbox (badness 10000) in paragraph at lines 210--210
 []|\OT1/cmr/m/n/12 Statistical feed-back
  []
 
 
-Underfull \hbox (badness 2409) in paragraph at lines 228--229
+Underfull \hbox (badness 2409) in paragraph at lines 220--221
+[]\OT1/cmr/m/n/12 Drivers abil-ity to han-dle an
+ []
+
+! Extra }, or forgotten \endgroup.
+l.225 ...nother drive} \item{Car veers off track}}
+                                                  
+? 
+
+Underfull \hbox (badness 2409) in paragraph at lines 227--228
 []\OT1/cmr/m/n/12 Drivers abil-ity to han-dle an
  []
 
 
-Overfull \hbox (72.99039pt too wide) in alignment at lines 181--249
+Overfull \hbox (72.99039pt too wide) in alignment at lines 173--244
  [] [] [] 
  []
 
-[6 <C:/Users/Gaz's Laptop/Projects/x/SCS/Sample/Pictures/senna-prost.jpg>]
-[7] [8] [9]
-Underfull \hbox (badness 1205) in paragraph at lines 286--286
+[5] [6] [7] <./Pictures/bathtub.jpg, id=35, 636.12656pt x 296.60812pt>
+File: ./Pictures/bathtub.jpg Graphic file (type jpg)
+
+<use ./Pictures/bathtub.jpg>
+Package pdftex.def Info: ./Pictures/bathtub.jpg used on input line 256.
+(pdftex.def)             Requested size: 292.77629pt x 136.50928pt.
+
+
+! LaTeX Error: \caption outside float.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.257 ...rdware life cycle as a function of time}}
+                                                  
+? 
+! Undefined control sequence.
+\caption ... \endcsname \fi \fi \@dblarg {\@tempf 
+                                                  \@captype }
+l.257 ...rdware life cycle as a function of time}}
+                                                  
+? 
+! Undefined control sequence.
+\caption ...e \fi \fi \@dblarg {\@tempf \@captype 
+                                                  }
+l.257 ...rdware life cycle as a function of time}}
+                                                  
+? 
+[8 <C:/Users/Gaz's Laptop/Projects/x/SCS/Sample/Pictures/bathtub.jpg>]
+Underfull \hbox (badness 1205) in paragraph at lines 277--277
 []\OT1/cmr/m/n/12 Interface & In-
  []
 
-[10]
+[9] [10]
 ! Misplaced alignment tab character &.
 <argument> Findings &
                       Conclusions
-l.304 \section{Findings & Conclusions}
+l.295 \section{Findings & Conclusions}
                                       
 ? 
-[11] [12] ("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.aux") ) 
+Missing character: There is no Ã in font cmr12!
+Missing character: There is no ³ in font cmr12!
+Missing character: There is no Ã in font cmr12!
+Missing character: There is no ­ in font cmr12!
+Missing character: There is no Ã in font cmr12!
+Missing character: There is no § in font cmr12!
+[11] [12] [13] ("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.aux") ) 
 Here is how much of TeX's memory you used:
- 2150 strings out of 494045
- 29517 string characters out of 3145947
- 200260 words of memory out of 3000000
- 5439 multiletter control sequences out of 15000+200000
+ 2137 strings out of 494045
+ 29353 string characters out of 3145947
+ 200296 words of memory out of 3000000
+ 5425 multiletter control sequences out of 15000+200000
  11006 words of font info for 38 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 27i,8n,23p,1370b,260s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Prog
-ram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Progra
-m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program 
-Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Program F
-iles (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program File
-s (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files (
-x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on essay_1.pdf (13 pages, 153789 bytes).
+ 27i,8n,23p,1370b,261s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:
+/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/P
+rogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Pro
+gram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Prog
+ram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program
+ Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Fi
+les (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
+Output written on essay_1.pdf (14 pages, 178053 bytes).
 PDF statistics:
- 71 PDF objects out of 1000 (max. 8388607)
+ 75 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -5,6 +5,7 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="jcanvas.js"></script>
 	<script type="text/javascript" src="index.js"></script>
+	<script type="text/javascript" src="rpn.js"></script>
 	
 	<link rel="stylesheet" type="text/css" href="index.css" />
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" type="text/css" media="all" />
@@ -23,18 +24,17 @@
 		<li><a href="#tabs-8">Poorly executed overtaking manouever</a></li>
 		<li><a href="#tabs-9">Punctured tyre</a></li>
 		<li><a href="#tabs-10">Safety car mechanical failure</a></li>
-		<li><a href="#tabs-11">Minor driver fatigue</a></li>
-		<li><a href="#tabs-12">Major driver fatigue</a></li>
-		<li><a href="#tabs-13">False start</a></li>
-		<li><a href="#tabs-14">Terrorist attack</a></li>
+		<li><a href="#tabs-11">Driver fatigue</a></li>
+		<li><a href="#tabs-12">False start</a></li>
+		<li><a href="#tabs-13">Terrorist attack</a></li>
 		
     </ul>
     <div id="tabs-1">
         <h2>Unpredicatable mechanical failure resulting in halting of vehicle</h2>
         <p>
-			Number of Exit Roads<input id="exit-roads" type="text"><br><br>
-			Team radio working<input id="team-radio" type="checkbox"><br><br>
-			<input type="button" action="" value="Get local RPN" /><br><br>
+			<div class="formItem"><div class="formLabel">Number of Exit Roads</div><input id="exit-roads" class="formInput" type="text" /></div>
+			<div class="formItem"><div class="formLabel">Team radio working</div><input id="team-radio" class="formInput" type="checkbox" /></div>
+			<br><div class="formItem"><input type="button" id="rpn1" class="formInput" action="" value="Get local RPN" /></div>
 		</p>
     </div>
     <div id="tabs-2">
@@ -44,14 +44,16 @@
 	<div id="tabs-3">
         <h2>Incorrect tyre fitting in pit lane</h2>
         <p>
-			Pit lane speed limit imposed <input id="pit-limits" type="checkbox" /><br><br>
-			Adheres to FIA pit lane regulations <input id="pit-regs" type="checkbox" /><br><br>
+			<div class="formItem"><div class="formLabel">Pit lane speed limit imposed</div> <input id="pit-limits" class="formInput" type="checkbox" /></div>
+			<div class="formItem"><div class="formLabel">Adheres to FIA pit lane regulations</div> <input id="pit-regs" class="formInput" type="checkbox" /></div>
+			<br><div class="formItem"><input type="button" id="rpn3" class="formInput" action="" value="Get local RPN" /></div>
 		</p>
     </div>    
 	<div id="tabs-4">
         <h2>Speeding in pit lane</h2>
         <p>
-			Pit lane speed limit imposed <input id="pit-limits2" type="checkbox" /><br><br>
+			<div class="formItem"><div class="formLabel">Pit lane speed limit imposed</div> <input id="pit-limits2" class="formInput" type="checkbox" /></div>
+			<br><div class="formItem"><input type="button" id="rpn4" class="formInput" action="" value="Get local RPN" /></div>
 		</p>
     </div> 
 	<div id="tabs-5">
@@ -62,19 +64,37 @@
 			<div class="formItem"><div class="formLabel">Spectators allowed on starting grid</div><input id="spectators-grid" class="formInput" type="checkbox" /></div>
 			<div class="formItem"><div class="formLabel">Are there at least 150 security officials and 130 medics/first aiders/doctors</div><input id="medics-available" class="formInput" type="checkbox" /></div>
 			<div class="formItem"><div class="formLabel">Do track conditions adhere to the FIA regulations</div><input id="track-regs" class="formInput" type="checkbox" /></div>
+			<br><div class="formItem"><input type="button" id="rpn5" class="formInput" action="" value="Get local RPN" /></div>		
 		</p>
     </div> 
 	<div id="tabs-6">
         <h2>Statistical feedback (ECT) broken</h2>
-        <p>Terrorist Probability etc.</p>
+        <p>
+			<em>This will not directly cause an accident, however, it may reduce the detectability of other faults. This system feeds back information such as 
+				engine temperature, brake temperature, aerodynamic flow and tyre temperature. This will make it much harder for the team to advise about probable
+				imminent failure with regards to faults in these areas</em>
+			<div class="formItem"><div class="formLabel">ECT checked before race</div><input id="ect-check" class="formInput" type="checkbox" /></div>
+			<div class="formItem"><div class="formLabel">Number of ECT malfunctions earlier in season</div><input id="ect-failures" class="formInput" type="text" /></div>
+			<br><div class="formItem"><input type="button" id="rpn6" class="formInput" action="" value="Get local RPN" /></div>
+		</p>
 	</div> 
 	<div id="tabs-7">
         <h2>Team radio broken</h2>
-        <p>Terrorist Probability etc.</p>
+        <p>
+			<em>The failure of the radio shouldn't directly cause an accident, however, the indirect effects may be drastic, this could include driver hitting 
+			debris or crashing into a stationary vehicle if not warned by their team. However, the use of flags in Formula 1 reduces this risk</em>
+			<div class="formItem"><div class="formLabel">Flags placed at regular locations throughout the track</div><input id="flags-available" class="formInput" type="checkbox" /></div>
+			<div class="formItem"><div class="formLabel">Radio checked before race</div><input id="radio-checked" class="formInput" type="checkbox" /></div>
+			<br><div class="formItem"><input type="button" id="rpn7" class="formInput" action="" value="Get local RPN" /></div>
+		</p>
 	</div> 
 	<div id="tabs-8">
         <h2>Poorly executed overtaking manouever</h2>
-        <p>Terrorist Probability etc.</p>
+			<p><em>A poorly executed manouever will directly cause an accident and may or may not be triggered (or aided by) another failure mode. 
+			For instance, reduced steering as a result of a punctured tyre.</em>
+			<div class="formItem"><div class="formLabel">Number of ECT malfunctions earlier in season</div><input id="expected-crashes" class="formInput" type="text" /></div>
+			<br><div class="formItem"><input type="button" id="rpn8" class="formInput" action="" value="Get local RPN" /></div>
+		</p>
 	</div> 
 	<div id="tabs-9">
         <h2>Punctured tyre</h2>
@@ -82,37 +102,46 @@
 	</div> 
 	<div id="tabs-10">
         <h2>Safety car mechanical failure</h2>
-        <p>Terrorist Probability etc.</p>
+        <p>
+			<div class="formItem"><div class="formLabel">Replacement cars available</div><input id="number-safety-cars" class="formInput" type="text" /></div>
+			<div class="formItem"><div class="formLabel">Safety cars checked before race</div><input id="safety-car-checked" class="formInput" type="checkbox" /></div>
+			<br><div class="formItem"><input type="button" id="rpn10" class="formInput" action="" value="Get local RPN" /></div>
+		</p>
 	</div> 
 	<div id="tabs-11">
-        <h2>Minor driver fatigue</h2>
-        <p>Terrorist Probability etc.</p>
-	</div> 
-	<div id="tabs-12">
-        <h2>Major driver fatigue</h2>
+        <h2>Driver fatigue</h2>
         <p>
 			<div class="formItem"><div class="formLabel">Hydration systems checked in each driver's helmet</div> <input id="fatigue-hydration" class="formInput" type="checkbox" /></div>
 			<div class="formItem"><div class="formLabel">Team radio working</div> <input id="fatigue-radio" class="formInput" type="checkbox" /></div>
 			<div class="formItem"><div class="formLabel">Average race time</div> <input id="race-time" class="formInput" type="text" /></div>
 			<div class="formItem"><div class="formLabel">Max G-force in race</div> <input id="g-force" class="formInput" type="text" /></div>
+			<br><div class="formItem"><input type="button" id="rpn11" class="formInput" action="" value="Get local RPN" /></div>
 		</p>
 	</div> 
-	<div id="tabs-13">
+	<div id="tabs-12">
         <h2>False start</h2>
         <p><em>This is an unpredicatable event, Formula 1 start procedures involve igniting 5 red lights and then extinguishing them.
 				there is a pause of a random length between 4 and 14 seconds reducing the chances of a driver making a premature manouever based on a guess of when
 				the lights will be extinguished. Click<a href="http://www.formula1.com/inside_f1/understanding_the_sport/5299.html"> here </a> to see the full regulations</em></p>
 	</div> 
 	
-	<div id="tabs-14">
+	<div id="tabs-13">
         <h2>Terrorist Attack</h2>
         <p>
 			<div class="formItem"><div class="formLabel">Terror Alert Level</div> <input id="terror-alert" class="formInput" type="text" /></div>
 			<div class="formItem"><div class="formLabel">Number of credible threats received</div><input id="terror-threats" class="formInput" type="text" /></div>
 			<div class="formItem"><div class="formLabel">Have you followed local government/police advice regarding terror attacks at the event</div><input id="terror-police" class="formInput" type="checkbox" /></div>
+			<br><div class="formItem"><input type="button" id="rpn13" class="formInput" action="" value="Get local RPN" /></div>		
 		</p>
 	</div> 
 	
+</div>
+
+<div id="results" style=" position:absolute;top: 30px; right: 80px; font-size: 28px;">
+Severity: <span id="severity"></span><br>
+Occurance: <span id="occurance"></span><br>
+Detectability: <span id="detect"></span><br>
+RPN: <span id="rpn"></span><br>
 </div>
 <!--
 <div id="controls">
