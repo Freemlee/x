@@ -87,7 +87,7 @@ Dr. Chris \textsc{Johnson} % Supervisor's Name
 
 Formula 1 has always been a sport in which tragedy has had the misfortune to echo throughout its history. The often fervent debate surrounding the sport's safety has lead to much increased safety standards within the past 30 years as there has not been a death in the sport for many years now (although there have been recent deaths in similar sports MotoGP and Indy 500). However, the sport transitioning into a new era has brought about new threats and concerns to both drivers and members of the public. A good example of this could be the terrorist threats this year in advance of the Bahrain GP.
 
-After the infamous death of Aryton Senna in Imola on the 1st of May 1994 (and Roland Ratzenberger in qualifying the day before), many pioneered for increased standards within the sport. Although the actual rate of innovation in safety after this did not increase at all. Innovations continued to be made before the deaths of Senna and Ratzenberger (such as mandatory fire proof clothing for all pit crew and the introduction of a safety car after crashes). The generally acc
+After the infamous death of Aryton Senna in Imola on the 1st of May 1994 (and Roland Ratzenberger in qualifying the day before), many pioneered for increased standards within the sport. Although the actual rate of innovation in safety after this did not increase at all. Innovations continued to be made before the deaths of Senna and Ratzenberger (such as mandatory fire proof clothing for all pit crew and the introduction of a safety car after crashes).
 
 This tool aims to objectively quantify the risks involved at any specific race by accepting an array of conditions as an input and then contrasting the likelihood of these conditions to occur and cause an accident with that of the presumed and generally accepted effectiveness of the measures designed to counteract them. The focal point of safety will be on that of the drivers, although, there will invariably be some cross over with other people included in a formula 1 event, this will be especially highlighted when this impacts on the driver in some way.
 
@@ -110,8 +110,7 @@ This tool aims to objectively quantify the risks involved at any specific race b
 \section{Introduction to Safety in Formula 1} % Major section
 
 We will examine what has happened in previous Formula 1 events, the consequences of some of these events as well as
-continuing innovations in safety in the sport. The governing body of Formula 1 is the FIA (Federation Internationale de l'Automobile), who are a very well known name in Formula 1 and all motorsport throughout the world. The responsibility of the safety of the drivers and other members of the Formula 1 team is their responsibility. Nowadays, and all of their regulations for the current season can be found on their website {\bf FIA reference}.\\
-Example citation \cite{Figueredo:2009dg}.\\
+continuing innovations in safety in the sport. The governing body of Formula 1 is the FIA (Federation Internationale de l'Automobile), who are a very well known name in Formula 1 and all motorsport throughout the world. The responsibility of the safety of the drivers and other members of the Formula 1 team is their responsibility. Nowadays, and all of their regulations for the current season can be found on their website\\
 
 %------------------------------------------------
 
@@ -122,14 +121,7 @@ Formula 1 has had the misfortune of being littered with disastrous past events, 
 %------------------------------------------------
 
 \subsection{Preventative Measures Taken} % Sub-section
-\subsubsection{In General}
-\subsubsection{For the 2012 Season}
-
-\begin{figure}[H] % Example image
-\center{\includegraphics[width=0.5\linewidth]{placeholder}}
-\caption{Example image.}
-\label{fig:speciation}
-\end{figure}
+There have been many past attempts to make Formula 1 100\% safe. Some examples include the addition of a track safety car, gravel traps to slow the cars as well as permentent medical centres being compulsory at all Formula 1 tracks. There were, of course, always people to push the changes through. Jackie Stewart, a now retired Formula 1 driver was considered the ambassador of safety for the sport. He first became concerned with the safety of the sport after a crash in the Spa Grand Prix when he became trapped under his car after a crash. After a long wait for an ambulance to arrive, he then had to endure a long and arduous trip to the hospital where, of course, the ambulance got lost en route. Luckily he was not seriously injured. The shock statistic of the time, he claims, was that people racing during his era had a roughly a two in three chance of dying. The last death in the sport was that of Aryton Senna in 1994, and since then the FIA have endeavoured to ensure that safety remains paramount in Formula 1 safety. Attached in the references is a history of all the major safety changes made throughout the seventies, eighties and nineties.
 
 %------------------------------------------------
 
@@ -140,17 +132,17 @@ Formula 1 has had the misfortune of being littered with disastrous past events, 
 
 \section{Safety Analysis} % Major section
 
-Any seasoned formula 1 fan will tell you that no two races are ever the same, this of course is true for many sporting event, however, where formula 1 (and motorsport in general) differ is that each driver is in command of a machine that can cause immense damage to other drivers.
+Any seasoned formula 1 fan will tell you that no two races are ever the same, this of course is true for many sporting events, however, where formula 1 (and motorsport in general) differ is that each driver is in command of a machine that can cause immense damage to other drivers.
 
 %------------------------------------------------
 
 \subsection{Tool Description}
 
-I've elected to use the FMECA technique in the development of the tool, the tool will examine a series of failure modes and after entering certain values, output to a risk matrix the Risk Probability Number. The values required to calculate the RPN (The severity, occurrence and detection rates) will be acquired by calculating user input. There will also be a slight amount of cross over between failure modes (for instance if one of the Electronica Control Units or ECUs breaks in a formula 1 car, then the chances of being forewarned of catastrophic engine failure is drastically reduced), for this reason an overall rating will be given which better reflects the probability of an overall accident. The tool also features an ability to view all of the FIA regulations relating to a microcosm of Formula 1 safety, such a pit lane regulations.
+I've elected to use a technique based upon the FMECA technique in the development of the tool, the tool will examine a series of failure modes and after entering certain values, output to a risk matrix the detectability vs severity of that particular failure mode. The tool also displays in the top right hand corner the RPN based on the occurance rate which is also calculated for each failure mode (but not reflected in the risk matrix). The values required to calculate the RPN (The severity, occurrence and detection rates) will be calculated based on  user input. There will also be a slight amount of cross over between failure modes (for instance if one of the Electronica Control Units or ECUs breaks in a formula 1 car, then the chances of being forewarned of catastrophic engine failure is drastically reduced), unfortunately, this is not reflected in the implementation, although, it is highlighted for each failure mode.
 
 \subsection{Block Diagrams}
 
-Block diagrams are a very good tool for determining the weak aspects of a system that may be instrumatal in realising a failure mode. However, for the tool that I developed I decided to omit the diagrams as I felt that the tool is too general to make any substantial gains from the inclusion of the diagrams. In my evaluation section, I discuss the concept of further development of the system to include more failure modes and better numerical analysis in determining the RPN. Should the failure modes be further developed. In this scenario when trying to identify ALL of the safety concerns and failure modes, the usage of block diagrams would aid greatly, however, as I am merely trying to encapsulate a broader spectrum of the main failure modes, the usage of block diagrams seems inapproapriate.
+Block diagrams are a very good tool for determining the weak aspects of a system that may be instrumatal in realising a failure mode. However, for the tool that I have developed I decided to omit the diagrams as I felt that the tool is too general to make any substantial gains from the inclusion of the diagrams. In my evaluation section, I discuss the concept of further development of the system to include more failure modes and better numerical analysis in determining the RPN. Should the failure modes be further developed. In this scenario when trying to identify ALL of the safety concerns and failure modes, the usage of block diagrams would aid greatly, however, as I am merely trying to encapsulate a broader spectrum of the main failure modes, the usage of block diagrams seems inapproapriate.
 
 \subsection{Failure modes}
 
@@ -166,8 +158,7 @@ Please refer to the appendices to see a full list of Failure Modes and Effects t
 \parbox{7cm}{\caption{Aryton Senna deliberately runs Alain Prost off the track at Suzuka in the 1990 Japan Grand Prix}}
 \end{wrapfigure}
 
-It is not always the case in Formula 1 events that the drivers necessarily reflect the risks involved in their racing style. Even after performing a thorough FMECA risk assessment, should a driver or a member of the public exercise a pre-mediated stunt (or simply do something entirely stupid) then there are only certain provisions that can be put in place to handle the resulting events. Figure 2 famously shows Aryton Senna crashing into Alain Prost after feeling cheated that he did not start on the correct side of the track. Although neither driver was injured and safety provisions had been put in place, other than the FIA changing the grid block positions, their is not a lot that they could have done to have prevented the crash. This level of recklessness is not uncommon in formula 1. Indeed a false start by Romain Grojean at Spa this season created a similar crash where he instantly caused three cars (including his own) to be retired straight away. The FIA punished him accordingly and he received a race ban.
-
+It is not always the case in Formula 1 events that the drivers necessarily reflect the risks involved in their racing style. Even after performing a thorough risk assessment (FMECA or otherwise), should a driver or a member of the public exercise a pre-mediated stunt (or simply do something entirely stupid) then there are only certain provisions that can be put in place to handle the resulting events. Figure 2 famously shows Aryton Senna crashing into Alain Prost after feeling cheated that he did not start on the correct side of the track. Although neither driver was injured and safety provisions had been put in place, other than the FIA changing the grid block positions, there is not a lot that they could have done to have prevented the crash. This level of recklessness is not uncommon in formula 1. Indeed a false start by Romain Grojean at Spa this season created a similar crash where he instantly caused three cars (including his own) to be retired straight away. The FIA punished him accordingly and he received a race ban. Essentially, this demonstrates that the hazards captured by FMECA or any other risk assessment technique, are subject to random events which cannot accurately be predicted.
 
 %------------------------------------------------
 
@@ -175,22 +166,22 @@ It is not always the case in Formula 1 events that the drivers necessarily refle
 
 \subsection{Further Information} % Sub-sub-section
 \subsubsection{Team Responsibility}
-In addition to the regulations that the FIA produce, each of the teams is expected to perform their own safety analysis and fully test their cars before driving, this, however, does not always mean that the vehicle is safe. For instance, this season Lewis Hamilton's McLaren MP4-27 broke unexpectedly 3 times causing him to retire from the races. It is, therefore, very important to understand that despite extensive testing from teams, that there is still (an albeit reduced) risk of unexpected failure.
-
-\begin{center}
-\includegraphics[width=0.7\linewidth]{bathtub}
-\parbox{10cm}{\caption{Bathtub model showing hardware life cycle as a function of time}}
-\end{center}
+In addition to the regulations that the FIA impose, each of the teams is expected to perform their own safety analysis and fully test their cars before driving, this, however, does not always mean that the vehicle is safe. For instance, this season Lewis Hamilton's McLaren MP4-27 broke unexpectedly 3 times causing him to retire from the races. It is, therefore, very important to understand that despite extensive testing from teams, that there is still (an albeit reduced) risk of unexpected failure.
 %----------------------------------------------------------------------------------------
 %	EVALUATION
 %----------------------------------------------------------------------------------------
 
 \section{Evaluation}
 
-Due to the scale and nature of Formula 1 events, it would be extremely difficult to do any practical testing of the system. That does not, however, not mean that general testing regarding the method and techniques cannot be performed. A reasonable way of going about the evaluation of the system would be to compare and contrast it to existing systems, and by careful examination of results, make a conclusion based on the accuracy of the system. It should be noted that initial sanity testing against a similar system resulted in a significant change of code, meaning that the version submitted is actually version 3 (with two major re-writes prior to this version), this means that some of the points made in this system have already been changed and will not be visible for 
+Due to the scale and nature of Formula 1 events, it would be extremely difficult to do any practical testing of the system. That does not, however, mean that general testing regarding the method and techniques cannot be performed. A reasonable way of going about the evaluation of the system would be to compare and contrast it to existing systems, and by careful examination of results, make a conclusion based on the accuracy of the system. It should be noted that initial sanity testing against a similar system resulted in a significant change of code, meaning that the version submitted is actually version 3 (with two major re-writes prior to this version), this means that some of the changes made in this system will not be obvious from looking at the tool in its current state.
 
 \subsubsection{The bathtub failure model}
 There are restrictions placed on the number of cars, engines and gearboxes that each driver may use, this can have an impact on the stability of the car. Each team is allowed no more than two cars at a time and should a new car be used between qualifying and the race, the driver of that car will start the race from the pit lane. Each driver is allowed at most eight engines per season and one gearbox per five races. The bathtub failure model (also known as the bathtub curve) is a model that explains the failure rate of hardware as a function of time illustrating that there is a high failure rate at the start of usage (known as the break in phase) and also towards the end of its life (known as the wear out phase). The tool that has been developed does not account for the changes in gearboxes or engines during the season due to time constraints.
+
+\begin{center}
+\includegraphics[width=0.7\linewidth]{bathtub}
+\parbox{10cm}{\caption{Bathtub model showing hardware life cycle as a function of time}}
+\end{center}
 
 \subsubsection{Significant Changes to the System}
 
@@ -201,8 +192,13 @@ Previous Item & Revision \\
 \hline \\
 Interface \& Interactivity & My initial system had been entirely paper based, it basically operated in a traditional paper based FMECA manner (a simple worksheet). I very quickly realised that making the system more interactive would allow for better, more personalised feedback to be given. I therefore started on a simple HTML mockup of the worksheet. This later changed again to be reflected in a risk matrix. \\
 Criticality Analysis & The initial system also did not feature any criticality analysis (this was mostly so that I could see what a more basic mock up of the system would look like before adding functionality), the addition of the criticality analysis feature was not something that I considered would pose that much more of a problem given the scope that I was working in, this was the major inspiration behind the development of the risk matrix. \\
+Local RPN & Initially, the plan was simply to output in each case to the risk martix. The problem with this is that the risk matrix only compares the detectability and the severity, which does not reflect the true RPN of the failure mode as it does not take into account the occurance rate. This was implemented to be shown at the same time as a value is added to the risk matrix.
 \end{tabular}
 \end{center}
+
+\subsubsection{User evaluation}
+
+To see if the outputted values to my risk matrix were correct I did an informal evaluation of the system (I opted for the informal technique as any major findings from this would not make a big difference to the system. ie factor values in the RPN engine would change a small amount). The evaluation took the form of giving paper risk matrices to peers and asking them to make an educated guess as to where to plot the probability against the severity given a condition for a failure mode (eg if stewards are present in the event of a terrorist attack). Surprisingly, the answers I received were close to my own which suggests that the values that I guessed using intuition \& the values I researched were close to what others would naturally guess they were. I still believe though that the system would benefit greatly with regards to validy should real statistics be used.
 
 \subsubsection{Effectiveness of the Tool}
 
@@ -217,11 +213,11 @@ Another factor to consider is that lots of the numbers used to generate the RPNs
 %	Findings & Conclusions
 %----------------------------------------------------------------------------------------
 
-\section{Findings \& Conclusions}
+\section{Findings and Conclusions}
 \subsection{Further Development}
 In my opinion, there are two ways in which the system can be made to be more accurate. Firstly, the inclusion of more failure modes would allow for more in-depth analysis and would almost certainly highlight new safety concerns. Secondly the addition of real statistical data in the RPN engine would make the values calculated much more accurate. Due to time constraints, mining this data proved insurmountable to the functioning of the system, so intuitive values were used.
 \subsection{Conclusive Summary}
-Overall, testers found that the system does a good job of illustrating the safety concerns of a Formula 1 race along with providing insight as to how performing certain actions or adding certain failsafe measures, can mitigate the risks. In this regard they system is a complete success (see above for how it could be further improved). However, I do not feel that by today's strict Formula 1 standards, that my tool would aid organisers of an event. Whilst researching safety and safety history in Formula 1. I very quickly learned what a large field it is
+Overall, testers found that the system does a good job of illustrating the safety concerns of a Formula 1 race along with providing insight as to how performing certain actions or adding certain failsafe measures, can mitigate the risks. In this regard they system is a complete success (see above for how it could be further improved). However, I do not feel that by today's strict Formula 1 standards, that my tool would aid organisers of an event. Whilst researching safety and safety history in Formula 1. Whilst investigating Formula 1 safety it became abundantly apparent that there is already a lot of money involved in keeping the sport safe. I do feel that the tool could eventually provide useful feelback and analysis, but only afer the steps detailed above in the further development stage have been performed.
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
@@ -246,6 +242,10 @@ Overall, testers found that the system does a good job of illustrating the safet
 \newblock FIA. FIA 2012 sporting regulations. Accessed 19 Nov 2012.\\ http://www.fia.com/en-GB/sport/regulations/Pages/FIAFormulaOneWorldChampionship.aspx
 \bibitem
 \newblock FIA. FIA Standards List. Various items listed, accessed from 12 Nov - 19 Nov 2012.\\ http://www.fia.com/en-GB/sport/regulations/Pages/FIAStandards.aspx
+\bibitem
+\newblock FIA. Hall of Fame (Jackie Stewart). accessed 19 Nov 2012.\\ http://www.formula1.com/teams_and_drivers/hall_of_fame/127/
+\bibitem
+\newblock Dennis J. Wilkins. The bathtub curve. accessed 19 Nov 2012 \\ http://www.weibull.com/hotwire/issue21/hottopics21.htm
  
 
 \end{thebibliography}

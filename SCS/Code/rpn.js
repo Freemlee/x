@@ -193,7 +193,6 @@ $(document).ready(function(){
 		var occur = 1;
 		var detect = 8;
 		var level = $('#terror-alert').val();
-		alert(level);
 		if (level >= 5){
 			occur += 3.5;
 		}else if (level >= 4){
