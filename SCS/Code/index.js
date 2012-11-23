@@ -75,5 +75,5 @@ $(document).ready(function(){
 		i += 1;
 		globalx += 100;
 	}
-	plotMarker(3,2);
+	plotMarker(9,9);
 });

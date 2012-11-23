@@ -1,4 +1,8 @@
 $(document).ready(function(){
+	var globRpn = 1;
+	var globDetr = 1;
+	var globSev = 1;
+
 	$('#rpn1').click(function(){
 		var roads = $('#exit-roads').val();
 		if ($('#team-radio').attr('checked')){
@@ -26,7 +30,13 @@ $(document).ready(function(){
 		$('#severity').text(severity);
 		$('#occurance').text("2");
 		$('#detect').text(detect);
+		if ((severity * detect) > globRpn){
+			globDetr = detect;
+			globSev = severity;
+			globRpn = globDetr * globSev;
+		}
 		$('#rpn').text(severity * 2 * detect);
+		plotMarker(globDetr, globSev);
 	});
 	
 	$('#rpn3').click(function(){
@@ -43,6 +53,13 @@ $(document).ready(function(){
 		$('#occurance').text("2");
 		$('#detect').text("2");
 		$('#rpn').text(severity * 2 * 2);
+		
+		if ((severity * 2) > globRpn){
+			globDetr = 2;
+			globSev = severity;
+			globRpn = globDetr * globSev;
+		}
+		plotMarker(globDetr, globSev);
 	});
 	
 	$('#rpn4').click(function(){
@@ -55,6 +72,13 @@ $(document).ready(function(){
 		$('#occurance').text("2");
 		$('#detect').text("2");
 		$('#rpn').text(severity * 2 * 2);
+		
+		if ((severity * 2) > globRpn){
+			globDetr = 2;
+			globSev = severity;
+			globRpn = globDetr * globSev;
+		}
+		plotMarker(globDetr, globSev);
 	});
 	
 	$('#rpn5').click(function(){
@@ -86,6 +110,13 @@ $(document).ready(function(){
 		$('#occurance').text(occur);
 		$('#detect').text(detect);
 		$('#rpn').text(severity * occur * detect);
+		
+		if ((severity * detect) > globRpn){
+			globDetr = detect;
+			globSev = severity;
+			globRpn = globDetr * globSev;
+		}
+		plotMarker(globDetr, globSev);
 	});
 	
 	$('#rpn6').click(function(){
@@ -115,7 +146,7 @@ $(document).ready(function(){
 		$('#occurance').text("Depends upon incident");
 		$('#detect').text(detect);
 		$('#rpn').text(detect);
-			
+		
 	});
 	
 	$('#rpn8').click(function(){
@@ -133,5 +164,114 @@ $(document).ready(function(){
 		$('#detect').text("Depends upon other factors (eg. punctured tyre)");
 		$('#rpn').text(occur + " with variance");
 			
+	});
+	
+	$('#rpn10').click(function(){
+		var crashed = $('#expected-crashes').val();
+		var occur = 0;
+		number = $('#number-safety-cars').val();
+		if (number > 3){
+			occur += 0;
+		}else if (number > 2){
+			occur += 1.5;
+		}else if (number > 1){
+			occur += 3;
+		}else if (number >= 0){
+			occur += 4.5;
+		}
+		if ($('#safety-car-checked').attr('checked')){
+			occur += 0;
+		}else{occur += 4;}
+		
+		$('#severity').text("Depending on accident");
+		$('#occurance').text(occur);
+		$('#detect').text("N/A");
+		$('#rpn').text(occur);
+	});
+	
+	$('#rpn11').click(function(){
+		var severity = 1;
+		var occur = 1;
+		var detect = 10;
+		if ($('#fatigue-hydration').attr('checked')){}else{severity += 4;}
+		if ($('#fatigue-radio').attr('checked')){detect = 2;}
+		if ($('#race-time').val() > 120){
+			occur += 5;
+		}
+		if ($('#g-force').val() > 5){
+			severity += 2.5
+		}
+		
+		$('#severity').text(severity);
+		$('#occurance').text(occur);
+		$('#detect').text(detect);
+		$('#rpn').text(occur * severity * detect);
+		
+		if ((severity * detect) > globRpn){
+			globDetr = detect;
+			globSev = severity;
+			globRpn = globDetr * globSev;
+		}
+		plotMarker(globDetr, globSev);
+	});
+	
+	$('#rpn13').click(function(){
+		var severity = 1;
+		var occur = 1;
+		var detect = 8;
+		var level = $('#terror-alert').val();
+		alert(level);
+		if (level >= 5){
+			occur += 3.5;
+		}else if (level >= 4){
+			occur += 3;
+		}else if (level >= 3){
+			occur += 2.5;
+		}else if (level >= 2){
+			occur += 2;
+		}else if (level >= 1){
+			occur += 1.5;
+		}else{
+			occur += 1;
+		}
+		
+		var threats = $('#terror-threats').val();
+		
+		if (threats >= 5){
+			occur += 3.5;
+			detect -= 3.5;
+		}else if (threats >= 4){
+			occur = 3;
+			detect -= 3.5;
+		}else if (threats >= 3){
+			occur = 2.5;
+			detect -= 3.5;
+		}else if (threats >= 2){
+			occur = 2;
+			detect -= 3.5;
+		}else if (threats >= 1){
+			occur = 1.5;
+			detect -= 3.5;
+		}else{
+			occur = 1;
+			detect -= 3.5;
+		}
+		
+		if ($('#terror-police').attr('checked')){
+		}else{
+			detect += 2;
+			severity += 2;}
+		
+		$('#severity').text(severity);
+		$('#occurance').text(occur);
+		$('#detect').text(detect);
+		$('#rpn').text(occur * severity * detect);
+		
+		if ((severity * detect) > globRpn){
+			globDetr = detect;
+			globSev = severity;
+			globRpn = globDetr * globSev;
+		}
+		plotMarker(globDetr, globSev);
 	});
 });

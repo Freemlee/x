@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.11.12)  23 NOV 2012 05:29
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.11.12)  23 NOV 2012 06:47
 entering extended mode
 **essay_1.tex
 ("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.tex"
@@ -160,7 +160,128 @@ Package: wrapfig 2003/01/31  v 3.6
 Package: lipsum 2011/04/14 v1.2 150 paragraphs of Lorem Ipsum dummy text
 \c@lips@count=\count124
 )
-("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.aux")
+("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.aux"
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.25 \bibcite{\hskip .11emplus.33emminus.07em}{1}
+                                                 
+? 
+
+LaTeX Warning: Label `\hskip .11emplus.33emminus.07em' multiply defined.
+
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.25 \bibcite{\hskip .11emplus.33emminus.07em}{1}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.26 \bibcite{\hskip .11emplus.33emminus.07em}{2}
+                                                 
+? 
+
+LaTeX Warning: Label `\hskip .11emplus.33emminus.07em' multiply defined.
+
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.26 \bibcite{\hskip .11emplus.33emminus.07em}{2}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.27 \bibcite{\hskip .11emplus.33emminus.07em}{3}
+                                                 
+? 
+
+LaTeX Warning: Label `\hskip .11emplus.33emminus.07em' multiply defined.
+
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.27 \bibcite{\hskip .11emplus.33emminus.07em}{3}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.28 \bibcite{\hskip .11emplus.33emminus.07em}{4}
+                                                 
+? 
+
+LaTeX Warning: Label `\hskip .11emplus.33emminus.07em' multiply defined.
+
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.28 \bibcite{\hskip .11emplus.33emminus.07em}{4}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.29 \bibcite{\hskip .11emplus.33emminus.07em}{5}
+                                                 
+? 
+
+LaTeX Warning: Label `\hskip .11emplus.33emminus.07em' multiply defined.
+
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.29 \bibcite{\hskip .11emplus.33emminus.07em}{5}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.30 \bibcite{\hskip .11emplus.33emminus.07em}{6}
+                                                 
+? 
+
+LaTeX Warning: Label `\hskip .11emplus.33emminus.07em' multiply defined.
+
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.30 \bibcite{\hskip .11emplus.33emminus.07em}{6}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.31 \bibcite{\hskip .11emplus.33emminus.07em}{7}
+                                                 
+? 
+
+LaTeX Warning: Label `\hskip .11emplus.33emminus.07em' multiply defined.
+
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.31 \bibcite{\hskip .11emplus.33emminus.07em}{7}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.32 \bibcite{\hskip .11emplus.33emminus.07em}{8}
+                                                 
+? 
+
+LaTeX Warning: Label `\hskip .11emplus.33emminus.07em' multiply defined.
+
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.32 \bibcite{\hskip .11emplus.33emminus.07em}{8}
+                                                 
+? 
+)
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 40.
 LaTeX Font Info:    ... okay on input line 40.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 40.
@@ -234,6 +355,11 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.toc")
 \tf@toc=\write3
  [2]
+
+LaTeX Warning: Citation `Figueredo:2009dg' on page 3 undefined on input line 11
+4.
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 112--115
 
  []
@@ -287,31 +413,126 @@ Underfull \hbox (badness 1205) in paragraph at lines 202--202
 []\OT1/cmr/m/n/12 Interface & In-
  []
 
-[7] [8] [9] [10]
+[7] [8] [9]
+Missing character: There is no Ã in font cmr12!
+Missing character: There is no © in font cmr12!
+Missing character: There is no Ã in font cmr12!
+Missing character: There is no © in font cmr12!
+
+Overfull \hbox (60.39714pt too wide) in paragraph at lines 234--236
+\OT1/cmr/m/n/12 http://www.formula1.com/inside[]f1/safety/a[]history[]of[]safet
+y[]in[]formula[]one/7425.html 
+ []
+
+
+Overfull \hbox (60.39714pt too wide) in paragraph at lines 236--238
+\OT1/cmr/m/n/12 http://www.formula1.com/inside[]f1/safety/a[]history[]of[]safet
+y[]in[]formula[]one/7426.html 
+ []
+
+
+Overfull \hbox (60.39714pt too wide) in paragraph at lines 238--240
+\OT1/cmr/m/n/12 http://www.formula1.com/inside[]f1/safety/a[]history[]of[]safet
+y[]in[]formula[]one/7427.html 
+ []
+
+
+Overfull \hbox (97.82156pt too wide) in paragraph at lines 244--246
+\OT1/cmr/m/n/12 http://www.fia.com/en-GB/sport/regulations/Pages/FIAFormulaOneW
+orldChampionship.aspx 
+ []
+
+
+Overfull \hbox (97.82156pt too wide) in paragraph at lines 246--248
+\OT1/cmr/m/n/12 http://www.fia.com/en-GB/sport/regulations/Pages/FIAFormulaOneW
+orldChampionship.aspx 
+ []
+
+[10]
 Missing character: There is no Ã in font cmr12!
 Missing character: There is no ³ in font cmr12!
 Missing character: There is no Ã in font cmr12!
 Missing character: There is no ­ in font cmr12!
 Missing character: There is no Ã in font cmr12!
 Missing character: There is no § in font cmr12!
- [11] [12]
-("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.aux") ) 
+ [11] [12] ("C:\Users\Gaz's Laptop\Projects\x\SCS\Sample\essay_1.aux"
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.25 \bibcite{\hskip .11emplus.33emminus.07em}{1}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.26 \bibcite{\hskip .11emplus.33emminus.07em}{2}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.27 \bibcite{\hskip .11emplus.33emminus.07em}{3}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.28 \bibcite{\hskip .11emplus.33emminus.07em}{4}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.29 \bibcite{\hskip .11emplus.33emminus.07em}{5}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.30 \bibcite{\hskip .11emplus.33emminus.07em}{6}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.31 \bibcite{\hskip .11emplus.33emminus.07em}{7}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.32 \bibcite{\hskip .11emplus.33emminus.07em}{8}
+                                                 
+? 
+! Missing \endcsname inserted.
+<to be read again> 
+                   \hskip 
+l.33 \bibcite{\hskip .11emplus.33emminus.07em}{9}
+                                                 
+? 
+)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 2136 strings out of 494045
- 29348 string characters out of 3145947
- 188243 words of memory out of 3000000
- 5424 multiletter control sequences out of 15000+200000
- 11006 words of font info for 38 fonts, out of 3000000 for 9000
+ 2137 strings out of 494045
+ 29353 string characters out of 3145947
+ 188285 words of memory out of 3000000
+ 5425 multiletter control sequences out of 15000+200000
+ 10659 words of font info for 37 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
  27i,8n,23p,1366b,261s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Files 
-(x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program Files (x
-86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files (x86
-)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Program Files (x86)
-/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files (x86)/Mi
-KTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files (x86)/MiKTe
-X 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on essay_1.pdf (13 pages, 176973 bytes).
+<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb>
+<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C
+:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:
+/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Pr
+ogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Progr
+am Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
+Output written on essay_1.pdf (13 pages, 177058 bytes).
 PDF statistics:
  72 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
