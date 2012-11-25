@@ -229,6 +229,8 @@ either direction).
 \begin{table}[h]
 \begin{center}
 \begin{tabular}{p{0.3\textwidth} p{0.2\textwidth}}
+Position & Percentage \\
+\hline \\
 Would use the app & 90\% \\
 Would not use the app & 10\% \\
 \end{tabular}
