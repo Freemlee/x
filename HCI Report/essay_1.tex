@@ -1,16 +1,3 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Simple Sectioned Essay Template
-% LaTeX Template
-%
-% This template has been downloaded from:
-% http://www.latextemplates.com
-%
-% Note:
-% The \lipsum[#] commands throughout this template generate dummy text
-% to fill the template out. These commands should all be removed when 
-% writing essay content.
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %----------------------------------------------------------------------------------------
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
@@ -65,9 +52,9 @@ Garry \textsc{Sharp}\\
 \begin{minipage}{0.4\textwidth}
 \begin{flushright} \large
 \emph{Supervisors:} \\
-Prof. S \textsc{Brewster}\\ % Supervisor's Name
-Dr. M \textsc{Chalmers}\\ % Supervisor's Name
-Dr. A \textsc{Morrison}\\ % Supervisor's Name
+Prof. S. \textsc{Brewster}\\ % Supervisor's Name
+Dr. M. \textsc{Chalmers}\\ % Supervisor's Name
+Dr. A. \textsc{Morrison}\\ % Supervisor's Name
 \end{flushright}
 \end{minipage}\\[4cm]
 
@@ -85,47 +72,107 @@ Dr. A \textsc{Morrison}\\ % Supervisor's Name
 
 \tableofcontents % Include a table of contents
 
-\newpage % Begins the essay on a new page instead of on the same page as the table of contents 
+\newpage
 
-%----------------------------------------------------------------------------------------
-%	INTRODUCTION
-%----------------------------------------------------------------------------------------
+\section{System Analysis}
 
-%------------------------------------------------
 
-%\begin{figure}[H] % Example image
-%\center{\includegraphics[width=0.5\linewidth]{placeholder}}
-%\caption{Example image.}
-%\label{fig:speciation}
-%\end{figure}
-
-%----------------------------------------------------------------------------------------
-%	MAJOR SECTION 1
-%----------------------------------------------------------------------------------------
-
-\section{System Analysis} % Major section
 
 \subsection{Aims of the System}
+\label{Aims}
+The key aim of the system is to provide a fun and interesting way of navigating around a space such
+as a park without using any visual aids. The system is designed to accomplish two things, firstly,
+provide a new and interesting way of navigating without the use of any visual interface, and
+secondly, provide a challenge to the user (in the context of a hide and seek game) to find a peer
+with another GPS enabled mobile device. ... Add about the interesting challenge of providing a user
+with instructions without using visual aids.
 
 
-%------------------------------------------------
+\subsection{Usefulness of the System} 
+The system is useful in that it provides users with a fun experience 
 
-\subsection{Usefulness of the System} % Sub-section
-
-%------------------------------------------------
-
-\subsection{Similar Systems} % Sub-sub-section
-
-%\begin{wrapfigure}{l}{0.4\textwidth} % Inline image example
-% \begin{center}
-%    \includegraphics[width=0.38\textwidth]{fish}
-%  \end{center}
-%  \caption{Fish}
-%\end{wrapfigure}
-%------------------------------------------------
+\subsection{Similar Systems} 
+%----------------------------------------------------------------------
 \newpage
-\section{Design and Testing} % Sub-sub-section
+\section{Design and Testing}
+The design of the system was focussed primarily on the user interface, this was especially
+interesting as I was very adamant not to user traditional visual methods. A series of techniques
+were used in the system design and testing which are detailed below, these included, but were not
+limited to, the use of Neilsen's heuristics and practical user testing.
+
 \subsection{Design}
+
+The system was designed adhereing to, and in accordance with Nielsen's heuristics (See Section
+\ref{Neilsen}). These essentially are a set of commonly agreed upon principles that should be
+adhered to when thinking about the design of a user interface. In past project, I used Neilsen's
+heuristics in the design of GUIs for various applications, however, this was the first time in
+which I applied the heuristics to system that would have no kind of graphical interaction. A
+complete description of the heuristics in the hide and seek app can be found below.
+
+\subsubsection{Nielsen's Heuristics}
+\label{Neilsen}
+\begin{description}
+\item[Visibility of system status] \hfill \\
+The user should always be informed about what is happening throughout the systems execution, this
+is difficult to adhere to in its entirity as part of the app is based explicitly on the user not
+knowing whether or not they are going in the right direction. As the app is a game, this is
+generally accepted as the goal is to make the location of the person with the broadcasting of the
+device intentionally challenging (though not too difficult as to aggrevate the user). The user is
+given multi-modal feedback in a number of 10 second windows which I found with user testing (See
+Section \ref{Testing}) provided a good balance vis-a-vis challenge and easy navigation.
+
+
+\item[Match between system and the real world] \hfill \\
+This is perhaps the heuristic that was deviated from the most, the user feedback received is very
+non-intuitive, however, as a heuristic of convenience (and with the system trying to achieve a level
+of inconveniece in not making it too easy to locate someone), I thought it acceptable to deviate
+from the traditional convention.
+
+\item[User control and freedom] \hfill \\
+The interaction between the user and the system is mostly one sided, that is to say, there is very
+little input that the user gives the system (in fact there is no direct input, simply the changed
+co-ordinates and direction which is collected as the user moves), contrasted to a large amount of
+feedback that is given back to the user. Their position directly influences how the system gives
+feedback. The user, however, has no control over the intervals with which feedback is given
+(hardcoded system constant). In future development (See Section \ref{FurtherDevelopment}),
+intervals of time may be user chosen to reflect varying levels of difficulty.
+
+\item[Consistency and standards] \hfill \\
+The vibrate function of the app is only ever used to indicate direction and the beeping sound is
+only ever used to indicate difference, in this regard it is very difficult for a user to become
+confused after learning what the feedback means.
+
+\item[Error prevention] \hfill \\
+The most common error in the system is that it will not work if there is not GPS signal, this makes
+use of the app indoors or in built up or wooded areas impossible. Occationaly the system experiences
+performace difficulties depending on the quality of the GPS installed on the device. These are the
+only known errors and flaws that the system presents.
+
+\item[Recognition rather than recall] \hfill \\
+Other than the understanding of the beep/vibrate frequencies (solid = right direction/close,
+intermittent = sideways direction/halfway there, no response = totally wrong direction/furthest
+away), there is no information that the user needs to remember.
+
+\item[Flexibility and efficiency of use] \hfill \\
+This does not apply to this applcation as it is both a game and also requires such little input
+from the user that the use of accelerators would be un-necessary.
+
+\item[Aesthetic and minimalist design] \hfill \\
+There is not visual display (with the exception of printing error message to the screen), and
+therefore, no requirement to worry about aesthetic.
+
+\item[Help users recognize, diagnose, and recover from errors] \hfill \\
+Lack of GPS or a weak GPS signal are the only known errors of the system, a message will appear on
+the screen informing the user to check that their GPS is turned on or to wait for incoming GPS data
+respectivey.
+
+\item[Help and documentation] \hfill \\
+A welcome dialogue is displayed upon launching the system informing the users of what a vibration,
+beep and the frequencies between them means. As the system is quite lightweight further
+documentation would be irrelevant.
+\end{description}
+
+
 \subsubsection{HAPTIMAPS Toolkit}
 HAPTIMAPS is an open source toolkit which allows developers to simply and easily create
 applications that offer multi-modal feedback for map based applications. Having previously used the
@@ -135,7 +182,73 @@ provides sufficient functionality for handling GPS data, it was not necessary to
 HAPTIMAPS toolkit, however, should the app be expanded further (See Section 
 \ref{FurtherDevelopment}) I would almost definitly opt to use the toolkit
 \subsection{Testing}
+\label{Testing}
 
+There were two main testing methodologies employed in the testing of the system, the component
+testing (which focussed on whether they system worked), and the acceptance testing (which tested
+the systems usability as well as whether it met its goals or not, See Section \ref{Aims}). Both
+methodologies are documented and detailed below.
+
+\subsubsection{Unit Testing}
+
+All unit testing strategy comprised of a hybrid of IEEE standard automated tests and manual testing
+of the more important components of the system (chiefly the timing, vibrating, beeping and GPS
+related functions). Unit testing was performed exhaustively until it met a suitable standard. The
+key problem I found was that in the many locations I tested the app, there wasn't always a strong
+GPS signal which caused further delays in the system giving feedback. This is also reflected in the
+user testing (See Section \ref{Acceptance}).
+\subsubsection{Acceptance Testing}
+\label{Acceptance}
+
+The acceptance testing was all end user based, a number of peers from the course obliged in a short
+testing of the system which took place just outside the Boyd Orr building. The were asked to use
+the app for a short time and then report back after a minute as to which direction that would start
+walking in if it were 
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{p{0.3\textwidth} p{0.2\textwidth}}
+Direction & Percentage \\
+\hline\\
+Correct Direction & 40\% \\
+Slight Discrepency & 40\% \\
+Large Discrepency & 20\% \\
+Wrong Direction & 0\% \\
+\end{tabular}
+\caption{Showing accuracy of users after a minutes use}
+\label{UserTestResults}
+\end{center}
+\end{table}
+
+From Table~\ref{UserTestResults} we can see that 80\% of users were able to establish an either
+perfectly correct, or roughly correct position (slight discrepency in the table above refers to a
+difference of 30$^\circ$ in either direction, whereas large discrepency refers to 30$^\circ$ to
+90$^\circ$ in either direction and wrong direction refers to anywhere further than the 90$^\circ$ in
+either direction).
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{p{0.3\textwidth} p{0.2\textwidth}}
+Position & Percentage \\
+\hline \\
+Would use the app & 90\% \\
+Would not use the app & 10\% \\
+\end{tabular}
+\caption{Showing accuracy of users after a minutes use}
+\label{UserTestUse}
+\end{center}
+\end{table}
+
+From Table~\ref{UserTestUse} we see very encouraging results related to the popularity of the app
+as an overwhelming majority of testers would use the app. However, even though these numbers work
+very nicely in favour of the app, the accuracy is questionable, as the app solves no major issues
+and merely provides entertainment value, the responses may not have been as honest and
+significantly fewer people may actually use the app more than a few times, however, this is to be
+expected. 
+
+Overall these were relatively positive figures, it should be noted that the 20\% that failed to
+report an accurate direction also suffered GPS issues on their devices as the feedback reveived
+indicated that they were indeed facing in the right direction.
 
 \newpage
 \section{More Information}
@@ -171,7 +284,7 @@ subject to variation in relation to the curvature of the earth. For instance, ca
 over a city would provide a negligable discrpency when constrasting the distances gathered using
 the haversine formula with distances caluculated without using it. For this reason, the application
 that I have developed does not perform any complex maths using the haversine formula or any other
-geo-positioning equations. However, should the app be developed further and used over a
+geo-positioning equations. However, should the app be developed further and used over a larger
 geographical scale, then the app would almost certainly have to feature GPS related maths.
 
 \subsection{Further development}                                                                   
