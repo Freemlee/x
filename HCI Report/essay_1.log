@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2012.9.11)  25 NOV 2012 14:58
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2012.9.11)  25 NOV 2012 23:09
 entering extended mode
  %&-line parsing enabled.
 **essay_1.tex
@@ -264,68 +264,72 @@ driver: pdftex
 
 (1in=72.27pt, 1cm=28.45pt)
 -----------------------
- [1
+ <./Pictures/Glasgow.png, id=75, 602.25pt x 86.3225pt>
+File: ./Pictures/Glasgow.png Graphic file (type png)
 
-{/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-(./essay_1.toc)
-\tf@toc=\write4
-\openout4 = `essay_1.toc'.
+<use ./Pictures/Glasgow.png> [1
 
+{/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map} <./Pictures/Glasgow.png>]
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.75 \newpage
-              [1] [2] [3] [4] [5] [6pdfTeX warning (ext4): destination with the
- same identifier (name{table.1}) has been already used, duplicate ignored
+l.80 \newpage
+              [1] (./essay_1.toc)
+\tf@toc=\write4
+\openout4 = `essay_1.toc'.
+
+ [2] [3] [4] [5] [6] [7] [8pdfTeX warning (ext4): destination with the same ide
+ntifier (name{table.1}) has been already used, duplicate ignored
 <to be read again> 
                    \endgroup \set@typeset@protect 
-l.248 
+l.277 
       pdfTeX warning (ext4): destination with the same identifier (name{table.2
 }) has been already used, duplicate ignored
 <to be read again> 
                    \endgroup \set@typeset@protect 
-l.248 
-      ] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 267--270
+l.277 
+      ] [9]
+Underfull \hbox (badness 10000) in paragraph at lines 296--299
 
  []
 
-<./Pictures/haversine.png, id=136, 220.825pt x 220.825pt>
+<./Pictures/haversine.png, id=154, 220.825pt x 220.825pt>
 File: ./Pictures/haversine.png Graphic file (type png)
 
 <use ./Pictures/haversine.png>
-Underfull \hbox (badness 6001) in paragraph at lines 279--289
+Underfull \hbox (badness 6001) in paragraph at lines 308--318
 [][]\OT1/cmr/m/n/12 After re-search-ing the topic, I
  []
 
 
-Underfull \hbox (badness 1902) in paragraph at lines 279--289
+Underfull \hbox (badness 1902) in paragraph at lines 308--318
 \OT1/cmr/m/n/12 quickly dis-cov-ered that many GPS
  []
 
-[8pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
-has been already used, duplicate ignored
+[10pdfTeX warning (ext4): destination with the same identifier (name{figure.1})
+ has been already used, duplicate ignored
 <to be read again> 
                    \endgroup \set@typeset@protect 
-l.289 
-       <./Pictures/haversine.png>] [9] [10] (./essay_1.aux) ) 
+l.318 
+       <./Pictures/haversine.png>] [11] [12] (./essay_1.aux) ) 
 Here is how much of TeX's memory you used:
- 3727 strings out of 256216
- 49641 string characters out of 1917072
- 201719 words of memory out of 1500000
- 6963 multiletter control sequences out of 10000+200000
- 10725 words of font info for 38 fonts, out of 1200000 for 2000
+ 3740 strings out of 256216
+ 49854 string characters out of 1917072
+ 201795 words of memory out of 1500000
+ 6971 multiletter control sequences out of 10000+200000
+ 11333 words of font info for 40 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 27i,9n,36p,265b,402s stack positions out of 5000i,500n,6000p,200000b,15000s
-</usr/share/texmf/
-fonts/type1/bluesky/cm/cmbx12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmcs
-c10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf/fo
-nts/type1/bluesky/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti12.
-pfb>
-Output written on essay_1.pdf (11 pages, 81056 bytes).
+ 27i,9n,36p,265b,406s stack positions out of 5000i,500n,6000p,200000b,15000s
+</usr/share/texmf
+/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmb
+x12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmcsc10.pfb></usr/share/texmf/
+fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr12
+.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy8.pfb></usr/share/texmf/fonts
+/type1/bluesky/cm/cmti12.pfb>
+Output written on essay_1.pdf (13 pages, 118694 bytes).
 PDF statistics:
- 177 PDF objects out of 1000 (max. 8388607)
- 31 named destinations out of 1000 (max. 131072)
- 150 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 202 PDF objects out of 1000 (max. 8388607)
+ 34 named destinations out of 1000 (max. 131072)
+ 163 words of extra memory for PDF output out of 10000 (max. 10000000)
 

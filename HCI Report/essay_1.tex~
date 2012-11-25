@@ -29,13 +29,12 @@
 
 \begin{titlepage}
 
-\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
-
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines,
+%change thickness here
 \center % Center everything on the page
-
-\textsc{\LARGE University of Glasgow}\\[1.5cm] % Name of your university/college
-\textsc{\Large Human Computer Interaction 4}\\[0.5cm] % Major heading such as course name
-\textsc{\large Assessed Exercise}\\[0.5cm] % Minor heading such as course title
+\includegraphics[width=\textwidth]{Glasgow}\\[1.5cm]
+\textsc{\LARGE Human Computer Interaction 4}\\[0.5cm] % Major heading such as course name
+\textsc{\Large Assessed Exercise}\\[0.5cm] % Minor heading such as course title
 
 \HRule \\[0.4cm]
 { \huge \bfseries Hide and Seek Mobile Application}\\[0.4cm] % Title of your document
@@ -60,8 +59,6 @@ Dr. A. \textsc{Morrison}\\ % Supervisor's Name
 
 {\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
 
-%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
-
 \vfill % Fill the rest of the page with whitespace
 
 \end{titlepage}
@@ -70,13 +67,36 @@ Dr. A. \textsc{Morrison}\\ % Supervisor's Name
 %	TABLE OF CONTENTS
 %----------------------------------------------------------------------------------------
 
+\begin{abstract}
+The main inspiration for the system stemmed from an idea, or rather a musing, I had regarding how
+difficult and strange it looks to navigate around a space whilst constantly looking at your phone.
+Not only does it look strange, it can also be incredibly inconvenient if you do not have both hands
+free or are engaged in some other activity such as running. The idea immediately interested me,
+and, whilst there were already existing applications to solve these practical issues, the idea of
+using multi-modal feedback in map based applications stayed with me. Eventually I opted for a hide
+and seek app (See Section \ref{Overview}) which would allow users to experience non-visual
+navegation in a fun way.
+\end{abstract}
+\newpage
 \tableofcontents % Include a table of contents
 
 \newpage
 
 \section{System Analysis}
 
+\subsection{Brief Overview and Description of the System}
+\label{Overview}
 
+The system is, as the name suggests, a reinvention of the common childrens "Hide and Seek" game. In
+a traditional game of hide and seek, the person who is to do the seeking (the seeker) counts to
+twenty while the other participant (the hider) uses this time to hide. The seeker then exclaims
+"here I come, ready or not" and the game is over when the seeker has found the hider. Another
+similar game is called Marco Polo, where the seeker (who has their eyes closed) shouts "Marco" and
+the hider responds "Polo", the seeker must then try to catch the hider based on acoustics. The
+application that has been developed is a fusion of both of these classic games that runs over a
+network, with the hider sending the seeker GPS co-ordinates corresponding to their location and the
+seeker then receiving feedback every 60 seconds in the form of vibration pulses and beeps to
+indicate if their current bearing and distance in relation to the hider.
 
 \subsection{Aims of the System}
 \label{Aims}
@@ -84,14 +104,23 @@ The key aim of the system is to provide a fun and interesting way of navigating 
 as a park without using any visual aids. The system is designed to accomplish two things, firstly,
 provide a new and interesting way of navigating without the use of any visual interface, and
 secondly, provide a challenge to the user (in the context of a hide and seek game) to find a peer
-with another GPS enabled mobile device. ... Add about the interesting challenge of providing a user
-with instructions without using visual aids.
+with another GPS enabled mobile device. Hopefully the user will also experience similar levels
+of cusiosity and intrigue as I did whilst developing it.
 
 
-\subsection{Usefulness of the System} 
-The system is useful in that it provides users with a fun experience 
+\subsection{Purpose of the System} 
+The system's primary purpose is to provide entertainment value to its users. Initially the idea was
+only concerning navigation without a visual aid, which may have had a useful application in
+developing map based applications for the blind or visually impaired, however, there are already
+many apps out there that tend to these needs (See Similar Systems below) and so the reapplication of
+the technology in a fun way quickly formed itself as the main goal of the system.
 
 \subsection{Similar Systems} 
+
+There are many map based applications on the android market today, perhaps the most well known of
+all is google maps, 
+
+
 %----------------------------------------------------------------------
 \newpage
 \section{Design and Testing}
