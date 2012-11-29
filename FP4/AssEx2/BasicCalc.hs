@@ -121,13 +121,13 @@ main =
        (\(x,y) -> prepareNumButton sr xml x y)
 
 -- Set up converter button
-																{-
-																GBP
-																CNY
-																USD
-																EUR
-																SGD
-																-}
+	{-
+	GBP
+	CNY
+	USD
+	EUR
+	SGD
+	-}
 
      bConv <- xmlGetWidget xml castToButton "bConv"
      onClicked bConv $ do
@@ -146,6 +146,31 @@ main =
 	let convertedVal = fromUSD (toUSD (read (curVal) :: Double) cur1) cur2
 	--putStrLn $ (show convertedVal)
 	entrySetText convVal $ show convertedVal
+
+-- Int/Double toggle listeners
+
+     rInt <- xmlGetWidget xml castToRadioButton "rInt"
+     rDoub <- xmlGetWidget xml castToRadioButton "rDoub"
+     onToggled rInt $ do
+	setStack sr []
+	return ()
+     onToggled rDoub $ do
+	setStack sr []
+	return ()
+
+-- Set up RND and TRN buttons
+
+     bRound <- xmlGetWidget xml castToButton "bRound"
+     onClicked bRound $ do
+	s <- readIORef sr
+	let (x:xs) = stack s
+	setStack sr $ ((read (show (round x))::Double):xs)
+
+     bTrunc <- xmlGetWidget xml castToButton "bTrunc"
+     onClicked bTrunc $ do
+	s <- readIORef sr
+	let (x:xs) = stack s
+	setStack sr $ ((read (show (floor x))::Double):xs)
 
 -- Set up the EXCH button
 
