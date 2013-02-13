@@ -1,0 +1,5 @@
+INDEX VERSION 1.126+C:\Users\Gaz's Laptop\Projects\x\HCI\.metadata\.plugins\org.eclipse.jdt.core
+3352491446.index
+3201398653.index
+3235746580.index
+1931949914.index

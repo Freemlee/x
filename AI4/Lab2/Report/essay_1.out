@@ -1,27 +1,27 @@
-\BOOKMARK [1][-]{section.1}{Design}{}
-\BOOKMARK [2][-]{subsection.1.1}{Performance}{section.1}
-\BOOKMARK [2][-]{subsection.1.2}{Environment}{section.1}
-\BOOKMARK [2][-]{subsection.1.3}{Actuators}{section.1}
-\BOOKMARK [2][-]{subsection.1.4}{Sensors}{section.1}
-\BOOKMARK [1][-]{section.2}{Theory}{}
-\BOOKMARK [2][-]{subsection.2.1}{Calculating the Energy, Magnitude and ZCR}{section.2}
-\BOOKMARK [3][-]{subsubsection.2.1.1}{Per Window}{subsection.2.1}
-\BOOKMARK [3][-]{subsubsection.2.1.2}{Per File}{subsection.2.1}
-\BOOKMARK [2][-]{subsection.2.2}{K-Fold Validation}{section.2}
-\BOOKMARK [3][-]{subsubsection.2.2.1}{Permuting the Data}{subsection.2.2}
-\BOOKMARK [2][-]{subsection.2.3}{Calculating the Mean and Variance}{section.2}
-\BOOKMARK [3][-]{subsubsection.2.3.1}{The Mean}{subsection.2.3}
-\BOOKMARK [3][-]{subsubsection.2.3.2}{The Variance}{subsection.2.3}
-\BOOKMARK [2][-]{subsection.2.4}{Calculating Probabilities}{section.2}
-\BOOKMARK [3][-]{subsubsection.2.4.1}{Individually for Energy, Magnitude and ZCR}{subsection.2.4}
-\BOOKMARK [3][-]{subsubsection.2.4.2}{Per File}{subsection.2.4}
-\BOOKMARK [3][-]{subsubsection.2.4.3}{Making a Guess}{subsection.2.4}
-\BOOKMARK [1][-]{section.3}{Experiments}{}
-\BOOKMARK [2][-]{subsection.3.1}{Scatter Plots}{section.3}
-\BOOKMARK [3][-]{subsubsection.3.1.1}{Energy vs. Magnitude}{subsection.3.1}
-\BOOKMARK [3][-]{subsubsection.3.1.2}{Energy vs. ZCR}{subsection.3.1}
-\BOOKMARK [3][-]{subsubsection.3.1.3}{Magnitude vs. ZCR}{subsection.3.1}
-\BOOKMARK [2][-]{subsection.3.2}{Accuracy}{section.3}
-\BOOKMARK [2][-]{subsection.3.3}{Guesses}{section.3}
-\BOOKMARK [1][-]{appendix.A}{Energy, Magnitude and Zero Crossing Rate Values}{}
-\BOOKMARK [1][-]{appendix.B}{Code}{}
+\BOOKMARK [1][-]{section.1}{Design}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Performance}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Environment}{section.1}% 3
+\BOOKMARK [2][-]{subsection.1.3}{Actuators}{section.1}% 4
+\BOOKMARK [2][-]{subsection.1.4}{Sensors}{section.1}% 5
+\BOOKMARK [1][-]{section.2}{Theory}{}% 6
+\BOOKMARK [2][-]{subsection.2.1}{Calculating the Energy, Magnitude and ZCR}{section.2}% 7
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Per Window}{subsection.2.1}% 8
+\BOOKMARK [3][-]{subsubsection.2.1.2}{Per File}{subsection.2.1}% 9
+\BOOKMARK [2][-]{subsection.2.2}{K-Fold Validation}{section.2}% 10
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Permuting the Data}{subsection.2.2}% 11
+\BOOKMARK [2][-]{subsection.2.3}{Calculating the Mean and Variance}{section.2}% 12
+\BOOKMARK [3][-]{subsubsection.2.3.1}{The Mean}{subsection.2.3}% 13
+\BOOKMARK [3][-]{subsubsection.2.3.2}{The Variance}{subsection.2.3}% 14
+\BOOKMARK [2][-]{subsection.2.4}{Calculating Probabilities}{section.2}% 15
+\BOOKMARK [3][-]{subsubsection.2.4.1}{Individually for Energy, Magnitude and ZCR}{subsection.2.4}% 16
+\BOOKMARK [3][-]{subsubsection.2.4.2}{Per File}{subsection.2.4}% 17
+\BOOKMARK [3][-]{subsubsection.2.4.3}{Making a Guess}{subsection.2.4}% 18
+\BOOKMARK [1][-]{section.3}{Experiments}{}% 19
+\BOOKMARK [2][-]{subsection.3.1}{Scatter Plots}{section.3}% 20
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Energy vs. Magnitude}{subsection.3.1}% 21
+\BOOKMARK [3][-]{subsubsection.3.1.2}{Energy vs. ZCR}{subsection.3.1}% 22
+\BOOKMARK [3][-]{subsubsection.3.1.3}{Magnitude vs. ZCR}{subsection.3.1}% 23
+\BOOKMARK [2][-]{subsection.3.2}{Accuracy}{section.3}% 24
+\BOOKMARK [2][-]{subsection.3.3}{Guesses}{section.3}% 25
+\BOOKMARK [1][-]{appendix.A}{Energy, Magnitude and Zero Crossing Rate Values}{}% 26
+\BOOKMARK [1][-]{appendix.B}{Code}{}% 27

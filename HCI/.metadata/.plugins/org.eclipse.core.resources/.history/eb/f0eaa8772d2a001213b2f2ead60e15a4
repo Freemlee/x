@@ -1,0 +1,57 @@
+package com.example.hideandseek;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.ToneGenerator;
+import android.os.Bundle;
+import android.os.Vibrator;
+import android.os.Bundle;
+import android.widget.Toast;
+import android.app.Activity;
+import android.content.Context;
+import java.net.*;
+import java.awt.Toolkit;
+
+public class MyLocationListener implements LocationListener{
+	Vibrator phoneVibrator;
+	Location dummyLocation;
+	MainActivity ma;
+
+	public MyLocationListener(Vibrator v, Location loc, MainActivity mac){
+		phoneVibrator = v;
+		dummyLocation = loc;
+		ma = mac;
+	}
+	
+	public void beep(float distance){
+		Toolkit tk = Toolkit.
+	}
+	public void onLocationChanged(Location location) {
+		float bearingOfDevice = location.bearingTo(dummyLocation);
+		if (bearingOfDevice < 0)
+			bearingOfDevice = 360 + bearingOfDevice;
+		float currentBearing = location.getBearing();
+		float distance = location.distanceTo(dummyLocation);
+		
+		//phoneVibrator.vibrate((long) myBearing * 15);
+		Toast.makeText(ma,"Bearing of Device: " + bearingOfDevice +"\nCurrent Bearing: " + currentBearing + "\nDistance: " + distance,Toast.LENGTH_LONG).show();
+	}
+
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

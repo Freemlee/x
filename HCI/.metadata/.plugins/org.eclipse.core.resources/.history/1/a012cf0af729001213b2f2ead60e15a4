@@ -1,0 +1,49 @@
+package com.example.hideandseek;
+
+import java.util.ArrayList;
+
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.os.Vibrator;
+import android.app.Activity;
+import android.content.Context;
+import android.view.Menu;
+
+public class MainActivity extends Activity {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        final Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+              // Called when a new location is found by the network location provider.
+              int y = (int) location.getBearing();
+              y = 180 - (y % 180);
+              //v.vibrate(y * 7);
+            }
+
+			public void onProviderDisabled(String arg0) {
+				int y = 5;
+			}
+
+			public void onProviderEnabled(String provider) {
+			}
+
+			public void onStatusChanged(String provider, int status,
+					Bundle extras) {
+			}
+          };
+          locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+         }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+}

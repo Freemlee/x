@@ -1,0 +1,73 @@
+package com.example.hideandseek;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.ToneGenerator;
+import android.os.Bundle;
+import android.os.Vibrator;
+import android.os.Bundle;
+import android.widget.Toast;
+import android.app.Activity;
+import android.content.Context;
+
+public class MyLocationListener implements LocationListener{
+	Vibrator phoneVibrator;
+	Location dummyLocation;
+	MainActivity ma;
+	float dist;
+
+	public MyLocationListener(Vibrator v, Location loc, MainActivity mac){
+		phoneVibrator = v;
+		dummyLocation = loc;
+		ma = mac;
+	}
+	/*
+	Thread tonethread = new Thread(new Runnable(){
+		public void run() {
+		try {
+			MediaPlayer player = MediaPlayer.create(ma,R.raw.notification_beep);
+			for (int i = 0; i<15; i++){
+				player.start();
+				Thread.sleep((long) (1/dist * 100));
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}}); */
+	
+	public void onLocationChanged(Location location) {
+		float bearingOfDevice = location.bearingTo(dummyLocation);
+		if (bearingOfDevice < 0)
+			bearingOfDevice = 360 + bearingOfDevice;
+		float currentBearing = location.getBearing();
+		dist = location.distanceTo(dummyLocation);
+		alertMessage(dist + "");
+		//tonethread.start();
+		
+		//phoneVibrator.vibrate((long) myBearing * 15);
+		Toast.makeText(ma,"Bearing of Device: " + bearingOfDevice +"\nCurrent Bearing: " + currentBearing + "\nDistance: " + dist,Toast.LENGTH_LONG).show();
+	}
+	
+	public void alertMessage(String message){
+		Toast.makeText(ma,message,Toast.LENGTH_LONG).show();
+	}
+
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

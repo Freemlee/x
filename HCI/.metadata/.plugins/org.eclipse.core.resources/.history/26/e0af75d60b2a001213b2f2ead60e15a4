@@ -1,0 +1,5 @@
+package com.example.hideandseek;
+
+public class MyLocationListener {
+
+}
