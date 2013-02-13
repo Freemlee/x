@@ -21,6 +21,10 @@ public class SuffixTreeAppl {
 		t = null;
 	}
 	
+	public SuffixTree getTree(){
+		return t;
+	}
+	
 	/**
 	 * Constructor with parameter.
 	 * 
@@ -114,7 +118,7 @@ public class SuffixTreeAppl {
 		occurences.clear();
 		int tRes = 0;
 		boolean isNull = true;
-		getNextOccurrence(x);
+		//getNextOccurrence(x);
 		result.setPositions(occurences); // replace with your code!
 		return result;
 	}
@@ -131,21 +135,21 @@ public class SuffixTreeAppl {
 		while (currentNode != null){
 			lengthAtNode = currentNode.getRightLabel() - currentNode.getLeftLabel() + 1;
 			String temp = new String(Arrays.copyOfRange(t.getString(), currentNode.getLeftLabel(), currentNode.getRightLabel()+1));
-			System.out.println("Characters at Node : " + temp + "\n(" + currentNode.getLeftLabel() + 
-					","+currentNode.getRightLabel()+") of " + new String(t.getString()) + " (length = " + lengthAtNode + ")");
+			//System.out.println("Characters at Node : " + temp + "\n(" + currentNode.getLeftLabel() + 
+			//		","+currentNode.getRightLabel()+") of " + new String(t.getString()) + " (length = " + lengthAtNode + ")");
 			//checks x with all the values at the currentNode
 			nodeIndex = 0;
 			match = true;
 			while (nodeIndex < lengthAtNode && match && xIndex < x.length){
 				int i = (currentNode.getLeftLabel()) + nodeIndex;
-				System.out.println("Comparing:\n\tThe " + xIndex + " of " + new String(x) + " WITH\n\t" +
-						"The " + i + " of " + new String(t.getString())); 
+				//System.out.println("Comparing:\n\tThe " + xIndex + " of " + new String(x) + " WITH\n\t" +
+				//		"The " + i + " of " + new String(t.getString())); 
 				if (x[xIndex] != t.getString()[i]){
-					System.out.println("\t\tNO MATCH -- here should go straight to sibling");
+					//System.out.println("\t\tNO MATCH -- here should go straight to sibling");
 					match = false;
 					result = -1;
 				}else{
-					System.out.println("\t\tMATCH");
+					//System.out.println("\t\tMATCH");
 					if (startLocation == -1){
 						startLocation = currentNode.getLeftLabel();
 					}
@@ -157,17 +161,17 @@ public class SuffixTreeAppl {
 			}
 			if (match){
 				currentNode = currentNode.getChild();
-				System.out.println("GOING TO CHILD");
+				//System.out.println("GOING TO CHILD");
 			}else{
 				currentNode = currentNode.getSibling();
-				System.out.println("GOING TO SIBLING");
+				//System.out.println("GOING TO SIBLING");
 			}
 		}
 		if (match == true){
 			result = startLocation + 1;
 		}
 
-		System.out.println("ONE RESULT: " + result);
+		//System.out.println("ONE RESULT: " + result);
 		
 		//subTree.setRoot(currentNode);
 		getNextOccurrence(x, currentNode);
@@ -190,9 +194,138 @@ public class SuffixTreeAppl {
 	 * @return a Task3Info object
 	 */
 	public Task3Info traverseForLrs () {
+		long start = System.currentTimeMillis();
+		//SuffixTreeNode bestNode;
+		SuffixTreeNode currentNode = t.getRoot().getChild();
+		LinkedList<SuffixTreeNode> bestLsrNodes = new LinkedList<SuffixTreeNode>();
+		LinkedList<SuffixTreeNode> currentPath = new LinkedList<SuffixTreeNode>();
+		currentPath.addLast(currentNode);
+		/*if prevLength is >= to the currentLength we want to 
+		remove a node from the tree (and decrement prevLength, otherwise we keep it.
+		*/
 		
-		return null; // replace with your code!
+		boolean isLast = false;
+		while (currentPath != null || isLast){
+			//System.out.println("Current size of path: " + currentPath.size());
+			currentNode = currentPath.getLast();
+			if (isValidBranch(currentNode)){
+				//System.out.println("VALID BRANCH");
+			}
+			//System.out.println("Current length = " + getLength(currentPath) + 
+			//		"\nBest length = " + getLength(bestLsrNodes));
+
+			if (getLength(currentPath) > getLength(bestLsrNodes) && isValidBranch(currentNode)){
+				//bestLsrNodes = currentPath;
+				bestLsrNodes.clear();
+				for (SuffixTreeNode n: currentPath){
+					bestLsrNodes.addLast(n);
+				}
+				//System.out.println("New best - " + getLength(bestLsrNodes));
+			}
+			currentPath = next(currentPath);
+		}
+		System.out.println(System.currentTimeMillis() - start);
+		Task3Info result = new Task3Info();
+		//System.out.println("FINAL BEST IS " + getLength(bestLsrNodes));
+		if (bestLsrNodes.isEmpty()){
+			return result;
+		}else{
+			int[] positions = getLeafSuffixes(bestLsrNodes.getLast());
+			result.setPos1(positions[0]);
+			result.setPos2(positions[1]);
+			result.setLen(getLength(bestLsrNodes));
+			return result;
+		}
+		
+		/*
+		if (getLengthOfNode(currentNode) + prevLength > bestLength){
+			if (currentDepth < lsrNodes.size()){
+				currentPath.addLast(currentNode);
+				currentDepth++;
+			}else{
+				lsrNodes.removeLast();
+				lsrNodes.addLast(currentNode);
+			}
+		}*/
 	}
+	
+	//Gets the leaf nodes of a branch node (when immediate parent, check with isValidBranch(x) first)
+	public int[] getLeafSuffixes(SuffixTreeNode x){
+		int[] result = new int[2];
+		SuffixTreeNode currentNode = x.getChild();
+		result[0] = currentNode.getSuffix();
+		currentNode = currentNode.getSibling();
+		result[1] = currentNode.getSuffix();
+		return result;
+	}
+	
+	public int getLength(LinkedList<SuffixTreeNode> x){
+		int len = 0;
+		if (x.isEmpty()){
+			return 0;
+		}
+		for (SuffixTreeNode node: x){
+			len += getLengthOfNode(node);
+		}
+		return len;
+	}
+	
+	public LinkedList<SuffixTreeNode> next(LinkedList<SuffixTreeNode> x){
+		SuffixTreeNode currentNode = x.getLast();
+		boolean visited = false;
+		boolean isBad = true;
+		while (isBad || x.isEmpty()){
+			if(currentNode.getChild() != null && !visited){
+				x.addLast(currentNode.getChild());
+				isBad = false;
+			}else if (currentNode.getSibling() != null){
+				x.removeLast();
+				x.addLast(currentNode.getSibling());
+				isBad = false;
+			}else{
+				if (!x.isEmpty()){
+					x.removeLast();
+					if (!x.isEmpty())
+						currentNode = x.getLast();	
+					else{
+						isBad = false;
+					}
+				}else{
+					//System.out.println("Arrived at last node");
+					break;
+				}
+				visited = true;
+			}
+		}
+		if (x.isEmpty()){
+			//System.out.println("Finished Iterating");
+			return null;
+		}
+		return x;
+	}
+	
+	//returns true if a branch ONLY has leaf nodes (at least 2)
+	public boolean isValidBranch(SuffixTreeNode x){
+		//if the node is a leaf..
+		boolean result = true;
+		if (x.getChild() == null){
+			return false;
+		}else{
+			SuffixTreeNode currentNode = x.getChild();
+			while (currentNode.getSibling() != null){
+				if (currentNode.getSuffix() == -1)
+					result = false;
+				currentNode = currentNode.getSibling();
+			}
+		}
+		return result;
+	}
+	
+	public int getLengthOfNode(SuffixTreeNode x){
+		return x.getRightLabel() - x.getLeftLabel() + 1;
+	}
+	
+	
 
 	/**
 	 * Traverse generalised suffix tree t representing strings s1 (of length

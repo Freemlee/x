@@ -1,0 +1,12 @@
+\contentsline {section}{\numberline {1}Instructions}{2}{section.1}
+\contentsline {section}{\numberline {2}Status}{3}{section.2}
+\contentsline {subsection}{\numberline {2.1}Windows}{3}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}The Stack}{3}{subsection.2.2}
+\contentsline {section}{\numberline {3}Extensions Implemented}{4}{section.3}
+\contentsline {subsection}{\numberline {3.1}Basic}{4}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Advanced}{4}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Nicer GUI}{4}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Financial Calculator}{4}{subsubsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.3}Readable Stack}{4}{subsubsection.3.2.3}
+\contentsline {subsubsection}{\numberline {3.2.4}Integer Support}{5}{subsubsection.3.2.4}
+\contentsline {subsubsection}{\numberline {3.2.5}Basic Error Handling}{5}{subsubsection.3.2.5}

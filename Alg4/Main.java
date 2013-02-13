@@ -12,18 +12,30 @@ public class Main {
 	 * The main method.
 	 * @param args the arguments
 	 */
+	static SuffixTreeAppl theTree;
 	public static void main(String args[]) {
-
+		boolean first = true;
 		Scanner standardInput = new Scanner(System.in);
 		do {   
 			// display prompt for user
 			System.out.println();
+			String resp = null;
+			if (!first){
+				System.out.println("Would you like to open another file? y/n");
+				resp = standardInput.nextLine();
+			}
+			if (resp == "y" || first == true){
+				System.out.println("What file would you like to open: ");
+				FileInput file = new FileInput(standardInput.nextLine());
+				byte[] treeBytes = file.readFile();
+				theTree = new SuffixTreeAppl(new SuffixTree(treeBytes));
+			}
 			System.out.print("Enter the number of the task or type 'q' to quit: ");
 
 			// read in a line from standard input
 			String line = standardInput.nextLine();
 			System.out.println();
-
+			first = false;
 			try {
 				// try to extract an integer from line if possible
 				int numTask = Integer.parseInt(line);
@@ -31,37 +43,60 @@ public class Main {
 
 				switch (numTask) {
 				case 1: 
+					/*
 					System.out.println("You entered '1'");
 					String treeString = standardInput.nextLine();
 					byte[] treeInput = treeString.getBytes();
 					SuffixTree theTree = new SuffixTree(treeInput);
-					SuffixTreeAppl ourTree = new SuffixTreeAppl(theTree);
+					SuffixTreeAppl ourTree = new SuffixTreeAppl(theTree); */
 					System.out.println("What would you like to search the tree for");
 					String searchString = standardInput.nextLine();
 					byte[] searchBytes = searchString.getBytes();
-					Task1Info result = ourTree.searchSuffixTree(searchBytes);
-					if (result.getPos() == -1){
+					Task1Info result1 = theTree.searchSuffixTree(searchBytes);
+					if (result1.getPos() == -1){
 						System.out.println("There search text does not exist in the tree");
 					}else{
-						System.out.println("The index of the first character is " + result.getPos() + 
+						System.out.println("The index of the first character is " + result1.getPos() + 
 								"\nNB. All indexes start counting from 1 upwards\n");
 					}
 					//System.out.println(theTree.toString());
 
 					break;
 				case 2: System.out.println("You entered '2'");
-				
+				/*
 					treeString = standardInput.nextLine();
 					treeInput = treeString.getBytes();
 					theTree = new SuffixTree(treeInput);
-					SuffixTreeAppl ourTree2 = new SuffixTreeAppl(theTree);
+					ourTree = new SuffixTreeAppl(theTree);
+					*/
 					System.out.println("What would you like to search the tree for");
 					searchString = standardInput.nextLine();
 					searchBytes = searchString.getBytes();
-					Task2Info result2 = ourTree2.allOccurrences(searchBytes);
+					Task2Info result2 = theTree.allOccurrences(searchBytes);
 					System.out.println("Locations are: " + result2.getPositions().toString());
 					break;
-				case 3: System.out.println("You entered '3'"); break;
+				case 3: System.out.println("You entered '3'");
+				/*
+					treeString = standardInput.nextLine();
+					treeInput = treeString.getBytes();
+					theTree = new SuffixTree(treeInput);
+					ourTree = new SuffixTreeAppl(theTree);
+					searchString = standardInput.nextLine();
+					searchBytes = searchString.getBytes();
+					*/
+					Task3Info result3 = theTree.traverseForLrs();
+					String str = "";
+					int pos1 = result3.getPos1(); int pos2 = result3.getPos2();
+					int len = result3.getLen();
+					if (len!=0){
+						str = new String(theTree.getTree().getString()).substring(pos1, pos1+len);
+					}
+					if (len == 0){
+						System.out.println("There are no repeating substrings..");
+					}else{
+						System.out.printf("Longest Repeating Substring is: %s\nLength: %d\nFirst Occurance: %d\nLast Occurance: %d\n", str,len,pos1,pos2);
+					}
+					break;
 				case 4: System.out.println("You entered '4'"); break;
 				/* replace the above four lines with code to display relevant
 				 * output for each task    
