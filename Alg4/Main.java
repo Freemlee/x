@@ -72,8 +72,14 @@ public class Main {
 					System.out.println("What would you like to search the tree for");
 					searchString = standardInput.nextLine();
 					searchBytes = searchString.getBytes();
+					String tString = new String(searchBytes);
 					Task2Info result2 = theTree.allOccurrences(searchBytes);
-					System.out.println("Locations are: " + result2.getPositions().toString());
+					if (result2.getPositions().isEmpty()){
+						System.out.println("There are no occurances of: " + tString);
+					}
+					for (int x : result2.getPositions()){
+						System.out.println(tString + " occurs at index " + x);
+					}
 					break;
 				case 3: System.out.println("You entered '3'");
 				/*

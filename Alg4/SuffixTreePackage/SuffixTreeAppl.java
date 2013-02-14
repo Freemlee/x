@@ -2,6 +2,7 @@ package SuffixTreePackage;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Class with methods for carrying out applications of suffix trees
@@ -12,7 +13,6 @@ public class SuffixTreeAppl {
 
 	/** The suffix tree */
 	private SuffixTree t;
-	private LinkedList<Integer> occurences = null;
 
 	/**
 	 * Default constructor.
@@ -57,7 +57,7 @@ public class SuffixTreeAppl {
 		
 		while (currentNode != null){
 			lengthAtNode = currentNode.getRightLabel() - currentNode.getLeftLabel() + 1;
-			String temp = new String(Arrays.copyOfRange(t.getString(), currentNode.getLeftLabel(), currentNode.getRightLabel()+1));
+			//String temp = new String(Arrays.copyOfRange(t.getString(), currentNode.getLeftLabel(), currentNode.getRightLabel()+1));
 			/*System.out.println("Characters at Node : " + temp + "\n(" + currentNode.getLeftLabel() + 
 					","+currentNode.getRightLabel()+") of " + new String(t.getString()) + " (length = " + lengthAtNode + ")");
 		*/	//checks x with all the values at the currentNode
@@ -71,6 +71,8 @@ public class SuffixTreeAppl {
 					//System.out.println("\t\tNO MATCH -- here should go straight to sibling");
 					match = false;
 					result.setPos(-1);
+					//NEWLINE
+					startLocation = -1;
 				}else{
 					//System.out.println("\t\tMATCH");
 					if (startLocation == -1){
@@ -113,7 +115,83 @@ public class SuffixTreeAppl {
 	 * @return a Task2Info object
 	 */
 	public Task2Info allOccurrences(byte[] x) {
-		SuffixTreeNode currentNode= t.getRoot().getChild();
+		LinkedList<Integer> occurrences = new LinkedList<Integer>();
+		//perform a search
+		Task2Helper next = search(t.getRoot().getChild(), x);
+		//nextNode.
+		while (next.start != -1){
+			occurrences.add(next.start);
+			LinkedList<Integer> leafs = getAllOccurances(next.node);
+			occurrences.addAll(leafs);
+			next = search(next.node, x);
+		}
+		Task2Info res = new Task2Info();
+		res.addList(occurrences);
+		return res;
+	}
+	
+	public class Task2Helper{
+		SuffixTreeNode node;
+		int start;
+		public Task2Helper(SuffixTreeNode n, int s){
+			node = n;
+			start = s;
+		}
+	}
+	
+	public Task2Helper search(SuffixTreeNode node, byte[] x){
+		boolean match = true;
+		SuffixTreeNode resultNode = null;
+		int startLocation = -1;
+		int xIndex = 0;
+		int nodeIndex = 0;
+		int lengthAtNode;
+		SuffixTreeNode currentNode = node;
+		
+		while (currentNode != null){
+			lengthAtNode = currentNode.getRightLabel() - currentNode.getLeftLabel() + 1;
+
+			nodeIndex = 0;
+			match = true;
+			while (nodeIndex < lengthAtNode && match && xIndex < x.length){
+				int i = (currentNode.getLeftLabel()) + nodeIndex;
+			/*	System.out.println("Comparing:\n\tThe " + xIndex + " of " + new String(x) + " WITH\n\t" +
+						"The " + i + " of " + new String(t.getString())); */
+				if (x[xIndex] != t.getString()[i]){
+					//System.out.println("\t\tNO MATCH -- here should go straight to sibling");
+					match = false;
+					startLocation = -1;
+				}else{
+					//System.out.println("\t\tMATCH");
+					if (startLocation == -1){
+						startLocation = currentNode.getLeftLabel();
+					}
+					xIndex++;
+					nodeIndex++;
+				}
+			}
+			if (match){
+				resultNode = currentNode;
+				currentNode = currentNode.getChild();
+				//System.out.println("GOING TO CHILD");
+			}else{
+				currentNode = currentNode.getSibling();
+				//System.out.println("GOING TO SIBLING");
+			}
+		}
+		return new Task2Helper(resultNode,startLocation);
+	}
+		
+		/*
+		searchSuffixTree(x);
+		Task2Info result = new Task2Info();
+		//System.out.println("Value at node is: " + new String(t.getString()).substring(task2Node.getLeftLabel(),task2Node.getRightLabel()));
+		//System.out.println(task2Node.getLeftLabel() + "\t" + task2Node.getRightLabel());
+		result.addList(getAllOccurances(task2Node));
+		//clear in memory
+		task2Node = null;
+		return result;
+		/*SuffixTreeNode currentNode= t.getRoot().getChild();
 		Task2Info result = new Task2Info();
 		occurences.clear();
 		int tRes = 0;
@@ -121,7 +199,8 @@ public class SuffixTreeAppl {
 		//getNextOccurrence(x);
 		result.setPositions(occurences); // replace with your code!
 		return result;
-	}
+		
+	}*/
 	
 	public void getNextOccurrence(byte[] x, SuffixTreeNode node) {
 		int result = -2;
@@ -145,11 +224,11 @@ public class SuffixTreeAppl {
 				//System.out.println("Comparing:\n\tThe " + xIndex + " of " + new String(x) + " WITH\n\t" +
 				//		"The " + i + " of " + new String(t.getString())); 
 				if (x[xIndex] != t.getString()[i]){
-					//System.out.println("\t\tNO MATCH -- here should go straight to sibling");
+					System.out.println("\t\tNO MATCH -- here should go straight to sibling");
 					match = false;
 					result = -1;
 				}else{
-					//System.out.println("\t\tMATCH");
+					System.out.println("\t\tMATCH");
 					if (startLocation == -1){
 						startLocation = currentNode.getLeftLabel();
 					}
@@ -256,6 +335,17 @@ public class SuffixTreeAppl {
 		result[0] = currentNode.getSuffix();
 		currentNode = currentNode.getSibling();
 		result[1] = currentNode.getSuffix();
+		return result;
+	}
+	
+	public LinkedList<Integer> getAllOccurances(SuffixTreeNode x){
+		LinkedList<Integer> result = new LinkedList<Integer>();
+		//x = x.getChild();
+		while (x != null){
+			if (x.getChild() == null)
+				result.add(new Integer(x.getSuffix()));
+			x = x.getSibling();
+		}
 		return result;
 	}
 	
