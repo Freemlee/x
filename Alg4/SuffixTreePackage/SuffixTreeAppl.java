@@ -13,7 +13,7 @@ public class SuffixTreeAppl {
 
 	/** The suffix tree */
 	private SuffixTree t;
-	private SuffixTreeNode t2Node;
+	private SuffixTreeNode t2Node = null;
 	private LinkedList<SuffixTreeNode> occurrences = null;
 
 	/**
@@ -21,7 +21,7 @@ public class SuffixTreeAppl {
 	 */
 	public SuffixTreeAppl () {
 		t = null;
-		t2Node = null;
+		//t2Node = null;
 		//occurrences = new LinkedList<SuffixTreeNode>();
 	}
 	
@@ -73,6 +73,10 @@ public class SuffixTreeAppl {
 				}else{
 					if (startLocation == -1){
 						startLocation = currentNode.getLeftLabel();
+						
+						//needed for Task2Info, added here necessary for very small trees that have 
+						//very shallow depths.
+						t2Node = currentNode;
 					}
 					xIndex++;
 					nodeIndex++;
@@ -81,12 +85,16 @@ public class SuffixTreeAppl {
 				//xIndex++;
 			}
 			if (match){
-				if (currentNode.getChild() != null)
+				if (currentNode.getChild() != null){
 					/*t2Node is a global variable that is used when calulating the Task2Info
 					 * this is because most of this code is useful and the redundancy for Task2Info (ie. setting a pos)
-					 * does not leave a great overhead (imo this is better than 
+					 * does not leave a great overhead (imo this is better than copying the code).
 					 */
-					t2Node = currentNode;
+					System.out.println("Here in code");
+					if (currentNode != null){
+						t2Node = currentNode;
+					}
+				}
 				currentNode = currentNode.getChild();
 			}else{
 				currentNode = currentNode.getSibling();
@@ -116,15 +124,22 @@ public class SuffixTreeAppl {
 	 * @return a Task2Info object
 	 */
 	public Task2Info allOccurrences(byte[] x) {
+		//update the t2Node
 		searchSuffixTree(x);
 		occurrences = new LinkedList<SuffixTreeNode>();
 		if (t2Node == null){
-			//File does not exist
+			//no occurrences.
 			return new Task2Info();
+		
+		//else if needed in case there is only 1 occurrence
+		}else if(t2Node.getSuffix() != -1){
+			occurrences.add(t2Node);
 		}
+		//get all occurrences.
 		getLeafDecendants(t2Node.getChild());
 		Task2Info res = new Task2Info();
 		for (SuffixTreeNode node: occurrences){
+			//add all occurrences
 			res.addEntry(node.getSuffix());
 		}
 		return res;
@@ -133,14 +148,14 @@ public class SuffixTreeAppl {
 	public void getLeafDecendants(SuffixTreeNode currentNode){
 		// was currentNode.getSibling()
 		while (currentNode != null){
+			//add suffix and go to sibling
 			if (currentNode.getChild() == null){
 				occurrences.add(currentNode);
 				currentNode = currentNode.getSibling();
+			//explore children for suffixes and then go to sibling
 			}else{
 				getLeafDecendants(currentNode.getChild());
-				//new line
-				currentNode = currentNode.getSibling();
-				
+				currentNode = currentNode.getSibling();				
 			}
 		}
 	}
@@ -159,6 +174,7 @@ public class SuffixTreeAppl {
 		SuffixTreeNode currentNode = t.getRoot().getChild();
 		LinkedList<SuffixTreeNode> bestLsrNodes = new LinkedList<SuffixTreeNode>();
 		LinkedList<SuffixTreeNode> currentPath = new LinkedList<SuffixTreeNode>();
+		//initialise the path equal to the furthest descendent
 		currentPath.addLast(currentNode);
 		
 		boolean isLast = false;
@@ -167,11 +183,14 @@ public class SuffixTreeAppl {
 			if (isValidBranch(currentNode)){
 			}
 			if (getLength(currentPath) > getLength(bestLsrNodes) && isValidBranch(currentNode)){
+				//remove previous searches
 				bestLsrNodes.clear();
 				for (SuffixTreeNode n: currentPath){
+					//update bestLsrNodes
 					bestLsrNodes.addLast(n);
 				}
 			}
+			//update the path
 			currentPath = next(currentPath);
 		}
 		Task3Info result = new Task3Info();
