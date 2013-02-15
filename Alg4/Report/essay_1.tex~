@@ -190,8 +190,8 @@ presume familiarity.
 Firstly, in order to use this method, a constructor for two files must be implemented in the
 SuffixTree class. This is done by reading in the bytes to the first file, appending a \# symbol,
 appending the bytes for the second file, and finally appending a \$ symbol. Variables such as
-stringLen must here be set to the length of the total bytes -1 (as to not include the \# symbol as a
-character in the actual tree). The tree is then built.
+stringLen must here be set to the length of the total bytes -1 (as to not include the \$ symbol as a
+character in the actual tree). No checking that either files contain a \$ or \# symbol is done as this is stated as a premumption in the constructor's javadoc. The tree is then built.
 
 For the description below, file a and file b reference the first and second files' bytes that make
 up part of the tree respectively.
@@ -202,7 +202,7 @@ contains at least two leaf nodes) and BEFORE setting the bestLsrNodes to the pat
 greater than what has previously been encountered. This step is simply making sure that AT LEAST
 ONE of the suffixes of the last node in the path is less than the length of the first file (ie. it
 is present in file a) and also that AT LEAST ONE OTHER suffix is greater than the length of the
-first file (ie. it is present in file b). If both of these conditions are matched, then and only
+first file (ie. it is present in file b). If both of these conditions are met, then and only
 then is the bestLrsNodes updated, if this condition is not met then the two substrings are not
 common, ie. It is not present in BOTH files. 
 
@@ -210,20 +210,5 @@ This solution suffers from the same minor flaw as task 3 in that it visits nodes
 calculate the path depth. Other than this it appears to work as expected.
 \newpage
 
-%----------------------------------------------------------------------------------------
-%	BIBLIOGRAPHY
-%----------------------------------------------------------------------------------------
-
-%\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
-
-%\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
-%Figueredo, A.~J. and Wolf, P. S.~A. (2009).
-%\newblock Assortative pairing and life history strategy - a cross-cultural
-%  study.
-%\newblock {\em Human Nature}, 20:317--330.
- 
-%\end{thebibliography}
-
-%----------------------------------------------------------------------------------------
 
 \end{document}

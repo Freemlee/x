@@ -1,0 +1,941 @@
+% Tutorial
+% John T. O'Donnell
+% 2009
+
+# Launching a script
+
+Create a file named Tutorial1.hs, and use your favorite text editor to
+put the following contents into it:
+
+     module Tutorial1 where
+     import Hydra
+     import Hydra.StandardCircuits
+
+Now launch the interactive Haskell system ghci, and then tell it to
+load your file.  Here is what you actually type in:
+
+     ghci
+     :load Tutorial1
+
+What you will see on the screen is something like this:
+
+     $ ghci
+     GHCi, version 6.10.1: http://www.haskell.org/ghc/  :? for help
+     Loading package ghc-prim ... linking ... done.
+     Loading package integer ... linking ... done.
+     Loading package base ... linking ... done.
+     Prelude> :load Tutorial1
+     [1 of 1] Compiling Tutorial1        ( Tutorial1.hs, interpreted )
+     Ok, modules loaded: Tutorial1.
+     *Tutorial1> 
+
+
+
+Hydra can be installed properly using the cabal script.  However,
+you can also run it without compilation, using the ghci interpreter
+for Haskell, as follows:
+
+Find out where the Hydra directory is on your system, or download it
+into your file space.  The name of the directory should be something
+like hydra-0.2.5.
+
+If you're using the bash shell, insert the following into your .bashrc
+file (in your home directory):
+
+     # Hydra hardware description language
+     alias hydra='ghci -i/.../hydra-0.3.1/src'
+
+If you're using the tcsh (or related) shell, use the following:
+
+     # Hydra hardware description language
+     alias hydra 'ghci -i/.../hydra-0.3.1/src'
+
+This defines a command hydra, which launches the Haskell interactive
+system ghci with the Hydra libraries pre-loaded. -}
+
+
+Launch hydra by entering hydra-ghci into the shell, and then load
+the file by entering :load Tutorial1 at the prompt:
+
+     hydra-ghci
+     :load Tu
+
+Something like this should appear in your shell:
+
+     $ hydra-ghci
+     GHCi, version 6.8.2: http://www.haskell.org/ghc/  :? for help
+     Loading package base ... linking ... done.
+     Prelude> :load Tutorial1
+     [1 of 8] Compiling Hydra.System.Signal ...
+     Ok, modules loaded: Hydra, Tutorial1, ...
+     *Tutorial1> 
+
+# Signals and gates
+
+A *signal* is a wire.  A signal may have a name, such as x, y, sum16.
+A name must begin with a lower case letter (x but not X), and it may
+continue with letters, digits, underscores, and single quote
+characters.  Here are some valid signal names:
+
+     a xyz carry_sum x'
+
+
+
+## Signals
+
+## Logic gates
+
+
+The most commonly used logic gates are
+
+     inv   inverter
+     and2  and gate with 2 inputs
+     or2   inclusive or gate with 2 inputs
+     xor2  exclusive or gate with 2 inputs
+
+An equation can be used to define the output of a logic gates which is
+connected to input signals.  For example, this equation says there is
+an inverter with input a and output p:
+
+     p = inv a
+     q = and2 a b
+     r = or2 a b
+     s = xor2 a b
+
+The behaviours of these logic gates are summarised in this truth
+table:
+
+
+ a    b      p    q    r    s
+---  ---    ---  ---  ---  ---
+ 0    0      1    0    0    0
+ 0    1      1    0    1    1
+ 1    0      0    0    1    1
+ 1    1      0    1    1    0
+
+
+## Complete list of pre-defined logic gates
+
+Here is a complete list of the logic gates that are defined in the
+Hydra libraries.
+
+
+     Usage              Description
+----------------   -----------------------
+buf a              buffer
+inv a              inverter
+and2 a b           2-input and gate
+and3 a b c         3-input and gate
+and4 a b c d       4-input and gate
+or2 a b            2-input or gate
+or3 a b c          3-input or gate
+or4 a b c d        4-input or gate
+xor2 a b           2-input xor gate
+xor3 a b c         3-input xor gate
+xor4 a b c d       4-input xor gate
+nand2 a b          2-input nand gate
+nand3 a b c        3-input nand gate
+nand4 a b c d      4-input nand gate
+nor2 a b           2-input nor gate
+nor3 a b c         3-input nor gate
+nor4 a b c d       4-input nor gate
+xnor2 a b          2-input xnor gate
+xnor3 a b c        3-input xnor gate
+xnor4 a b c d      4-input xnor gate
+
+
+
+## Simulating a logic gate with Booleans
+
+You can simulate a small combinational circuit by giving it input
+values of True or False.  For example, inv True means "connect an inv
+circuit to an input value of True", and the result is the output of
+the logic gate, which is False.
+
+     *Tutorial1> inv True
+     False
+
+The other logic gates can be tested in a similar way.  Be sure to give
+the component the right number of inputs.
+
+     *Tutorial1> and2 False True
+     False
+     *Tutorial1> xor3 True False True
+     False
+     *Tutorial1> 
+
+This technique is useful for some quick experiments with a circuit,
+but it has some limitations, and it is limited to combinational
+circuits, i.e. circuits that do not contain any flip flops.
+
+
+## Constant signals
+
+A signal is the value on a wire.  The constant signals are written
+as
+
+     zero
+     one
+
+You can use a constant signal as an input to a circuit: inv one.  If
+you do this in a top-level interaction, there will be an error
+message, looking something like this:
+
+     *Tutorial1> inv zero
+     <interactive>:1:0:
+         Ambiguous type variable `a' in the constraint:
+           `Signal a' arising from a use of `inv' at <interactive>:1:0-7
+         Probable fix: add a type signature that fixes these type variable(s)
+     *Tutorial1> 
+
+The cause of the error is that Hydra has several different ways to
+represent a signal, and an expression like inv zero doesn't provide
+enough context to determine which one you want (hence the ambiguous
+type variable).
+
+The normal way to prevent this error is simply to run your circuit with a
+simulation driver (described below), which will specify which signal
+representation to use.  If you really want to use the constants zero or one
+without a simulation driver, you can specify the Bool representation
+explicitly:
+
+     *Tutorial1> inv zero :: Bool
+     True
+     *Tutorial1> 
+
+However, that will only work for a combinational circuit.  To simulate
+a sequential circuit, you really need to use a simulation driver.
+
+
+## Generating truth tables
+
+One way to determine fully the behaviour of a circuit is to simulate
+it with all possible sets of input values, building a truth table
+showing the results.  Hydra provides a set of operations to do this.
+For example, truthTable21 takes a circuit from 2 inputs to 1 output,
+and prints the truth table:
+
+     *Tutorial1> truthTable21 xor2
+         0 0 | 0
+         0 1 | 1
+         1 0 | 1
+         1 1 | 0
+     *Tutorial1> 
+
+This approach is feasible only for combinational circuits that have a
+small number of inputs.  The following definition runs a sequence of
+truth table tests on several of the logic gates. -}
+
+test_gates =
+  do putStrLn "Buffer (buf)"
+     truthTable11 buf
+     putStrLn "Inverter (inv)"
+     truthTable11 inv
+     putStrLn "2-input and gate (and2)"
+     truthTable21 and2
+     putStrLn "3-input and gate (and3)"
+     truthTable31 and3
+     putStrLn "4-input and gate (and4)"
+     truthTable41 and4
+
+{- You can run the test_gates command by entering it at the prompt:
+
+  *Tutorial1> test_gates
+  Buffer (buf)
+      0 | 0
+      1 | 1
+  Inverter (inv)
+      0 | 1
+      1 | 0
+  2-input and gate (and2)
+      0 0 | 0
+  ...
+  ...
+-}
+
+
+# Combinational circuits
+
+Here is a definition of a black box circuit, named circ1, with two
+inputs and one output.  Within the black box, the inputs are named x
+and y, and the output is anonymous (has no name).  The first input to
+the and2 gate is the output of an inverter with input x.  The second
+input to the and2 gate is y.
+
+     circ1 x y = and2 (inv x) y
+
+     tt_circ1 = truthTable21 circ1
+
+
+     mux1 :: Signal a => a -> a -> a -> a
+     mux1 p a b = x
+       where x = or2 (and2 (inv p) a) (and2 p b)
+
+## Defining equation for a circuit
+
+## Circuit type
+
+## Defining internal signals
+
+## Scope of names
+
+
+# Signal clusters
+
+## Tuples
+
+
+     demux1 :: Signal a => a -> a -> (a,a)
+     demux1 c x = (and2 (inv c) x, and2 c x)
+
+     mux2 :: Signal a => (a,a) -> a -> a -> a -> a -> a
+     mux2 (p0,p1) a b c d = x
+       where x = mux1 p0 (mux1 p1 a b) (mux1 p1 c d)
+
+     mux3 :: Signal a => (a,a,a) -> a -> a -> a -> a -> a-> a -> a -> a -> a
+     mux3 (c0,c1,c2) a0 a1 a2 a3 a4 a5 a6 a7 =
+       mux1 c0
+         (mux1 c1
+           (mux1 c2 a0 a1)
+           (mux1 c2 a2 a3))
+         (mux1 c1
+           (mux1 c2 a4 a5)
+           (mux1 c2 a6 a7))
+
+     mux22 :: Signal a => (a,a) -> (a,a) -> (a,a) -> (a,a) -> (a,a) -> (a,a)
+     mux22 (p0,p1) (a0,a1) (b0,b1) (c0,c1) (d0,d1) = (x,y)
+       where x = mux2 (p0,p1) a0 b0 c0 d0
+             y = mux2 (p0,p1) a1 b1 c1 d1
+
+     demux2 :: Signal a => (a,a) -> a -> (a,a,a,a)
+     demux2 (c0,c1) x = (y0,y1,y2,y3)
+       where (y0,y1) = demux1 c1 (inv c0)
+             (y2,y3) = demux1 c1 c0
+
+
+
+## Words
+
+Notation for words
+
+-- Logic on words
+
+
+     winv4 :: Signal a => [a] -> [a]
+     winv4 [x0,x1,x2,x3]
+       = [inv x0, inv x1, inv x2, inv x3]
+
+     w4mux1 :: Signal a => a -> [a] -> [a] -> [a]
+     w4mux1 c [x0,x1,x2,x3] [y0,y1,y2,y3] =
+       [mux1 c x0 y0, mux1 c x1 y1, mux1 c x2 y2, mux1 c x3 y3]
+
+
+## Word4
+
+
+     rippleAdd4 :: Signal a => a -> [(a,a)] -> (a,[a])
+     rippleAdd4 cin [(x0,y0),(x1,y1),(x2,y2),(x3,y3)]
+       = (c0, [s0,s1,s2,s3])
+       where
+         (c0,s0) = fullAdd (x0,y0) c1
+         (c1,s1) = fullAdd (x1,y1) c2
+         (c2,s2) = fullAdd (x2,y2) c3
+         (c3,s3) = fullAdd (x3,y3) cin
+
+
+
+     -- A 4-bit shift register
+     -- op:  00   no operation
+     --      01   load
+     --      10   shift right
+     --      11   shift left
+
+
+
+     srb :: Clocked a => (a,a) -> a -> a -> a -> a
+     srb op l r x = y
+       where y = dff (mux2 op y x l r)
+
+
+     sr4 :: Clocked a => (a,a) -> a -> a -> [a] -> [a]
+     sr4 op l r [x0,x1,x2,x3] = [a,b,c,d]
+       where
+          a = srb op l b x0
+          b = srb op a c x1
+          c = srb op b d x2
+          d = srb op c r x3
+
+
+
+## Simulation drivers
+
+
+     sim_circ1 input =
+       let a = getbit input 0
+           b = getbit input 1
+           x = circ1 a b
+           simoutput :: [Format Bool]
+           simoutput =
+             [string "  a=", bit a, string " b=", bit b, string "  x=", bit x]
+       in do putStrLn "\nSimulating circ1"
+             run input simoutput
+
+     circ1_input :: [[Int]]
+     circ1_input =
+       [ [0,0]
+       , [0,1]
+       , [1,0]
+       , [1,1]
+       ]
+
+
+
+
+     circ2 x y z = (or2 x y, xor2 x z)
+     
+     -- sim_circ2 circ2_input
+     
+     sim_circ2 input =
+       let a = getbit input 0
+           b = getbit input 1
+           c = getbit input 2
+           (p,q) = circ2 a b c
+           simoutput :: [Format Bool]
+           simoutput =
+             [string "  a=", bit a, string "  b=", bit b,
+              string "  p=", bit p, string "  q=", bit q]
+       in do putStrLn "\nSimulating circ2"
+             run input simoutput
+     
+     circ2_input :: [[Int]]
+     circ2_input =
+       [[0,0,1],
+        [1,1,0],
+        [1,0,0],
+        [1,1,1],
+        [1,1,0],
+        [0,1,0]]
+
+
+
+     mux14_test :: [[Int]]
+     mux14_test =
+       [[0,  3 , 4],
+        [1,  3,  4],
+        [0, 12, 13],
+        [1, 12, 13]]
+
+     sim_mux14 input =
+       let zs = w4mux1 c xs ys
+           c = getbit input 0 :: Stream Bool
+           xs = getbin 4 input 1
+           ys = getbin 4 input 2
+           simoutput :: [Format Bool]
+           simoutput =
+             [string "  c=", bit c,
+              string "  xs = ", bits xs,
+              string " (hex ", hex xs, string ") ",
+              string "  ys = ", bits ys,
+              string " (hex ", hex ys, string ") ",
+              string "  Output zs = ", bits zs,
+              string " (hex ", hex zs, string ") "]
+       in do putStrLn "Simulating mux14"
+             run input simoutput
+
+
+## a circuit
+
+     circuit1b x y z = (p,q)
+       where p = and3 x y z
+             b = or2 y z
+             q = xor2 p b
+
+Test by evaluating:
+   truthTable31 circuit1b
+
+
+truthTable31 circuit5
+
+     circuit5 a b c =
+       or2 (and3 (inv a) (inv b) (inv c))
+           (and3 a (inv b) c)
+
+     truthTable31 circuit5
+
+
+     circuit1a a b c = inv (xor2 (and2 a b) (or2 b c))
+
+-- truthTable31 circuit1a
+
+     testcirc :: Signal a => a -> a -> a -> a
+     testcirc a b c = or2 (and2 a b) c
+
+     circuit1 a b c = inv (xor2 (and2 a b) (or2 b c))
+
+
+
+     sim_circ2 input =
+       let a = getbit input 0
+           b = getbit input 1
+           (p,q) = circ2 a b
+           simoutput :: [Format Bool]
+           simoutput =
+             [string "  a=", bit a, string "  b=", bit b,
+              string "  p=", bit p, string "  q=", bit q]
+       in do putStrLn "\nSimulating circ2"
+             run input simoutput
+
+
+     circ2x_input :: [[Int]]
+     circ2x_input =
+       [[0,0],
+        [1,1],
+        [1,0],
+        [1,1],
+        [1,1],
+        [0,1]]
+
+
+
+
+# Synchronous circuits
+
+
+##  Streams and lists: Simple sequential circuit
+
+     circ5 a =
+       let x = dff (xor2 x a)
+       in x
+     
+     circ5_input1 =
+       listStream [True, False, True, True, False, True, True]
+     
+     circ5_input2 = listStream (repeat True)
+
+     -- circ5 circ1_input1
+     -- circ5 circ1_input2
+
+
+## A sequential circuit with several inputs and flip flops
+
+     circ6 a b = (p,q)
+       where u = and2 a q
+             v = xor2 b p
+             p = dff u
+             q = dff v
+
+     circ6_inputa = listStream [False, True, True,  True, True, False]
+     circ6_inputb = listStream [False, True, False, True, True, True]
+
+
+       [[0,0],
+        [1,1],
+        [1,0],
+        [1,1],
+        [1,1],
+        [0,1]]
+
+
+     -- circ2 circ2_inputa circ2_inputb
+     -- fst (circ2 circ2_inputa circ2_inputb)
+     -- snd (circ2 circ2_inputa circ2_inputb)
+
+
+     Cycle   a  b  u  v  p  q
+       0     0  0  0  0  0  0
+       1     1  1  0  1  0  0
+       2     1  0  1  0  0  1
+       3     1  1  0  0  1  0
+       4     1  1  0  1  0  0
+       5     0  1  0  1  0  1
+       6                 0  1
+
+
+
+
+
+## A 1-bit register
+
+     reg1 :: Clocked a => a -> a -> a
+     reg1 ld x = r
+       where r = dff (mux1 ld r x)
+
+     reg_input_ld =
+       listStream [True, False, False, True,  True, True, True,  False]
+     reg_input_x =
+       listStream [True, False, True,  False, True, True, False, True]
+
+
+
+     Cycle  ld  x   reg
+       0     1  1    0
+       1     0  0    1
+       2     0  1    1
+       3     1  0    1
+       4     1  1    0
+       5     1  1    1
+       6     1  0    1
+       7     0  1    0
+       8             0
+
+
+-- reg1 reg_ld reg_x
+
+
+     sim_reg1 input =
+       let ld = getbit input 0
+           x = getbit input 1
+           r = reg1 ld x
+           simoutput :: [Format Bool]
+           simoutput =
+             [string "ld=", bit ld, string " x=", bit x, string " r=", bit r]
+       in do putStrLn "\nSimulating reg1"
+             run input simoutput
+
+
+     reg1_input :: [[Int]]
+     reg1_input =
+       [[1,1],
+        [0,0],
+        [0,1],
+        [1,0],
+        [1,1],
+        [0,0]]
+
+
+## 4-bit register
+
+
+     reg4 :: Clocked a => a -> [a] -> [a]
+     reg4 ld [x0,x1,x2,x3] =
+       [reg1 ld x0, reg1 ld x1, reg1 ld x2, reg1 ld x3]
+
+
+## 4-bit shift register
+
+
+-- sim_sr4 sr4_input
+
+     sim_sr4 input =
+       let op0 = getbit input 0
+           op1 = getbit input 1
+           li = getbit input 2
+           ri = getbit input 3
+           x0 = getbit input 4
+           x1 = getbit input 5
+           x2 = getbit input 6
+           x3 = getbit input 7
+           [y0,y1,y2,y3] = sr4 (op0,op1) li ri [x0,x1,x2,x3]
+           simoutput :: [Format Bool]
+           simoutput =
+             [string "op=", bit op0, bit op1,
+              string "  li=", bit li,
+              string "  ri=", bit ri,
+              string "  x=", bit x0, bit x1, bit x2, bit x3,
+              string "  y=", bit y0, bit y1, bit y2, bit y3]
+       in do putStrLn "\nSimulating sr4y"
+             run input simoutput
+
+     sr4_input :: [[Int]]
+     sr4_input =
+       [[0,1,  0,0,  1,0,1,1],
+        [0,0,  0,0,  0,0,0,0],
+        [1,0,  1,0,  0,0,0,0],
+        [1,0,  0,0,  0,0,0,0],
+        [1,0,  1,0,  0,0,0,0],
+        [0,0,  0,0,  0,0,0,0],
+        [1,1,  0,1,  0,0,0,0],
+        [1,1,  0,1,  0,0,0,0],
+        [1,1,  0,0,  0,0,0,0],
+        [0,1,  0,0,  0,1,0,0],
+        [0,0,  0,0,  0,0,0,0]]
+
+
+
+
+Working out a simulation table by hand:
+
+         op    l r      x         y
+       [[0,1,  0,0,  1,0,1,1],  0000 
+        [0,0,  0,0,  0,0,0,0],  1011  result of load
+        [1,0,  1,0,  0,0,0,0],  1011  result of nop
+        [1,0,  0,0,  0,0,0,0],  1101  result of shift right (with 1)
+        [1,0,  1,0,  0,0,0,0],  0110  result of shift right (with 0)
+        [0,0,  0,0,  0,0,0,0],  1011  result of shift right (with 1)
+        [1,1,  0,1,  0,0,0,0],  1011  result of nop
+        [1,1,  0,1,  0,0,0,0],  0111  result of shift left (with 1)
+        [1,1,  0,0,  0,0,0,0],  1111  result of shift left (with 1)
+        [0,1,  0,0,  0,1,0,0],  1110  result of shift left (with 0)
+        [0,0,  0,0,  0,0,0,0]]  0100  result of load
+                           0100  result of nop
+
+
+
+
+-- set up the simulation
+
+     sr4_out = [y0,y1,y2,y3]
+       where
+         [y0,y1,y2,y3] = sr4 (op0,op1) li ri [x0, x1, x2, x3]
+         op0 = input_ints [0,0,1,1,1,0,1,1,1,0,0]
+         op1 = input_ints [1,0,0,0,0,0,1,1,1,1,0]
+         li  = input_ints [0,0,1,0,1,0,0,0,0,0,0]
+         ri  = input_ints [0,0,0,0,0,0,1,1,0,0,0]
+         x0  = input_ints [1,0,0,0,0,0,0,0,0,0,0]
+         x1  = input_ints [0,0,0,0,0,0,0,0,0,1,0]
+         x2  = input_ints [1,0,0,0,0,0,0,0,0,0,0]
+         x3  = input_ints [1,0,0,0,0,0,0,0,0,0,0]
+
+
+
+
+Meaning of op:
+
+     0 -- no state change
+     1 -- load input word x
+     2 -- shift right
+     3 -- shift left
+
+
+Several variations of the shift register, which handle the fanout
+in different ways.  See the Hydra Manual section on fanout and
+partial applications.
+
+Version 1 is just the same as above.
+
+     sr4_v1 :: Clocked a => (a,a) -> a -> a -> [a] -> [a]
+     sr4_v1 op l r [x0,x1,x2,x3] = [a,b,c,d]
+       where
+          a = srb op l b x0
+          b = srb op a c x1
+          c = srb op b d x2
+          d = srb op c r x3
+
+Version 2 uses implicit fanout expressed by defining the f box as a
+partial application.
+
+     sr4_v2 :: Clocked a => (a,a) -> a -> a -> [a] -> [a]
+     sr4_v2 op l r [x0,x1,x2,x3] = [a,b,c,d]
+       where
+          f = srb op
+          a = f l b x0
+          b = f a c x1
+          c = f b d x2
+          d = f c r x3
+
+-- Version 3 uses explicit fanout.
+
+     sr4_v3 :: Clocked a => (a,a) -> a -> a -> [a] -> [a]
+     sr4_v3 op l r [x0,x1,x2,x3] = [a,b,c,d]
+       where
+          (opa,opb,opc,opd) = fanout4 op
+          a = srb opa l b x0
+          b = srb opb a c x1
+          c = srb opc b d x2
+          d = srb opd c r x3
+
+
+------------------------------------------------------------------------
+
+# Miscellaneous
+
+
+
+# Design patterns
+
+
+-- Word inverter: winv takes a word and inverts each of its bits
+
+     winv :: Signal a => [a] -> [a]
+     winv x = map inv x
+
+And/Or over a word: Determine whether there exists a 1 in a word, or
+whether all the bits are 0.  A tree fold can do this in log time, but
+for simplicity this is just a linear time fold.
+
+-- ?? any1, all1 deprecated, remove...
+
+     any0, any1, all0, all1 :: Signal a => [a] -> a
+     any1 = error "any1 replaced by orw" -- foldl or2 zero
+     all1 = error "all1 replaced by andw" -- foldl and2 one
+     all0 xs = inv (orw xs)
+     any0 xs = inv (andw xs)
+
+     orw, andw :: Signal a => [a] -> a
+     orw = foldl or2 zero
+     andw = foldl and2 one
+
+
+     mux1w :: Signal a => a -> [a] -> [a] -> [a]
+     mux1w c x y = map2 (mux1 c) x y
+
+
+-- Ripple carry addition
+
+     rippleAdd :: Signal a => a -> [(a,a)] -> (a,[a])
+     rippleAdd = mscanr fullAdd
+
+
+-- Two's complement addition and subtraction
+
+     addSub :: Signal a => a -> [(a,a)] -> (a,[a])
+     addSub sub xy = rippleAdd sub (map f xy)
+       where f (x,y) = (x, xor2 sub y)
+
+
+
+
+
+
+
+------------------------------------------------------------------------
+
+## Registers
+
+     reg :: Clocked a => Int -> a -> [a] -> [a]
+     reg k ld x = mapn (reg1 ld) k x
+     wlatch :: Clocked a => Int -> [a] -> [a]
+     wlatch k x = mapn dff k x
+
+
+## Register files
+
+     regfile1 :: Clocked a => Int -> a -> [a] -> [a] -> [a] -> a -> (a,a)
+     
+     regfile1 0 ld d sa sb x = (r,r)
+       where r = reg1 ld x
+     
+     {- demux1 not in scope ???
+     regfile1 (k+1) ld (d:ds) (sa:sas) (sb:sbs) x = (a,b)
+       where
+         (a0,b0) = regfile1 k ld0 ds sas sbs x
+         (a1,b1) = regfile1 k ld1 ds sas sbs x
+         (ld0,ld1) = demux1 d ld
+         a = mux1 sa a0 a1
+         b = mux1 sb b0 b1
+     -}
+     
+     regfile :: Clocked a => Int -> Int
+       -> a -> [a] -> [a] -> [a] -> [a] -> ([a],[a])
+     
+     regfile n k ld d sa sb x =
+        unbitslice2 [regfile1 k ld d sa sb (x!!i)  | i <- [0..n-1]]
+
+     -- sim_regfile regfile_input1
+     -- sim_regfile regfile_input2
+     
+     regfile_input1 :: [[Int]]
+     regfile_input1 =
+     -- ld  d  sa  sb   x
+     -- ~~~~~~~~~~~~~~~~~~~
+       [[1, 3,  5,  3,  12],
+        [0, 0,  5,  3,  00],
+        [1, 6,  2,  6,  35]]
+     
+     regfile_input2 :: [[Int]]
+     regfile_input2 =
+     -- ld  d  sa  sb   x
+     -- ~~~~~~~~~~~~~~~~~~~
+       [[1, 4,  0,  0,  29],
+        [1, 3,  0,  4,  11],
+        [0, 4,  4,  3,  13],
+        [1, 6,  6,  3,  21],
+        [1, 6,  6,  4,  15],
+        [0, 1,  6,  4,  98]]
+     
+     
+     sim_regfile input =
+       let k = 4  -- there are 2^4 = 16 registers
+           n = 16 -- each register contains 16 bits
+           ld = getbit   input 0
+           d  = getbin k input 1
+           sa = getbin k input 2
+           sb = getbin k input 3
+           x  = getbin n input 4
+           (a,b) = regfile n k ld d sa sb x
+           simoutput :: [Format Bool]
+           simoutput =
+             [string "Input: ",
+              bit ld, string " ", bindec 1 d, string " ",
+              bindec 1 sa, string " ", bindec 1 sb,
+              string " ", bindec 3 x,
+              string "   Output: ",
+              bindec 3 a, string " ", bindec 3 b]
+       in do putStrLn "\nSimulating register file"
+             run input simoutput
+
+
+# Standard circuits
+
+## Buffered Fanout
+
+     fanoutbuf2 :: Signal a => a -> (a,a)
+     fanoutbuf2 x = (y,y)
+       where y = buf x
+
+     fanoutbuf3 :: Signal a => a -> (a,a,a)
+     fanoutbuf3 x = (y,y,y)
+       where y = buf x
+
+     fanoutbuf4 :: Signal a => a -> (a,a,a,a)
+     fanoutbuf4 x = (y,y,y,y)
+       where y = buf x
+
+
+## Adder
+
+Bit addition
+
+-- myHalfAdd x y = (and2 x y, xor2 x y)
+
+     halfAdd :: Signal a => a -> a -> (a,a)
+     halfAdd x y = (and2 x y, xor2 x y)
+
+     bsum, bcarry :: Signal a => (a,a) -> a -> a
+     bsum (x,y) c = xor3 x y c
+     bcarry (x,y) c = or3 (and2 x y) (and2 x c) (and2 y c)
+
+     fullAdd :: Signal a => (a,a) -> a -> (a,a)
+     fullAdd (x,y) c = (bcarry (x,y) c, bsum (x,y) c)
+
+
+
+## Comparison
+
+
+-- Bit comparison
+
+     cmp1 :: Signal a => (a,a,a) -> (a,a) -> (a,a,a)
+     cmp1 (lt,eq,gt) (x,y) =
+       (or2 lt (and3 eq (inv x) y),
+        and2 eq (inv (xor2 x y)),
+        or2 gt (and3 eq x (inv y))
+       )
+
+-- Ripple comparison
+
+     rippleCmp :: Signal a => [(a,a)] -> (a,a,a)
+     rippleCmp = foldl cmp1 (zero,one,zero)
+
+
+
+
+## Unbuffered Fanout
+
+
+     fanout2 :: a -> (a,a)
+     fanout2 x = (x,x)
+
+     fanout3 :: a -> (a,a,a)
+     fanout3 x = (x,x,x)
+
+     fanout4 :: a -> (a,a,a,a)
+     fanout4 x = (x,x,x,x)
+
+Duplicating a bit to form a word: fanout takes a wordsize k and a
+signal x, and produces a word of size k each of whose bits takes
+the value of x.
+
+     fanout :: Signal a => Int -> a -> [a]
+     fanout k x = take k (repeat x)
+

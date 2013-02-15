@@ -1,0 +1,15 @@
+% Overview
+% John T. O'Donnell
+% 2009
+
+Hydra is a computer hardware description language for designing
+digital circuits.  It uses a functional style to specify circuits
+clearly and concisely.  There are tools to simplify circuit
+description, including black box abstraction, design patterns, and
+tools for specialised circuits such as control algorithms.  Hydra
+supports circuit simulation, and simplifies running simulations
+simulation driver (or "testbench").
+
+A good way to get started is to read the overview, work through the
+tutorial, and look at some examples.  Then read the user's guide for
+all the details.

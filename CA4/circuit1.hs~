@@ -1,0 +1,37 @@
+module TrafficLights1 where
+
+import HDL.Hydra.Core.Lib
+import HDL.Hydra.Circuits.StandardCircuits
+
+-- input button
+resetButton :: Clocked a => a -> a
+resetButton button = reset
+  where
+	reset = dff (mux2 button one zero)
+	
+
+-- (r,g,b) = LightLogic [1,2,3,4]
+
+signalExtender :: Clocked a => a -> [a]
+signalExtender reset = [i0,i1,i2,i3]
+  where
+	i0 = zero
+	i1 = zero
+	i2 = zero
+	i3 = or2 reset zero -- change zero for feedback nine signal
+	
+lightLogic :: Clocked a => [a] -> (a,a,a)
+lightLogic [o0,o1,o2,o3] = (r,a,g)
+  where
+	r = or3 (and3 (inv o3) o2 o1) (and3 (inv o3) o2 o0) (and4 o3 (inv o2) (inv o1) (inv o0))
+	a = or2 (and4 (inv o3) o2 (inv o1) (inv o0)) (and4 o3 (inv o2) (inv o1) o0)
+	g = or2 (and3 (inv o3) (inv o2) o1) (and3 (inv o3) (inv o2) o0)
+	
+
+counter :: Clocked a => [a] -> a -> [a]
+counter [i0,i1,i2,i3] cin = [o0,o1,o2,o3]
+  where 
+	(c3,o3) = halfAdd cin i3
+	(c2,o2) = halfAdd c3 i2
+	(c1,o1) = halfAdd c2 i1
+	(c0,o0) = halfAdd c1 i0
