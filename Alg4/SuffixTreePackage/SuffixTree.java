@@ -53,6 +53,16 @@ public class SuffixTree {
 	 */
 	public SuffixTree (byte[] sInput1, byte[] sInput2) {
          // to be completed!
+		root = new SuffixTreeNode(null, null, 0, 0, -1);
+		s = new byte[sInput1.length + sInput2.length + 2];
+		System.arraycopy(sInput1, 0, s, 0, sInput1.length);
+		s[sInput1.length] = (byte) '#';
+		System.arraycopy(sInput2, 0, s, sInput1.length + 1, sInput2.length);
+		s[sInput1.length + sInput2.length + 1] = (byte) '$';
+		//try changing to 2
+		stringLen = sInput1.length + sInput2.length + 1;
+		System.out.println(sInput1.length+sInput2.length+2 + "\t" + s.length);
+		buildSuffixTree();
 	}
 
 	/**
@@ -63,7 +73,7 @@ public class SuffixTree {
 			for (int i=0; i<= stringLen; i++) {
 				// for large files, the following line may be useful for
 				// indicating the progress of the suffix tree construction
-				if (i % 10000==0) System.out.println(i);
+				//if (i % 10000==0) System.out.println(i);
 
 				// raise an exception if the text file contained a '$'
 				if (s[i] == (byte) '$' && i < stringLen)

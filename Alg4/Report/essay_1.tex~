@@ -1,0 +1,150 @@
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[12pt]{article} % Default font size is 12pt, it can be changed here
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{geometry} % Required to change the page size to A4
+\geometry{a4paper} % Set the page size to be A4 as opposed to the default US Letter
+
+\usepackage{graphicx} % Required for including pictures
+
+\usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
+\usepackage{wrapfig} % Allows in-line images such as the example fish picture
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\linespread{1.2} % Line spacing
+
+%\setlength\parindent{0pt} % Uncomment to remove all indentation from paragraphs
+
+\graphicspath{{./Pictures/}} % Specifies the directory where pictures are stored
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines,
+%change thickness here
+\center % Center everything on the page
+\includegraphics[width=\textwidth]{Glasgow}\\[1.5cm]
+\textsc{\LARGE Algorithmics}\\[0.5cm] % Major heading such as course name
+\textsc{\Large Assessed Exercise}\\[0.5cm] % Minor heading such as course title
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Suffix Tree Applications}\\[0.4cm]
+\\
+\emph{State \& Strategy}
+\HRule \\[1.5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+Garry \textsc{Sharp}\\
+0801585s\\ % Your name
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Supervisors:} \\
+Dr. D. \textsc{Manlove}\\ % Supervisor's Name
+\end{flushright}
+\end{minipage}\\[4cm]
+
+{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+\tableofcontents
+\newpage
+\section{Task 1 (Search Suffix Tree)}
+The task here is implement a method \textit{searchSuffixTree} in the class \textit{SuffixTreeAppl}
+which searches over a global instance of a \textit{SuffixTree} known as \textit{t} with the search
+term being an array of bytes \textit{x}
+\subsection{State}
+My solution works in an effective manner to search the tree in \textit{O(n)} time. It should be
+noted that the solutions to Task 2 \ref{task2}, Searching for all occurrences relies heavily on
+this method. This means that there is a very small amount(almost negligable) amount of redundant
+code when searching (sets a global variable). 
+\subsection{Solution}
+Firstly, lets examine the variables that are used. I keep track of an x index (initialised
+to 0) a node index (index of the characted being compared at the node), a boolean called match
+(which is set to true/false depending on whether there is a match), an integer start location
+(initialised to -1) as well as a SuffixTreeNode called currentNode (initialised to the child of the
+root of the tree).
+
+My solution comparing the relevant values of x with the relevant values held at the node. If all
+characters are matched successfully (and there are more in subsequent nodes) then I perform the
+same check at the child of that node. If all characters have been matched and no more are left then
+the loop terminates.
+
+If there is a mismatch at any characters then I examine the sibling that node until, either there
+is another match (is a mismatch occurs at that node it looks at the sibling, otherwise if fully
+matched goes to the child) or a mismatch at which point the loop exits.
+
+A variable t2Node is set throughout and this is so that Task 2 can be completed by recycling code,
+this node is eventually set to the final node that contains leafs of the instances of the search
+term.
+
+If a match does occur and startLocation is not already set, a variable startLocation is set to it's
+left label of the currentNode. Otherwise is a mismatch occurs startLabel is reset (set to -1).
+
+The program terminates by setting the Task1Info object with position startLocation (which will be a
+-1 if not found) to the main method which then displays it accordingly. The search executes in O(n)
+time.
+
+This solution uses no external helper methods.
+\newpage
+\section{Task 2 (All Occurrences)}
+The task here is very similar to Task 1, but with the result being equal to every instance of the
+search term in the text, specifically the starting index of every occurrence.
+\label{task2}
+\subsection{State}
+This works in an effective manner by reusing the search functionality implemented in Task 1, this
+is done by calling the searchSuffixTree method and then using the t2Node (which is set to the
+branch node from which all decendent leaf nodes contain the occurrences). The solution executes in
+O(n) time (plus build time).
+\subsection{Solution}
+As mentioned above, searchSuffixTree is called and t2Node is assigned accordingly. From here on I
+used a recursive method on the child of the node until there are no more siblings. I basically look
+at all nodes, where if there is no child (ie. node is a leaf) I add the value to a global variable
+called occurrences, otherwise (if leaf) I recurse down the child of the currentnode and after move
+to the sibling.
+
+Finally I iterate through the value of occurences and add each of the suffixes of each node to the
+Task2Info object which I then return.
+\newpage
+\section{Task 3 (Longest Repeating Substring)}
+\subsection{State}
+\subsection{Solution}
+\newpage
+\section{Task4 (Longest Common Substring)}
+\subsection{State}
+\subsection{Solution}
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+%\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
+
+%\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
+%Figueredo, A.~J. and Wolf, P. S.~A. (2009).
+%\newblock Assortative pairing and life history strategy - a cross-cultural
+%  study.
+%\newblock {\em Human Nature}, 20:317--330.
+ 
+%\end{thebibliography}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}

@@ -13,6 +13,7 @@ public class Main {
 	 * @param args the arguments
 	 */
 	static SuffixTreeAppl theTree;
+	static byte[] tree1Bytes;
 	public static void main(String args[]) {
 		boolean first = true;
 		Scanner standardInput = new Scanner(System.in);
@@ -27,8 +28,8 @@ public class Main {
 			if (resp == "y" || first == true){
 				System.out.println("What file would you like to open: ");
 				FileInput file = new FileInput(standardInput.nextLine());
-				byte[] treeBytes = file.readFile();
-				theTree = new SuffixTreeAppl(new SuffixTree(treeBytes));
+				tree1Bytes = file.readFile();
+				theTree = new SuffixTreeAppl(new SuffixTree(tree1Bytes));
 			}
 			System.out.print("Enter the number of the task or type 'q' to quit: ");
 
@@ -103,7 +104,21 @@ public class Main {
 						System.out.printf("Longest Repeating Substring is: %s\nLength: %d\nFirst Occurance: %d\nLast Occurance: %d\n", str,len,pos1,pos2);
 					}
 					break;
-				case 4: System.out.println("You entered '4'"); break;
+				case 4: 
+					System.out.println("You entered '4'"); 
+					System.out.println("What is the second file you would like to open? - ");
+					FileInput file = new FileInput(standardInput.nextLine());
+					byte[] file2Bytes = file.readFile();
+					//theTree = new SuffixTreeAppl(new SuffixTree(tree1Bytes,file2Bytes));
+					SuffixTreeAppl Task4Tree = new SuffixTreeAppl(new SuffixTree(tree1Bytes, file2Bytes));
+					Task4Info res = Task4Tree.traverseForLcs(tree1Bytes.length);
+					System.out.println(res.getPos1());
+					System.out.println(res.getPos2());								//swapped
+					//System.out.println(new String(Task4Tree.getTree().getString()));
+					System.out.println("Longest Common Substring is: " + new String(file2Bytes).substring(res.getPos1(), res.getLen() + res.getPos1()));
+					System.out.println("Longest Common Substring is: " + new String(tree1Bytes).substring(res.getPos2(), res.getLen() + res.getPos2()));
+					System.out.printf("Occurring at location %d in file1 and location %d in file2\n",res.getPos2(),res.getPos1());
+					break;
 				/* replace the above four lines with code to display relevant
 				 * output for each task    
                  *
@@ -134,4 +149,6 @@ public class Main {
 		} while (true);
 		standardInput.close();
 	}
+	
+	
 }
