@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2012.9.11)  14 FEB 2013 17:22
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2012.9.11)  15 FEB 2013 03:52
 entering extended mode
  %&-line parsing enabled.
 **essay_1.tex
@@ -290,22 +290,27 @@ been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.67 \newpage
-              [1] [2] [3] [4] [5] [6] (./essay_1.aux) ) 
+              [1] [2] [3] [4] [5]
+Overfull \hbox (0.69475pt too wide) in paragraph at lines 160--165
+[]\OT1/cmr/m/n/12 The fi-nal so-lu-tion ba-si-cally com-bines all of the above 
+meth-ods, it-er-at-ing through
+ []
+
+[6] [7] [8] (./essay_1.aux) ) 
 Here is how much of TeX's memory you used:
- 3703 strings out of 256216
- 49309 string characters out of 1917072
- 200381 words of memory out of 1500000
- 6950 multiletter control sequences out of 10000+200000
+ 3706 strings out of 256216
+ 49329 string characters out of 1917072
+ 200442 words of memory out of 1500000
+ 6951 multiletter control sequences out of 10000+200000
  11072 words of font info for 39 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 27i,4n,36p,265b,406s stack positions out of 5000i,500n,6000p,200000b,15000s
-</usr/share/texmf/fonts/
-type1/bluesky/cm/cmbx12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmcsc10.pf
-b></usr/share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf/fonts/ty
-pe1/bluesky/cm/cmti12.pfb>
-Output written on essay_1.pdf (7 pages, 62137 bytes).
+ 27i,4n,36p,287b,406s stack positions out of 5000i,500n,6000p,200000b,15000s
+</usr/share/texmf/fonts/type1/bluesky/cm/cmbx12.pf
+b></usr/share/texmf/fonts/type1/bluesky/cm/cmcsc10.pfb></usr/share/texmf/fonts/
+type1/bluesky/cm/cmr12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti12.pfb>
+Output written on essay_1.pdf (9 pages, 70611 bytes).
 PDF statistics:
- 125 PDF objects out of 1000 (max. 8388607)
- 20 named destinations out of 1000 (max. 131072)
+ 134 PDF objects out of 1000 (max. 8388607)
+ 22 named destinations out of 1000 (max. 131072)
  118 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -66,17 +66,11 @@ public class SuffixTreeAppl {
 			match = true;
 			while (nodeIndex < lengthAtNode && match && xIndex < x.length){
 				int i = (currentNode.getLeftLabel()) + nodeIndex;
-				
-				/*System.out.println("Comparing:\n\tThe " + xIndex + " of " + new String(x) + " WITH\n\t" +
-						"The " + i + " of " + new String(t.getString())); */
 				if (x[xIndex] != t.getString()[i]){
-					//System.out.println("\t\tNO MATCH -- here should go straight to sibling");
 					match = false;
 					result.setPos(-1);
-					//NEWLINE
 					startLocation = -1;
 				}else{
-					//System.out.println("\t\tMATCH");
 					if (startLocation == -1){
 						startLocation = currentNode.getLeftLabel();
 					}
@@ -96,7 +90,6 @@ public class SuffixTreeAppl {
 				currentNode = currentNode.getChild();
 			}else{
 				currentNode = currentNode.getSibling();
-				//System.out.println("GOING TO SIBLING");
 			}
 		}
 		if (match == true){
@@ -129,12 +122,8 @@ public class SuffixTreeAppl {
 			//File does not exist
 			return new Task2Info();
 		}
-		//might need to change to t2Node.getChild();
-		//System.out.println(t2Node.getSuffix());
-		//System.out.println(t2Node.getChild().getSuffix());
 		getLeafDecendants(t2Node.getChild());
 		Task2Info res = new Task2Info();
-		System.out.println("Size = " + occurrences.size());
 		for (SuffixTreeNode node: occurrences){
 			res.addEntry(node.getSuffix());
 		}
@@ -145,7 +134,6 @@ public class SuffixTreeAppl {
 		// was currentNode.getSibling()
 		while (currentNode != null){
 			if (currentNode.getChild() == null){
-				System.out.println("Adding item");
 				occurrences.add(currentNode);
 				currentNode = currentNode.getSibling();
 			}else{
@@ -168,39 +156,25 @@ public class SuffixTreeAppl {
 	 * @return a Task3Info object
 	 */
 	public Task3Info traverseForLrs () {
-		long start = System.currentTimeMillis();
-		//SuffixTreeNode bestNode;
 		SuffixTreeNode currentNode = t.getRoot().getChild();
 		LinkedList<SuffixTreeNode> bestLsrNodes = new LinkedList<SuffixTreeNode>();
 		LinkedList<SuffixTreeNode> currentPath = new LinkedList<SuffixTreeNode>();
 		currentPath.addLast(currentNode);
-		/*if prevLength is >= to the currentLength we want to 
-		remove a node from the tree (and decrement prevLength, otherwise we keep it.
-		*/
 		
 		boolean isLast = false;
 		while (currentPath != null || isLast){
-			//System.out.println("Current size of path: " + currentPath.size());
 			currentNode = currentPath.getLast();
 			if (isValidBranch(currentNode)){
-				//System.out.println("VALID BRANCH");
 			}
-			//System.out.println("Current length = " + getLength(currentPath) + 
-			//		"\nBest length = " + getLength(bestLsrNodes));
-
 			if (getLength(currentPath) > getLength(bestLsrNodes) && isValidBranch(currentNode)){
-				//bestLsrNodes = currentPath;
 				bestLsrNodes.clear();
 				for (SuffixTreeNode n: currentPath){
 					bestLsrNodes.addLast(n);
 				}
-				//System.out.println("New best - " + getLength(bestLsrNodes));
 			}
 			currentPath = next(currentPath);
 		}
-		System.out.println(System.currentTimeMillis() - start);
 		Task3Info result = new Task3Info();
-		//System.out.println("FINAL BEST IS " + getLength(bestLsrNodes));
 		if (bestLsrNodes.isEmpty()){
 			return result;
 		}else{
@@ -212,24 +186,14 @@ public class SuffixTreeAppl {
 		}
 	}
 	
-	//Gets the leaf nodes of a branch node (when immediate parent, check with isValidBranch(x) first)
-	public int[] getLeafSuffixes(SuffixTreeNode x){
+	/*Gets 2 the leaf nodes of a branch node, should be checked with 
+	isValidBranch(x) first. (when immediate parent, check with isValidBranch(x) first)*/
+	private int[] getLeafSuffixes(SuffixTreeNode x){
 		int[] result = new int[2];
 		SuffixTreeNode currentNode = x.getChild();
 		result[0] = currentNode.getSuffix();
 		currentNode = currentNode.getSibling();
 		result[1] = currentNode.getSuffix();
-		return result;
-	}
-	
-	public LinkedList<Integer> getAllOccurances(SuffixTreeNode x){
-		LinkedList<Integer> result = new LinkedList<Integer>();
-		//x = x.getChild();
-		while (x != null){
-			if (x.getChild() == null)
-				result.add(new Integer(x.getSuffix()));
-			x = x.getSibling();
-		}
 		return result;
 	}
 	
@@ -252,35 +216,55 @@ public class SuffixTreeAppl {
 	 */
 	public LinkedList<SuffixTreeNode> next(LinkedList<SuffixTreeNode> x){
 		SuffixTreeNode currentNode = x.getLast();
-		boolean visited = false;
+		//necessary when visiting parents as it prevents them from immediately visiting the child.
+		boolean visited = false; 
+		
+		/*used as a loop escape, once the path is at an acceptable configuration, 
+		 * required as sometimes the parents must be visited several times.
+		 */
 		boolean isBad = true;
 		while (isBad || x.isEmpty()){
+			
+			//Go to the child if not already visited.
 			if(currentNode.getChild() != null && !visited){
 				x.addLast(currentNode.getChild());
 				isBad = false;
+				
+			//If not, then go to the sibling if possible
 			}else if (currentNode.getSibling() != null){
 				x.removeLast();
 				x.addLast(currentNode.getSibling());
 				isBad = false;
+				
+			//If not, then go up the list as high as required.
 			}else{
 				if (!x.isEmpty()){
+					//Go up one step
 					x.removeLast();
 					if (!x.isEmpty())
 						currentNode = x.getLast();	
 					else{
+						//stop looping if empty
 						isBad = false;
 					}
 				}else{
+				 /* break needed so that items are not continually removed from the list
+					after the list is empty, prevents NoSuchElementException */
 					break;
 				}
+				//prevent from going to the child in next iteration.
 				visited = true;
 			}
 		}
 		if (x.isEmpty()){
-			//System.out.println("Finished Iterating");
+			//returns null when no more paths are available
 			return null;
 		}
 		return x;
+		/*NB. Multiple handlers of x.isEmpty() are necessary as items are removed from x
+		 * at various stages in its execution. All are to prevent either 
+		 * NoSuchElementExceptions or to escape the loop.
+		 */
 	}
 	
 	//returns true if a branch ONLY has leaf nodes (at least 2)
@@ -298,33 +282,6 @@ public class SuffixTreeAppl {
 			}
 		}
 		return result;
-	}
-	
-	private boolean isValidBranchLCS(SuffixTreeNode x, int s1Length){
-		//if the node is a leaf..
-		boolean isFirst = false;
-		boolean isSecond = false;
-		boolean result = true;
-		if (x.getChild() == null){
-			return false;
-		}else{
-			SuffixTreeNode currentNode = x.getChild();
-			while (currentNode.getSibling() != null){
-				if (currentNode.getSuffix() == -1)
-					result = false;
-				else if(currentNode.getSuffix() < s1Length){
-					isFirst = true;
-				}else if(currentNode.getSuffix()> s1Length){
-					isSecond = true;
-				}
-				currentNode = currentNode.getSibling();
-			}
-		}
-		if (result && isFirst && isSecond){
-			return true;
-		}else{
-			return false;
-		}
 	}
 	
 	public int getLengthOfNode(SuffixTreeNode x){
@@ -348,26 +305,16 @@ public class SuffixTreeAppl {
 	 * @return a Task4Info object
 	 */
 	public Task4Info traverseForLcs (int s1Length) {
-		long start = System.currentTimeMillis();
-		//SuffixTreeNode bestNode;
 		SuffixTreeNode currentNode = t.getRoot().getChild();
 		LinkedList<SuffixTreeNode> bestLsrNodes = new LinkedList<SuffixTreeNode>();
 		LinkedList<SuffixTreeNode> currentPath = new LinkedList<SuffixTreeNode>();
 		LinkedList<SuffixTreeNode> tempLeaves = new LinkedList<SuffixTreeNode>();
 		currentPath.addLast(currentNode);
-		/*if prevLength is >= to the currentLength we want to 
-		remove a node from the tree (and decrement prevLength, otherwise we keep it.
-		*/
-		
 		boolean isLast = false;
 		boolean left = false;
 		boolean right = false;
 		while (currentPath != null || isLast){
 			currentNode = currentPath.getLast();
-			if (isValidBranch(currentNode)){
-					//System.out.println("VALID BRANCH");
-			}
-
 			if (getLength(currentPath) > getLength(bestLsrNodes) && isValidBranch(currentNode)){
 				tempLeaves = getImmidiateLeafDescs(currentNode);
 				for (SuffixTreeNode node:tempLeaves){
@@ -385,13 +332,10 @@ public class SuffixTreeAppl {
 				}
 				left = false;
 				right = false;
-				//System.out.println("New best - " + getLength(bestLsrNodes));
 			}
 			currentPath = next(currentPath);
 		}
-		//System.out.println(System.currentTimeMillis() - start);
 		Task4Info result = new Task4Info();
-		//System.out.println("FINAL BEST IS " + getLength(bestLsrNodes));
 		if (bestLsrNodes.isEmpty()){
 			return result;
 		}else{
