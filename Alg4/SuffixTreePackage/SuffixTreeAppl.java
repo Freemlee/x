@@ -101,7 +101,7 @@ public class SuffixTreeAppl {
 			}
 		}
 		if (match == true){
-			result.setPos(startLocation + 1);
+			result.setPos(startLocation);
 		}
 
 		return result;
@@ -146,7 +146,6 @@ public class SuffixTreeAppl {
 	}
 	
 	public void getLeafDecendants(SuffixTreeNode currentNode){
-		// was currentNode.getSibling()
 		while (currentNode != null){
 			//add suffix and go to sibling
 			if (currentNode.getChild() == null){
@@ -177,11 +176,10 @@ public class SuffixTreeAppl {
 		//initialise the path equal to the furthest descendent
 		currentPath.addLast(currentNode);
 		
-		boolean isLast = false;
-		while (currentPath != null || isLast){
+		while (currentPath != null){
+			//last item in the path (potential "vaild" node")
 			currentNode = currentPath.getLast();
-			if (isValidBranch(currentNode)){
-			}
+			
 			if (getLength(currentPath) > getLength(bestLsrNodes) && isValidBranch(currentNode)){
 				//remove previous searches
 				bestLsrNodes.clear();
@@ -195,8 +193,10 @@ public class SuffixTreeAppl {
 		}
 		Task3Info result = new Task3Info();
 		if (bestLsrNodes.isEmpty()){
+			//if no lrs exists...
 			return result;
 		}else{
+			//otherwise set positions and return
 			int[] positions = getLeafSuffixes(bestLsrNodes.getLast());
 			result.setPos1(positions[0]);
 			result.setPos2(positions[1]);
@@ -290,19 +290,31 @@ public class SuffixTreeAppl {
 	public boolean isValidBranch(SuffixTreeNode x){
 		//if the node is a leaf..
 		boolean result = true;
+		int count = 0;
+		
+		//if the node itself is a leaf then return false.
 		if (x.getChild() == null){
 			return false;
+			
+		//if not a leaf.
 		}else{
 			SuffixTreeNode currentNode = x.getChild();
-			while (currentNode.getSibling() != null){
-				if (currentNode.getSuffix() == -1)
-					result = false;
+			while (currentNode != null){
+				//count the number of leaf nodes..
+				if (currentNode.getSuffix() != -1)
+					count++;
 				currentNode = currentNode.getSibling();
 			}
 		}
-		return result;
+		//return true if there are at least 2 leaf nodes.
+		if (count >= 2){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
+	// simple helper to aid readability, gets the length of a node.
 	public int getLengthOfNode(SuffixTreeNode x){
 		return x.getRightLabel() - x.getLeftLabel() + 1;
 	}
@@ -324,8 +336,9 @@ public class SuffixTreeAppl {
 	 * @return a Task4Info object
 	 */
 	public Task4Info traverseForLcs (int s1Length) {
+		//Very similar to Task3Info, only changed sections will be commented.
 		SuffixTreeNode currentNode = t.getRoot().getChild();
-		LinkedList<SuffixTreeNode> bestLsrNodes = new LinkedList<SuffixTreeNode>();
+		LinkedList<SuffixTreeNode> bestLcrNodes = new LinkedList<SuffixTreeNode>();
 		LinkedList<SuffixTreeNode> currentPath = new LinkedList<SuffixTreeNode>();
 		LinkedList<SuffixTreeNode> tempLeaves = new LinkedList<SuffixTreeNode>();
 		currentPath.addLast(currentNode);
@@ -334,32 +347,40 @@ public class SuffixTreeAppl {
 		boolean right = false;
 		while (currentPath != null || isLast){
 			currentNode = currentPath.getLast();
-			if (getLength(currentPath) > getLength(bestLsrNodes) && isValidBranch(currentNode)){
+			if (getLength(currentPath) > getLength(bestLcrNodes) && isValidBranch(currentNode)){
 				tempLeaves = getImmidiateLeafDescs(currentNode);
 				for (SuffixTreeNode node:tempLeaves){
+					//if a node is in the first file set left to true
 					if (node.getSuffix() < s1Length){
 						left = true;
+					//if a node is in the second file set right to true
 					}else if(node.getSuffix() > s1Length){
 						right = true;
 					}
 				}
+				//ONLY is subtring is present in BOTH the first and second files.
 				if (left && right){
-					bestLsrNodes.clear();
+					//reset bestLcrNodes to empty
+					bestLcrNodes.clear();
+					//Update bestLcrNodes
 					for (SuffixTreeNode n: currentPath){
-						bestLsrNodes.addLast(n);
+						bestLcrNodes.addLast(n);
 					};
 				}
+				//Reset left and right values as we move to a new node.
 				left = false;
 				right = false;
 			}
 			currentPath = next(currentPath);
 		}
 		Task4Info result = new Task4Info();
-		if (bestLsrNodes.isEmpty()){
+		if (bestLcrNodes.isEmpty()){
 			return result;
 		}else{
-			int[] positions = getLeafSuffixes(bestLsrNodes.getLast());
+			int[] positions = getLeafSuffixes(bestLcrNodes.getLast());
 			int which = -1;
+			
+			//Index movements relative to the position in THEIR respective files.
 			if (positions[0] > s1Length){
 				positions[0]-= (s1Length + 1);
 				which = 0;
@@ -367,6 +388,8 @@ public class SuffixTreeAppl {
 				positions[1]-= (s1Length + 1);
 				which = 1;
 			}
+			
+			//Set the data for return
 			if (which == 0){
 				result.setPos1(positions[0]);
 				result.setPos2(positions[1]);
@@ -374,17 +397,22 @@ public class SuffixTreeAppl {
 				result.setPos1(positions[1]);
 				result.setPos2(positions[0]);
 			}
-			result.setLen(getLength(bestLsrNodes));
+			result.setLen(getLength(bestLcrNodes));
 			return result;
 		}
 	}
 		private LinkedList<SuffixTreeNode> getImmidiateLeafDescs(SuffixTreeNode x){
 			LinkedList<SuffixTreeNode> leaves = new LinkedList<SuffixTreeNode>();
+			// if x itself is a lead return null
 			if (x.getChild() == null){
 				return null;
+			
+			//if a branch...
 			}else{
+				//examine all children and siblings of the branch
 				x = x.getChild();
 				while (x != null){
+					//if a leaf then add to the list
 					if (x.getChild() == null){
 						leaves.add(x);
 					}

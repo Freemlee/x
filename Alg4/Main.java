@@ -17,7 +17,7 @@ public class Main {
 	static byte[] searchTerm;
 	
 	public static void displayIndexWarning(){
-		System.out.println("NB. All indexes start counting from 1 upwards");
+		System.out.println("NB. All indexes start counting from 0 upwards");
 	}
 	
 	public static void main(String args[]) {
@@ -80,7 +80,7 @@ public class Main {
 					if (len == 0){
 						System.out.println("There are no repeating substrings");
 					}else{
-						System.out.printf("Longest Repeating Substring is: %s\nLength: %d\nOne occurrence is at position %d\nAnother occurrence is at position %d\n", str,len,pos1,pos2);
+						System.out.printf("Longest Repeating Substring is: %s\nIts length is %d\nOne occurrence is at position %d\nAnother occurrence is at position %d\n", str,len,pos1,pos2);
 						displayIndexWarning();
 					}
 					break;
@@ -91,13 +91,12 @@ public class Main {
 					System.out.print("What is the second file would you like to search: ");
 					String file2Name = standardInput.nextLine();
 					byte[] tree2Bytes = new FileInput(file2Name).readFile();
-					System.out.print("What would you like to search the tree for: ");
 					theTree = new SuffixTreeAppl(new SuffixTree(treeBytes, tree2Bytes));
 					Task4Info res = theTree.traverseForLcs(treeBytes.length);
 					if (res.getLen() == 0){
 						System.out.println("There are no common substrings");
 					}else{
-						System.out.println("Longest Common Substring is: " + new String(tree2Bytes).substring(res.getPos1(), res.getLen() + res.getPos1()));
+						System.out.println("Longest Common Substring is: \"" + new String(tree2Bytes).substring(res.getPos1(), res.getLen() + res.getPos1()) + "\" \nIts length is " + res.getLen());
 						System.out.printf("Occurring at position %d in %s and position %d in %s\n",res.getPos2(), file1Name, res.getPos1(), file2Name);
 						displayIndexWarning();
 					}
