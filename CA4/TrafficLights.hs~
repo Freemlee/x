@@ -7,12 +7,15 @@ import HDL.Hydra.Circuits.StandardCircuits
 controller1 :: Clocked a => a -> [a] -> (a,a,a)
 controller1 button signal = lightLogic counterVal
   where
+	{-
 	shouldReset = reset button signal
-	nextVal = counter 4 storedVal
+	nextVal = counter4 storedVal
 	--shouldIncrement = and2 (increment signal) (inv shouldReset)
 	--counterVal = counter2 shouldReset shouldIncrement signal
-	reset = 
-
+	updatedCount = counter2 reset should
+	stored = wlatch 4 
+	reset = isNine stored
+  -}
 isNine :: Clocked a => [a] -> a
 isNine [a,b,c,d] = output
   where

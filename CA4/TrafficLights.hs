@@ -20,6 +20,14 @@ isNine :: Clocked a => [a] -> a
 isNine [a,b,c,d] = output
   where
 	output = and2 b d
+
+ff :: Clocked a => a -> (a,a,a)
+ff x = (r,a,g)
+	where
+	(r,a,g) = lightLogic previousSignal 
+	wlatch (resetPressed x)
+		
+
 	
 controller2 :: Clocked a => a -> (a,a,a)
 controller2 button = lightLogic counterVal
