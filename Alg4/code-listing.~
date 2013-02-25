@@ -1,0 +1,2710 @@
+%!PS-Adobe-3.0
+%%Title: Main.java, SuffixTree.java, SuffixTreeAppl.java
+%%For: Garry Sharp
+%%Creator: a2ps version 4.14
+%%CreationDate: Fri Feb 15 05:32:59 2013
+%%BoundingBox: 24 24 571 818
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 9
+%%PageOrder: Ascend
+%%DocumentMedia: A4 595 842 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontType get 0 eq {
+    currentfont /FontMatrix get 3 get
+  }{
+    currentfont /FontMatrix get 3 get 1000 mul
+  } ifelse
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      % <vector> <key> <val>
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def % -
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Get the underline position and thickness if they're defined.
+    % Use 1 if they are not defined.
+    currentdict /FontInfo 2 copy known
+    { get
+      /UnderlinePosition 2 copy % <FontInfo> /UP <FontInfo> /UP
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+
+      /UnderlineThickness 2 copy % <FontInfo> /UT <FontInfo> /UT
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+      pop % -
+    }{ pop pop
+    } ifelse
+
+    currentdict
+  end 
+} bind def
+
+% composite fonts for ASCII-EUC mixed string
+% Version 1.2 1/31/1990
+% Orignal Ken'ichi HANDA (handa@etl.go.jp)
+% Modified Norio Katayama (katayama@rd.nacsis.ac.jp),1998
+% Extend & Fix Koji Nakamaru (maru@on.cs.keio.ac.jp), 1999
+% Anyone can freely copy, modify, distribute this program.
+
+/copyfont {	% font-dic extra-entry-count  copyfont  font-dic
+	1 index maxlength add dict begin
+	{	1 index /FID ne 2 index /UniqueID ne and
+		{def} {pop pop} ifelse
+	} forall
+	currentdict
+	end
+} bind def
+
+/compositefont { % ASCIIFontName EUCFontName RomanScale RomanOffset Rot(T/F) compositefont font
+    /RomanRotation exch def
+    /RomanOffset exch def
+    /RomanScale exch def
+    userdict /fixeucfont_dict known not {
+	userdict begin
+	    /fixeucfont_dict 2 dict begin
+		/UpperByteEncoding [
+		    16#00 1 16#20 { pop 0 } for
+		    16#21 1 16#28 { 16#20 sub } for
+		    16#29 1 16#2F { pop 0 } for
+		    16#30 1 16#74 { 16#27 sub } for
+		    16#75 1 16#FF { pop 0 } for
+		] def
+	        /LowerByteEncoding [
+		    16#00 1 16#A0 { pop /.notdef } for
+		    16#A1 1 16#FE { 16#80 sub 16 2 string cvrs
+				    (cXX) dup 1 4 -1 roll
+				    putinterval cvn } for
+		    /.notdef
+		] def
+		currentdict
+	    end def
+	end
+    } if
+    findfont dup /FontType get 0 eq {
+	14 dict begin
+	    %
+	    % 7+8 bit EUC font
+	    %
+	    12 dict begin
+		/EUCFont exch def
+		/FontInfo (7+8 bit EUC font) readonly def
+		/PaintType 0 def
+		/FontType 0 def
+		/FontMatrix matrix def
+		% /FontName
+		/Encoding fixeucfont_dict /UpperByteEncoding get def
+		/FMapType 2 def
+		EUCFont /WMode known
+		{ EUCFont /WMode get /WMode exch def }
+		{ /WMode 0 def } ifelse
+		/FDepVector [
+		    EUCFont /FDepVector get 0 get
+		    [ 16#21 1 16#28 {} for 16#30 1 16#74 {} for ]
+		    {
+			13 dict begin
+			    /EUCFont EUCFont def
+			    /UpperByte exch 16#80 add def	
+			    % /FontName
+			    /FontInfo (EUC lower byte font) readonly def
+			    /PaintType 0 def
+			    /FontType 3 def
+			    /FontMatrix matrix def
+			    /FontBBox {0 0 0 0} def
+			    /Encoding
+				fixeucfont_dict /LowerByteEncoding get def
+			    % /UniqueID
+			    % /WMode
+			    /BuildChar {
+				gsave
+				exch dup /EUCFont get setfont
+				/UpperByte get
+				2 string
+				dup 0 4 -1 roll put
+				dup 1 4 -1 roll put
+				dup stringwidth setcharwidth
+				0 0 moveto show
+				grestore
+			    } bind def
+			    currentdict
+			end
+			/lowerbytefont exch definefont
+		    } forall
+		] def
+		currentdict
+	    end
+	    /eucfont exch definefont
+	    exch
+	    findfont 1 copyfont dup begin
+		RomanRotation {
+			/FontMatrix FontMatrix
+			[ 0 RomanScale neg RomanScale 0 RomanOffset neg 0 ]
+			matrix concatmatrix def
+		}{
+			/FontMatrix FontMatrix
+			[ RomanScale 0 0 RomanScale 0 RomanOffset ] matrix concatmatrix
+			def
+			/CDevProc
+			    {pop pop pop pop 0 exch -1000 exch 2 div 880} def
+		} ifelse
+	    end
+	    /asciifont exch definefont
+	    exch
+	    /FDepVector [ 4 2 roll ] def
+	    /FontType 0 def
+	    /WMode 0 def
+	    /FMapType 4 def
+	    /FontMatrix matrix def
+	    /Encoding [0 1] def
+	    /FontBBox {0 0 0 0} def
+%	    /FontHeight 1.0 def % XXXX
+	    /FontHeight RomanScale 1.0 ge { RomanScale }{ 1.0 } ifelse def
+	    /Descent -0.3 def   % XXXX
+	    currentdict
+	end
+	/tmpfont exch definefont
+	pop
+	/tmpfont findfont
+    }{
+	pop findfont 0 copyfont
+    } ifelse
+} def	
+
+/slantfont {	% FontName slant-degree  slantfont  font'
+    exch findfont 1 copyfont begin
+    [ 1 0 4 -1 roll 1 0 0 ] FontMatrix exch matrix concatmatrix
+    /FontMatrix exch def
+    currentdict
+    end
+} def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 595 def
+/sw 842 def
+/llx 24 def
+/urx 818 def
+/ury 571 def
+/lly 24 def
+/#copies 1 def
+/th 15.000000 def
+/fnfs 11 def
+/bfs 8.005733 def
+/cw 4.803440 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 81.400000 mul
+def
+/ph
+   501.959430 th add
+def
+/pmw urx llx sub pw 2 mul sub 1 div def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+  dup pmw add pw add
+] def
+/y [
+  pmh ph add 0 mul ph add
+  dup
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1-2) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(import) K
+( java.util.*;) p n
+(import) K
+( SuffixTreePackage.*;) p n
+() N
+(/**) C n
+( * Main class - for accessing suffix tree applications) N
+( * David Manlove, Jan 03.  Modified by David Manlove, Jan 07 and Jan 09.) N
+( */) N
+() p n
+(public) K
+( ) p
+(class) K
+( ) p
+(Main) L
+( {) p n
+() N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * The main method.) N
+() S 8 T ( * @param args the arguments) N
+() S 8 T ( */) N
+() p 8 T () S
+(static) K
+( SuffixTreeAppl theTree;) p n
+() S 8 T () S
+(static) K
+( ) p
+(byte) k
+([] treeBytes;) p n
+() S 8 T () S
+(static) K
+( ) p
+(byte) k
+([] searchTerm;) p n
+() S 8 T () N
+() S 8 T () S
+(public) K
+( ) p
+(static) K
+( ) p
+(void) k
+( displayIndexWarning\(\){) p n
+() S 8 T () S 16 T (System.out.println\(") S
+(NB. All indexes start counting from 0 upwards) str
+("\);) p n
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T () S
+(public) K
+( ) p
+(static) K
+( ) p
+(void) k
+( main\(String args[]\) {) p n
+() S 8 T () S 16 T (Scanner standardInput = ) S
+(new) K
+( Scanner\(System.in\);) p n
+() S 8 T () S 16 T () S
+(do) K
+( {   ) p n
+() S 8 T () S 16 T () S 24 T (System.out.println\(\);) S 48 T () S 56 T () N
+() S 8 T () S 16 T () S 24 T (System.out.print\(") S
+(Enter the number of the task or type 'q' to quit: ) str
+("\);) p n
+() N
+() S 8 T () S 16 T () S 24 T (String line = standardInput.nextLine\(\);) N
+() S 8 T () S 16 T () S 24 T (System.out.println\(\);) N
+() S 8 T () S 16 T () S 24 T () S
+(try) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// try to extract an integer from line if possib) c n
+(le) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(int) k
+( numTask = Integer.parseInt\(line\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(switch) K
+( \(numTask\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(case) K
+( 1: ) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.print\(") S
+(What file would you like to sear) str n
+(ch: ) S
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (treeBytes = ) S
+(new) K
+( FileInput\(standardInput.) p n
+(nextLine\(\)\).readFile\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.print\(") S
+(What would you like to search t) str n
+(he tree for: ) S
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (searchTerm = standardInput.nextLine\(\).ge) N
+(tBytes\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (theTree = ) S
+(new) K
+( SuffixTreeAppl\() p
+(new) K
+( SuffixT) p n
+(ree\(treeBytes\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Task1Info result1 = theTree.searchSuffix) N
+(Tree\(searchTerm\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(result1.getPos\(\) == -1\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (System.out.println\(") S
+(The string \\") str
+(" +) p n
+( ) S
+(new) K
+( String\(searchTerm\) + ") p
+(\\" does not occur) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (System.out.println\(") S
+(The string \\") str
+(" +) p n
+( ) S
+(new) K
+( String\(searchTerm\) + ") p
+(\\" occurs at position ) str
+(" + result1.getPos\(\)\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (displayIndexWarning\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(case) K
+( 2:) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.print\(") S
+(What file would you like to sear) str n
+(ch: ) S
+("\);) p n
+(Main.java) (Page 1/4) (Feb 15, 13 5:17) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (treeBytes = ) S
+(new) K
+( FileInput\(standardInput.) p n
+(nextLine\(\)\).readFile\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.print\(") S
+(What would you like to search t) str n
+(he tree for: ) S
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (searchTerm = standardInput.nextLine\(\).ge) N
+(tBytes\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (theTree = ) S
+(new) K
+( SuffixTreeAppl\() p
+(new) K
+( SuffixT) p n
+(ree\(treeBytes\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(//System.out.println\(new String\(searchTe) c n
+(rm\)\);) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Task2Info result2 = theTree.allOccurrenc) N
+(es\(searchTerm\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(result2.getPositions\(\).isEmpty\(\)\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (System.out.println\(") S
+(The string \\") str
+(" +) p n
+( ) S
+(new) K
+( String\(searchTerm\) + ") p
+(\\" does not occur) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (System.out.println\(") S
+(The string \\") str
+(" +) p n
+( ) S
+(new) K
+( String\(searchTerm\) + ") p
+(\\" occurs ) str
+(" + result2.getPositions\(\).size\(\) + ") p
+( times at posit) str n
+(ions: ) S
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(for) K
+( \() p
+(int) k
+( x : result2.getPosition) p n
+(s\(\)\){) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (System.out.println\(x\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (displayIndexWarning\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(case) K
+( 3:) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.print\(") S
+(What file would you like to sear) str n
+(ch: ) S
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (treeBytes = ) S
+(new) K
+( FileInput\(standardInput.) p n
+(nextLine\(\)\).readFile\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (theTree = ) S
+(new) K
+( SuffixTreeAppl\() p
+(new) K
+( SuffixT) p n
+(ree\(treeBytes\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Task3Info result3 = theTree.traverseForL) N
+(rs\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (String str = "";) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(int) k
+( pos1 = result3.getPos1\(\); ) p
+(int) k
+( pos2 =) p n
+( result3.getPos2\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(int) k
+( len = result3.getLen\(\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(len!=0\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (str = ) S
+(new) K
+( String\(theTree.getTree) p n
+(\(\).getString\(\)\).substring\(pos1, pos1+len\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(len == 0\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (System.out.println\(") S
+(There are no repe) str n
+(ating substrings) S
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (System.out.printf\(") S
+(Longest Repeating ) str n
+(Substring is: %s\\nIts length is %d\\nOne occurrence is at position %d\\nAnother occurrence is at position %d\\n) S
+(", str) p n
+(,len,pos1,pos2\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (displayIndexWarning\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(case) K
+( 4: ) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.print\(") S
+(What is the first file would you l) str n
+(ike to search: ) S
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (String file1Name = standardInput.nextLin) N
+(e\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (treeBytes = ) S
+(new) K
+( FileInput\(file1Name\).rea) p n
+(dFile\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.print\(") S
+(What is the second file would yo) str n
+(u like to search: ) S
+("\);) p n
+(Main.java) (Page 2/4) (Feb 15, 13 5:17) title
+border
+grestore
+(Printed by Garry Sharp) rhead
+(Main.java) (1/9) (Friday February 15, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-4) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (String file2Name = standardInput.nextLin) N
+(e\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(byte) k
+([] tree2Bytes = ) p
+(new) K
+( FileInput\(file2N) p n
+(ame\).readFile\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (theTree = ) S
+(new) K
+( SuffixTreeAppl\() p
+(new) K
+( SuffixT) p n
+(ree\(treeBytes, tree2Bytes\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Task4Info res = theTree.traverseForLcs\(t) N
+(reeBytes.length\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(res.getLen\(\) == 0\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (System.out.println\(") S
+(There are no com) str n
+(mon substrings) S
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (System.out.println\(") S
+(Longest Common) str n
+( Substring is: \\") S
+(" + ) p
+(new) K
+( String\(tree2Bytes\).substring\(res.getPos1\(\), res.getLen\(\) + re) p n
+(s.getPos1\(\)\) + ") S
+(\\" \\nIts length is ) str
+(" + res.getLen\(\)\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (System.out.printf\(") S
+(Occurring at positi) str n
+(on %d in %s and position %d in %s\\n) S
+(",res.getPos2\(\), file1Name, res.getPos1\(\), file2Name\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (displayIndexWarning\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(/* replace the above four lines with code to dis) c n
+(play relevant) N
+() S 8 T () S 16 T () S 24 T () S 32 T ( * output for each task    ) N
+(                 *) N
+() S 8 T () S 16 T () S 24 T () S 32 T ( * in the case of Tasks 1, 2 and 3, get the name) N
+( of a text file) N
+() S 8 T () S 16 T () S 24 T () S 32 T ( * from standard input; in the case of Task 4, g) N
+(et the names of) N
+() S 8 T () S 16 T () S 24 T () S 32 T ( * two text files from standard input) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T ( * then, in all cases, read the data from the te) N
+(xt file\(s\) using ) N
+() S 8 T () S 16 T () S 24 T () S 32 T ( * the FileInput class and build the relevant su) N
+(ffix tree) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T ( * in the case of Tasks 1 and 2, get a string fr) N
+(om standard input) N
+() S 8 T () S 16 T () S 24 T () S 32 T ( * and convert the string to bytes, with the rel) N
+(evant information) N
+() S 8 T () S 16 T () S 24 T () S 32 T ( * stored in the array of bytes from positions 0) N
+( onwards) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T ( * then call the relevant method from above to p) N
+(rocess the) N
+() S 8 T () S 16 T () S 24 T () S 32 T ( * information, and display the output using Sys) N
+(tem.out.print) N
+() S 8 T () S 16 T () S 24 T () S 32 T ( * and System.out.println */) N
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(default) K
+(: ) p
+(throw) K
+( ) p
+(new) K
+( NumberFormatException\(\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T () S 24 T () S
+(catch) K
+( \(NumberFormatException e\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(line.length\(\)==0 || line.charAt\(0\)!='q'\)) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.println\(") S
+(You must enter either '1', '2') str n
+(, '3', '4' or 'q'.) S
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(else) K n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (} ) S
+(while) K
+( \() p
+(true) k
+(\);) p n
+() S 8 T () S 16 T (standardInput.close\(\);) N
+() S 8 T (}) N
+() S 8 T () N
+(Main.java) (Page 3/4) (Feb 15, 13 5:17) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () N
+(}) S
+(Main.java) (Page 4/4) (Feb 15, 13 5:17) title
+border
+grestore
+(Printed by Garry Sharp) rhead
+(Main.java) (2/9) (Friday February 15, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1-2) 3
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( SuffixTreePackage;) p n
+() N
+(/**) C n
+( * Class for construction and manipulation of suffix trees based on a list) N
+( * of children at each node.) N
+( * ) N
+( * Includes naive O\(n^2\) suffix tree construction algorithm based on) N
+( * repeated insertion of suffixes and node-splitting.) N
+( * ) N
+( * Modifies Ada implementation of naive suffix tree construction algorithm) N
+( * due to Rob Irving, Jan 00.) N
+( * ) N
+( * Also incorporates Java code for naive suffix tree construction algorithm) N
+( * due to Ela Hunt, Jan 01.) N
+( * ) N
+( * Modifications by David Manlove, Apr 02, Jan 03,Jan 07 and Jan 09.) N
+( */) N
+() p n
+(public) K
+( ) p
+(class) K
+( ) p
+(SuffixTree) L
+( {) p n
+() N
+() S 8 T () S
+(/** Root node of the suffix tree. */) C n
+() p 8 T () S
+(private) K
+( SuffixTreeNode root;) p n
+() N
+() S 8 T () S
+(/** String \(byte array\) corresponding to suffix tree. */) C n
+() p 8 T () S
+(private) K
+( ) p
+(byte) k
+( [] s;) p n
+() S 8 T () N
+() S 8 T () S
+(/** Length of string corresponding to suffix tree \(without termination c) C n
+(haracter\). */) N
+() p 8 T () S
+(private) K
+( ) p
+(int) k
+( stringLen;) p n
+() N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Builds the suffix tree for a given string.) N
+() S 8 T ( * ) N
+() S 8 T ( * @param sInput the string whose suffix tree is to be built) N
+() S 8 T ( * - assumes that '$' does not occur as a character anywhere in sInput) N
+() S 8 T ( * - assumes that characters of sInput occupy positions 0 onwards) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( SuffixTree \() p
+(byte) k
+( [] sInput\) {) p n
+() S 8 T () S 16 T (root = ) S
+(new) K
+( SuffixTreeNode\() p
+(null) k
+(, ) p
+(null) k
+(, 0, 0, -1\);  ) p
+(// create root) c n
+( node of suffix tree;) N
+() p 8 T () S 16 T (stringLen = sInput.length;) N
+() S 8 T () S 16 T (s = ) S
+(new) K
+( ) p
+(byte) k
+([stringLen + 1]; ) p
+(// create longer byte array ready f) c n
+(or termination character) N
+() p 8 T () S 16 T (System.arraycopy\(sInput, 0, s, 0, stringLen\);) N
+() S 8 T () S 16 T (s[stringLen] = \() S
+(byte) k
+(\) '$';   ) p
+(// append termination character to ) c n
+(original string) N
+() p 8 T () S 16 T (buildSuffixTree\(\);           ) S
+(// build the suffix tree) c n
+() p 8 T (}) N
+() N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Builds a generalised suffix tree for two given strings.) N
+() S 8 T ( * ) N
+() S 8 T ( * @param sInput1 the first string) N
+() S 8 T ( * @param sInput2 the second string) N
+() S 8 T ( * - assumes that '$' and '#' do not occur as a character anywhere in sI) N
+(nput1 or sInput2) N
+() S 8 T ( * - assumes that characters of sInput1 and sInput2 occupy positions 0 o) N
+(nwards) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( SuffixTree \() p
+(byte) k
+([] sInput1, ) p
+(byte) k
+([] sInput2\) {) p n
+(         ) S
+(// to be completed!) c n
+() p 8 T () S 16 T (root = ) S
+(new) K
+( SuffixTreeNode\() p
+(null) k
+(, ) p
+(null) k
+(, 0, 0, -1\);) p n
+(SuffixTree.java) (Page 1/5) (Feb 15, 13 4:24) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T (s = ) S
+(new) K
+( ) p
+(byte) k
+([sInput1.length + sInput2.length + 2];) p n
+() S 8 T () S 16 T (System.arraycopy\(sInput1, 0, s, 0, sInput1.length\);) N
+() S 8 T () S 16 T (s[sInput1.length] = \() S
+(byte) k
+(\) '#';) p n
+() S 8 T () S 16 T (System.arraycopy\(sInput2, 0, s, sInput1.length + 1, sInput2.leng) N
+(th\);) N
+() S 8 T () S 16 T (s[sInput1.length + sInput2.length + 1] = \() S
+(byte) k
+(\) '$';) p n
+() S 8 T () S 16 T (stringLen = sInput1.length + sInput2.length + 1;) N
+() S 8 T () S 16 T (buildSuffixTree\(\);) N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Builds the suffix tree.) N
+() S 8 T ( */) N
+() p 8 T () S
+(private) K
+( ) p
+(void) k
+( buildSuffixTree\(\) {) p n
+() S 8 T () S 16 T () S
+(try) K
+( {) p 24 T () S 32 T () N
+() S 8 T () S 16 T () S 24 T () S
+(for) K
+( \() p
+(int) k
+( i=0; i<= stringLen; i++\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// for large files, the following line may be us) c n
+(eful for) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// indicating the progress of the suffix tree co) c n
+(nstruction) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(//if \(i % 10000==0\) System.out.println\(i\);) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// raise an exception if the text file contained) c n
+( a '$') N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(s[i] == \() p
+(byte) k
+(\) '$' && i < stringLen\)) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(throw) K
+( ) p
+(new) K
+( Exception\(\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(else) K n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (insert\(i\);  ) S
+(// insert suffix number i of) c n
+( z into tree) N
+() p 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (} ) N
+() S 8 T () S 16 T () S
+(catch) K
+( \(Exception e\) {) p n
+() S 8 T () S 16 T () S 24 T (System.out.println\(") S
+(Text file contains a $ character!) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T (System.exit\(-1\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Given node nodeIn of suffix tree and character ch, search nodeIn, ) N
+() S 8 T ( * plus all sibling nodes of nodeIn, looking for a node whose left ) N
+() S 8 T ( * label x satisfies ch == s[x].) N
+() S 8 T ( * - Assumes that characters of s occupy positions 0 onwards) N
+() S 8 T ( * ) N
+() S 8 T ( * @param nodeIn a node of the suffix tree) N
+() S 8 T ( * @param ch the character to match) N
+() S 8 T ( * ) N
+() S 8 T ( * @return the matching suffix tree node \(null if none exists\)) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( SuffixTreeNode searchList \(SuffixTreeNode nodeIn, ) p
+(byte) k
+( ch\) { ) p n
+() N
+() S 8 T () S 16 T (SuffixTreeNode next = nodeIn;) N
+() S 8 T () S 16 T (SuffixTreeNode nodeOut = ) S
+(null) k
+(;) p n
+() N
+() S 8 T () S 16 T () S
+(while) K
+( \(next != ) p
+(null) k
+(\) {) p n
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(next.getLeftLabel\(\) < stringLen && s[next.getLeftLab) p n
+(el\(\)] == ch\)) N
+() S 8 T () S 16 T () S 24 T ({) N
+() S 8 T () S 16 T () S 24 T () S 32 T (nodeOut = next;) N
+() S 8 T () S 16 T () S 24 T () S 32 T (next = ) S
+(null) k
+(;) p n
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T () S 24 T () S
+(else) K n
+() p 8 T () S 16 T () S 24 T () S 32 T (next = next.getSibling\(\);) N
+(SuffixTree.java) (Page 2/5) (Feb 15, 13 4:24) title
+border
+grestore
+(Printed by Garry Sharp) rhead
+(SuffixTreePackage/SuffixTree.java) (3/9) (Friday February 15, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-4) 4
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(return) K
+( nodeOut;  ) p
+(// return matching node if successful, or null ) c n
+(otherwise) N
+() p 8 T (}) N
+() N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Inserts suffix number i of s into suffix tree.) N
+(     * - assumes that characters of s occupy positions 0 onwards) N
+() S 8 T ( * ) N
+() S 8 T ( * @param i the suffix number of s to insert) N
+() S 8 T ( */) N
+() p 8 T () S
+(private) K
+( ) p
+(void) k
+( insert\() p
+(int) k
+( i\) {) p n
+() N
+() S 8 T () S 16 T () S
+(int) k
+( pos, j, k;) p n
+() S 8 T () S 16 T (SuffixTreeNode current, next;) N
+() S 8 T () S 16 T (pos = i;  ) S
+(// position in s) c n
+() p 8 T () S 16 T (current = root;) N
+() N
+() S 8 T () S 16 T () S
+(while) K
+( \() p
+(true) k
+(\) {) p n
+() S 8 T () S 16 T () S 24 T () S
+(// search for child of current with left label x such th) c n
+(at s[x]==s[pos]) N
+() p 8 T () S 16 T () S 24 T (next = searchList\(current.getChild\(\), s[pos]\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(next == ) p
+(null) k
+(\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// current node has no such child, so add new on) c n
+(e corresponding to) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// positions pos onwards of s) c n
+() p 8 T () S 16 T () S 24 T () S 32 T (current.addChild\(pos, stringLen, i\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T () S 24 T () S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// try to match s[node.getLeftLabel\(\)+1..node.ge) c n
+(tRightLabel\(\)] with ) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// segment of s starting at position pos+1) c n
+() p 8 T () S 16 T () S 24 T () S 32 T (j = next.getLeftLabel\(\) + 1;) N
+() S 8 T () S 16 T () S 24 T () S 32 T (k = pos + 1;) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(while) K
+( \(j <= next.getRightLabel\(\)\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(s[j] == s[k]\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (j++;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (k++;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(else) K n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(j > next.getRightLabel\(\)\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// succeeded in matching whole segment, ) c n
+(so go further down tree) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (pos = k;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (current = next;) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(/* succeeded in matching s[next.getLeftL) c n
+(abel\(\)..j-1] with) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T ( * s[pos..k-1].  Split the node next so ) N
+(that its right label is) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T ( * now j-1.  Create two children of next) N
+(: \(1\) corresponding to) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T ( * suffix i, with left label k and right) N
+( label s.length-1,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T ( * and \(2\) with left label j and right l) N
+(abel next.getRightLabel\(\),) N
+(SuffixTree.java) (Page 3/5) (Feb 15, 13 4:24) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() c 8 T () S 16 T () S 24 T () S 32 T () S 40 T ( * whose children are those of next \(if ) N
+(any\), and whose suffix ) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T ( * number is equal to that of next. */) N
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (SuffixTreeNode n1 = ) S
+(new) K
+( SuffixTreeNode\() p
+(n) k n
+(ull) S
+(, ) p
+(null) k
+(, k, stringLen, i\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (SuffixTreeNode n2 = ) S
+(new) K
+( SuffixTreeNode\(n) p n
+(ext.getChild\(\), n1, ) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (                        ) N
+(       j, next.getRightLabel\(\), next.getSuffix\(\)\);) N
+(                    ) S
+(// now update next's right label, list of children and suffi) c n
+(x number) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (next.setRightLabel\(j-1\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (next.setChild\(n2\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (next.setSuffix\(-1\); ) S
+(// next is now an in) c n
+(ternal node) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (}) N
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Gets the root node.) N
+() S 8 T ( * ) N
+() S 8 T ( * @return the root node) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( SuffixTreeNode getRoot\(\) { ) p
+(return) K
+( root; }) p n
+() N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Sets the root node.) N
+() S 8 T ( * ) N
+() S 8 T ( * @param node the new root node) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( ) p
+(void) k
+( setRoot\(SuffixTreeNode node\) { root = node; }) p n
+() S 8 T () N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Gets the string represented by the suffix tree.) N
+() S 8 T ( * ) N
+() S 8 T ( * @return the string represented by the suffix tree) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( ) p
+(byte) k
+([] getString\(\) { ) p
+(return) K
+( s; }) p n
+() N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Sets the string represented by the suffix tree.) N
+() S 8 T ( * ) N
+() S 8 T ( * @param sInput the new string represented by the suffix tree) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( ) p
+(void) k
+( setString\() p
+(byte) k
+( [] sInput\) { s = sInput; }) p n
+() S 8 T () N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Gets the length of the string represented by the suffix tree.) N
+() S 8 T ( * ) N
+() S 8 T ( * @return the length of the string represented by the suffix tree) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( ) p
+(int) k
+( getStringLen\(\) { ) p
+(return) K
+( stringLen; }) p n
+() N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Sets the length of the string represented by the suffix tree.) N
+() S 8 T ( * ) N
+() S 8 T ( * @param len the new length of the string represented by the suffix tre) N
+(e) N
+(SuffixTree.java) (Page 4/5) (Feb 15, 13 4:24) title
+border
+grestore
+(Printed by Garry Sharp) rhead
+(SuffixTreePackage/SuffixTree.java) (4/9) (Friday February 15, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5,1) 5
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() C 8 T ( */) N
+() p 8 T () S
+(public) K
+( ) p
+(void) k
+( setStringLen\() p
+(int) k
+( len\) { stringLen = len; }) p n
+(}) N
+(SuffixTree.java) (Page 5/5) (Feb 15, 13 4:24) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( SuffixTreePackage;) p n
+() N
+(import) K
+( java.util.Arrays;) p n
+(import) K
+( java.util.LinkedList;) p n
+(import) K
+( java.util.List;) p n
+() N
+(/**) C n
+( * Class with methods for carrying out applications of suffix trees) N
+( * David Manlove, Jan 03.  Modified by David Manlove, Jan 07 and Jan 09.) N
+( */) N
+() p n
+(public) K
+( ) p
+(class) K
+( ) p
+(SuffixTreeAppl) L
+( {) p n
+() N
+() S 8 T () S
+(/** The suffix tree */) C n
+() p 8 T () S
+(private) K
+( SuffixTree t;) p n
+() S 8 T () S
+(private) K
+( SuffixTreeNode t2Node = ) p
+(null) k
+(;) p n
+() S 8 T () S
+(private) K
+( LinkedList<SuffixTreeNode> occurrences = ) p
+(null) k
+(;) p n
+() N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Default constructor.) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( SuffixTreeAppl \(\) {) p n
+() S 8 T () S 16 T (t = ) S
+(null) k
+(;) p n
+() S 8 T () S 16 T () S
+(//t2Node = null;) c n
+() p 8 T () S 16 T () S
+(//occurrences = new LinkedList<SuffixTreeNode>\(\);) c n
+() p 8 T (}) N
+() S 8 T () N
+() S 8 T () S
+(public) K
+( SuffixTree getTree\(\){) p n
+() S 8 T () S 16 T () S
+(return) K
+( t;) p n
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Constructor with parameter.) N
+() S 8 T ( * ) N
+() S 8 T ( * @param tree the suffix tree) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( SuffixTreeAppl \(SuffixTree tree\) {) p n
+() S 8 T () S 16 T (t = tree;) N
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Search the suffix tree t representing string s for a target x.) N
+() S 8 T ( * Stores -1 in Task1Info.pos if x is not a substring of s,) N
+() S 8 T ( * otherwise stores p in Task1Info.pos such that x occurs in s) N
+() S 8 T ( * starting at s[p] \(p counts from 0\)) N
+() S 8 T ( * - assumes that characters of s and x occupy positions 0 onwards) N
+() S 8 T ( * ) N
+() S 8 T ( * @param x the target string to search for) N
+() S 8 T ( * ) N
+() S 8 T ( * @return a Task1Info object) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( Task1Info searchSuffixTree\() p
+(byte) k
+([] x\) {) p n
+() S 8 T () S 16 T (Task1Info result = ) S
+(new) K
+( Task1Info\(\);) p n
+() S 8 T () S 16 T () S
+(boolean) k
+( match = ) p
+(true) k
+(;) p n
+() S 8 T () S 16 T () S
+(int) k
+( startLocation = -1;) p n
+() S 8 T () S 16 T () S
+(int) k
+( xIndex = 0;) p n
+() S 8 T () S 16 T () S
+(int) k
+( nodeIndex = 0;) p n
+() S 8 T () S 16 T () S
+(int) k
+( lengthAtNode;) p n
+() S 8 T () S 16 T (result.setPos\(-2\);) N
+() S 8 T () S 16 T (SuffixTreeNode currentNode = t.getRoot\(\).getChild\(\);) N
+() S 8 T () S 16 T () N
+() S 8 T () S 16 T () S
+(while) K
+( \(currentNode != ) p
+(null) k
+(\){) p n
+(SuffixTreeAppl.java) (Page 1/8) (Feb 15, 13 5:25) title
+border
+grestore
+(Printed by Garry Sharp) rhead
+(SuffixTreePackage/SuffixTree.java, SuffixTreePackage/SuffixTreeAppl.java) (5/9) (Friday February 15, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2-3) 6
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T (lengthAtNode = currentNode.getRightLabel\(\) - currentNode) N
+(.getLeftLabel\(\) + 1;) N
+() S 8 T () S 16 T () S 24 T () S
+(//checks x with all the values at the currentNode) c n
+() p 8 T () S 16 T () S 24 T (nodeIndex = 0;) N
+() S 8 T () S 16 T () S 24 T (match = ) S
+(true) k
+(;) p n
+() S 8 T () S 16 T () S 24 T () S
+(while) K
+( \(nodeIndex < lengthAtNode && match && xIndex < x.l) p n
+(ength\){) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(int) k
+( i = \(currentNode.getLeftLabel\(\)\) + nodeIndex) p n
+(;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(x[xIndex] != t.getString\(\)[i]\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (match = ) S
+(false) k
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (result.setPos\(-1\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (startLocation = -1;) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(startLocation == -1\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (startLocation = currentNode.getL) N
+(eftLabel\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(//needed for Task2Info, added he) c n
+(re necessary for very small trees that have ) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(//very shallow depths.) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (t2Node = currentNode;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (xIndex++;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (nodeIndex++;) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(//nodeIndex++;) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(//xIndex++;) c n
+() p 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(match\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(currentNode.getChild\(\) != ) p
+(null) k
+(\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(/*t2Node is a global variable that is us) c n
+(ed when calulating the Task2Info) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T ( * this is because most of this code is ) N
+(useful and the redundancy for Task2Info \(ie. setting a pos\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T ( * does not leave a great overhead \(imo ) N
+(this is better than copying the code\).) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T ( */) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.println\(") S
+(Here in code) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(currentNode != ) p
+(null) k
+(\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (t2Node = currentNode;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T (currentNode = currentNode.getChild\(\);) N
+() S 8 T () S 16 T () S 24 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (currentNode = currentNode.getSibling\(\);) N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(if) K
+( \(match == ) p
+(true) k
+(\){) p n
+() S 8 T () S 16 T () S 24 T (result.setPos\(startLocation\);) N
+() S 8 T () S 16 T (}) N
+() N
+() S 8 T () S 16 T () S
+(return) K
+( result;) p n
+() S 8 T () S 16 T () S 24 T () S
+(// if mismatch at current node check all of the siblings) c n
+( until no more siblings) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(//at which point set match to false.) c n
+() p 8 T () S 16 T () S 24 T () S
+(// if a match at current node then set currentNode to be) c n
+( the child of that node \(recurse\)) N
+() p 8 T () S 16 T () S 24 T () N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(/**) C n
+(SuffixTreeAppl.java) (Page 2/8) (Feb 15, 13 5:25) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() C 8 T ( * Search suffix tree t representing string s for all occurrences of tar) N
+(get x.) N
+() S 8 T ( * Stores in Task2Info.positions a linked list of all such occurrences.) N
+() S 8 T ( * Each occurrence is specified by a starting position index in s) N
+() S 8 T ( * \(as in searchSuffixTree above\).  The linked list is empty if there) N
+() S 8 T ( * are no occurrences of x in s.) N
+() S 8 T ( * - assumes that characters of s and x occupy positions 0 onwards) N
+() S 8 T ( * ) N
+() S 8 T ( * @param x the target string to search for) N
+() S 8 T ( * ) N
+() S 8 T ( * @return a Task2Info object) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( Task2Info allOccurrences\() p
+(byte) k
+([] x\) {) p n
+() S 8 T () S 16 T () S
+(//update the t2Node) c n
+() p 8 T () S 16 T (searchSuffixTree\(x\);) N
+() S 8 T () S 16 T (occurrences = ) S
+(new) K
+( LinkedList<SuffixTreeNode>\(\);) p n
+() S 8 T () S 16 T () S
+(if) K
+( \(t2Node == ) p
+(null) k
+(\){) p n
+() S 8 T () S 16 T () S 24 T () S
+(//no occurrences.) c n
+() p 8 T () S 16 T () S 24 T () S
+(return) K
+( ) p
+(new) K
+( Task2Info\(\);) p n
+() S 8 T () S 16 T () N
+() S 8 T () S 16 T () S
+(//else if needed in case there is only 1 occurrence) c n
+() p 8 T () S 16 T (}) S
+(else) K
+( ) p
+(if) K
+(\(t2Node.getSuffix\(\) != -1\){) p n
+() S 8 T () S 16 T () S 24 T (occurrences.add\(t2Node\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(//get all occurrences.) c n
+() p 8 T () S 16 T (getLeafDecendants\(t2Node.getChild\(\)\);) N
+() S 8 T () S 16 T (Task2Info res = ) S
+(new) K
+( Task2Info\(\);) p n
+() S 8 T () S 16 T () S
+(for) K
+( \(SuffixTreeNode node: occurrences\){) p n
+() S 8 T () S 16 T () S 24 T () S
+(//add all occurrences) c n
+() p 8 T () S 16 T () S 24 T (res.addEntry\(node.getSuffix\(\)\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(return) K
+( res;) p n
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T () S
+(public) K
+( ) p
+(void) k
+( getLeafDecendants\(SuffixTreeNode currentNode\){) p n
+() S 8 T () S 16 T () S
+(while) K
+( \(currentNode != ) p
+(null) k
+(\){) p n
+() S 8 T () S 16 T () S 24 T () S
+(//add suffix and go to sibling) c n
+() p 8 T () S 16 T () S 24 T () S
+(if) K
+( \(currentNode.getChild\(\) == ) p
+(null) k
+(\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (occurrences.add\(currentNode\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (currentNode = currentNode.getSibling\(\);) N
+() S 8 T () S 16 T () S 24 T () S
+(//explore children for suffixes and then go to sibling) c n
+() p 8 T () S 16 T () S 24 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (getLeafDecendants\(currentNode.getChild\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (currentNode = currentNode.getSibling\(\);) S 72 T () S 80 T () N
+() S 0 T () S 8 T () N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (}) N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Traverses suffix tree t representing string s and stores ln, p1 and) N
+() S 8 T ( * p2 in Task3Info.len, Task3Info.pos1 and Task3Info.pos2 respectively,) N
+() S 8 T ( * so that s[p1..p1+ln-1] = s[p2..p2+ln-1], with ln maximal;) N
+() S 8 T ( * i.e., finds two embeddings of a longest repeated substring of s) N
+() S 8 T ( * - assumes that characters of s occupy positions 0 onwards) N
+() S 8 T ( * so that p1 and p2 count from 0) N
+() S 8 T ( * ) N
+() S 8 T ( * @return a Task3Info object) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( Task3Info traverseForLrs \(\) {) p n
+() S 8 T () S 16 T (SuffixTreeNode currentNode = t.getRoot\(\).getChild\(\);) N
+() S 8 T () S 16 T (LinkedList<SuffixTreeNode> bestLsrNodes = ) S
+(new) K
+( LinkedList<SuffixT) p n
+(SuffixTreeAppl.java) (Page 3/8) (Feb 15, 13 5:25) title
+border
+grestore
+(Printed by Garry Sharp) rhead
+(SuffixTreePackage/SuffixTreeAppl.java) (6/9) (Friday February 15, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (4-5) 7
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(reeNode>\(\);) p n
+() S 8 T () S 16 T (LinkedList<SuffixTreeNode> currentPath = ) S
+(new) K
+( LinkedList<SuffixTr) p n
+(eeNode>\(\);) N
+() S 8 T () S 16 T () S
+(//initialise the path equal to the furthest descendent) c n
+() p 8 T () S 16 T (currentPath.addLast\(currentNode\);) N
+() S 8 T () S 16 T () N
+() S 8 T () S 16 T () S
+(while) K
+( \(currentPath != ) p
+(null) k
+(\){) p n
+() S 8 T () S 16 T () S 24 T () S
+(//last item in the path \(potential "vaild" node"\)) c n
+() p 8 T () S 16 T () S 24 T (currentNode = currentPath.getLast\(\);) N
+() S 8 T () S 16 T () S 24 T () N
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(getLength\(currentPath\) > getLength\(bestLsrNodes\) && ) p n
+(isValidBranch\(currentNode\)\){) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(//remove previous searches) c n
+() p 8 T () S 16 T () S 24 T () S 32 T (bestLsrNodes.clear\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(for) K
+( \(SuffixTreeNode n: currentPath\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(//update bestLsrNodes) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (bestLsrNodes.addLast\(n\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T () S 24 T () S
+(//update the path) c n
+() p 8 T () S 16 T () S 24 T (currentPath = next\(currentPath\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T (Task3Info result = ) S
+(new) K
+( Task3Info\(\);) p n
+() S 8 T () S 16 T () S
+(if) K
+( \(bestLsrNodes.isEmpty\(\)\){) p n
+() S 8 T () S 16 T () S 24 T () S
+(//if no lrs exists...) c n
+() p 8 T () S 16 T () S 24 T () S
+(return) K
+( result;) p n
+() S 8 T () S 16 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S
+(//otherwise set positions and return) c n
+() p 8 T () S 16 T () S 24 T () S
+(int) k
+([] positions = getLeafSuffixes\(bestLsrNodes.getLast\(\)) p n
+(\);) N
+() S 8 T () S 16 T () S 24 T (result.setPos1\(positions[0]\);) N
+() S 8 T () S 16 T () S 24 T (result.setPos2\(positions[1]\);) N
+() S 8 T () S 16 T () S 24 T (result.setLen\(getLength\(bestLsrNodes\)\);) N
+() S 8 T () S 16 T () S 24 T () S
+(return) K
+( result;) p n
+() S 8 T () S 16 T (}) N
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T () S
+(/*Gets 2 the leaf nodes of a branch node, should be checked with ) c n
+() S 8 T (isValidBranch\(x\) first. \(when immediate parent, check with isValidBranch) N
+(\(x\) first\)*/) N
+() p 8 T () S
+(private) K
+( ) p
+(int) k
+([] getLeafSuffixes\(SuffixTreeNode x\){) p n
+() S 8 T () S 16 T () S
+(int) k
+([] result = ) p
+(new) K
+( ) p
+(int) k
+([2];) p n
+() S 8 T () S 16 T (SuffixTreeNode currentNode = x.getChild\(\);) N
+() S 8 T () S 16 T (result[0] = currentNode.getSuffix\(\);) N
+() S 8 T () S 16 T (currentNode = currentNode.getSibling\(\);) N
+() S 8 T () S 16 T (result[1] = currentNode.getSuffix\(\);) N
+() S 8 T () S 16 T () S
+(return) K
+( result;) p n
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T () S
+(//Gets the collective length of all of the nodes in a list.) c n
+() p 8 T () S
+(public) K
+( ) p
+(int) k
+( getLength\(LinkedList<SuffixTreeNode> x\){) p n
+() S 8 T () S 16 T () S
+(int) k
+( len = 0;) p n
+() S 8 T () S 16 T () S
+(if) K
+( \(x.isEmpty\(\)\){) p n
+() S 8 T () S 16 T () S 24 T () S
+(return) K
+( 0;) p n
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(for) K
+( \(SuffixTreeNode node: x\){) p n
+() S 8 T () S 16 T () S 24 T (len += getLengthOfNode\(node\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(return) K
+( len;) p n
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T () S
+(/*) c n
+(SuffixTreeAppl.java) (Page 4/8) (Feb 15, 13 5:25) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() c 8 T ( * Iterates through the tree, returning a list representing the "childre) N
+(n" ) N
+() S 8 T ( * with each the last node being the current node and the preceding node) N
+(s being the parents.) N
+() S 8 T ( * The iteration is done depth first.) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( LinkedList<SuffixTreeNode> next\(LinkedList<SuffixTreeNode> x\){) p n
+() S 8 T () S 16 T (SuffixTreeNode currentNode = x.getLast\(\);) N
+() S 8 T () S 16 T () S
+(//necessary when visiting parents as it prevents them from immed) c n
+(iately visiting the child.) N
+() p 8 T () S 16 T () S
+(boolean) k
+( visited = ) p
+(false) k
+(; ) p n
+() S 8 T () S 16 T () N
+() S 8 T () S 16 T () S
+(/*used as a loop escape, once the path is at an acceptable confi) c n
+(guration, ) N
+() S 8 T () S 16 T ( * required as sometimes the parents must be visited several tim) N
+(es.) N
+() S 8 T () S 16 T ( */) N
+() p 8 T () S 16 T () S
+(boolean) k
+( isBad = ) p
+(true) k
+(;) p n
+() S 8 T () S 16 T () S
+(while) K
+( \(isBad || x.isEmpty\(\)\){) p n
+() S 8 T () S 16 T () S 24 T () N
+() S 8 T () S 16 T () S 24 T () S
+(//Go to the child if not already visited.) c n
+() p 8 T () S 16 T () S 24 T () S
+(if) K
+(\(currentNode.getChild\(\) != ) p
+(null) k
+( && !visited\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (x.addLast\(currentNode.getChild\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (isBad = ) S
+(false) k
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () N
+() S 8 T () S 16 T () S 24 T () S
+(//If not, then go to the sibling if possible) c n
+() p 8 T () S 16 T () S 24 T (}) S
+(else) K
+( ) p
+(if) K
+( \(currentNode.getSibling\(\) != ) p
+(null) k
+(\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (x.removeLast\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (x.addLast\(currentNode.getSibling\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (isBad = ) S
+(false) k
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () N
+() S 8 T () S 16 T () S 24 T () S
+(//If not, then go up the list as high as required.) c n
+() p 8 T () S 16 T () S 24 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(!x.isEmpty\(\)\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(//Go up one step) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (x.removeLast\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(!x.isEmpty\(\)\)) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (currentNode = x.getLast\(\);) S 80 T () N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(//stop looping if empty) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (isBad = ) S
+(false) k
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S 32 T ( ) S
+(/* break needed so that items are not continual) c n
+(ly removed from the list) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (after the list is empty, prevents NoSuch) N
+(ElementException */) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(//prevent from going to the child in next iterat) c n
+(ion.) N
+() p 8 T () S 16 T () S 24 T () S 32 T (visited = ) S
+(true) k
+(;) p n
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(if) K
+( \(x.isEmpty\(\)\){) p n
+() S 8 T () S 16 T () S 24 T () S
+(//returns null when no more paths are available) c n
+() p 8 T () S 16 T () S 24 T () S
+(return) K
+( ) p
+(null) k
+(;) p n
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(return) K
+( x;) p n
+() S 8 T () S 16 T () S
+(/*NB. Multiple handlers of x.isEmpty\(\) are necessary as items ar) c n
+(e removed from x) N
+() S 8 T () S 16 T ( * at various stages in its execution. All are to prevent either) N
+(SuffixTreeAppl.java) (Page 5/8) (Feb 15, 13 5:25) title
+border
+grestore
+(Printed by Garry Sharp) rhead
+(SuffixTreePackage/SuffixTreeAppl.java) (7/9) (Friday February 15, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (6-7) 8
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+( ) c n
+() S 8 T () S 16 T ( * NoSuchElementExceptions or to escape the loop.) N
+() S 8 T () S 16 T ( */) N
+() p 8 T (}) N
+() S 8 T () N
+() S 8 T () S
+(//returns true if a branch ONLY has leaf nodes \(at least 2\)) c n
+() p 8 T () S
+(public) K
+( ) p
+(boolean) k
+( isValidBranch\(SuffixTreeNode x\){) p n
+() S 8 T () S 16 T () S
+(//if the node is a leaf..) c n
+() p 8 T () S 16 T () S
+(boolean) k
+( result = ) p
+(true) k
+(;) p n
+() S 8 T () S 16 T () S
+(int) k
+( count = 0;) p n
+() S 8 T () S 16 T () N
+() S 8 T () S 16 T () S
+(//if the node itself is a leaf then return false.) c n
+() p 8 T () S 16 T () S
+(if) K
+( \(x.getChild\(\) == ) p
+(null) k
+(\){) p n
+() S 8 T () S 16 T () S 24 T () S
+(return) K
+( ) p
+(false) k
+(;) p n
+() S 8 T () S 16 T () S 24 T () N
+() S 8 T () S 16 T () S
+(//if not a leaf.) c n
+() p 8 T () S 16 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T (SuffixTreeNode currentNode = x.getChild\(\);) N
+() S 8 T () S 16 T () S 24 T () S
+(while) K
+( \(currentNode != ) p
+(null) k
+(\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(//count the number of leaf nodes..) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(currentNode.getSuffix\(\) != -1\)) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (count++;) N
+() S 8 T () S 16 T () S 24 T () S 32 T (currentNode = currentNode.getSibling\(\);) N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(//return true if there are at least 2 leaf nodes.) c n
+() p 8 T () S 16 T () S
+(if) K
+( \(count >= 2\){) p n
+() S 8 T () S 16 T () S 24 T () S
+(return) K
+( ) p
+(true) k
+(;) p n
+() S 8 T () S 16 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S
+(return) K
+( ) p
+(false) k
+(;) p n
+() S 8 T () S 16 T (}) N
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T () S
+(// simple helper to aid readability, gets the length of a node.) c n
+() p 8 T () S
+(public) K
+( ) p
+(int) k
+( getLengthOfNode\(SuffixTreeNode x\){) p n
+() S 8 T () S 16 T () S
+(return) K
+( x.getRightLabel\(\) - x.getLeftLabel\(\) + 1;) p n
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T () N
+() N
+() S 8 T () S
+(/**) C n
+() S 8 T ( * Traverse generalised suffix tree t representing strings s1 \(of length) N
+() S 8 T ( * s1Length\), and s2, and store ln, p1 and p2 in Task4Info.len,) N
+() S 8 T ( * Task4Info.pos1 and Task4Info.pos2 respectively, so that) N
+() S 8 T ( * s1[p1..p1+ln-1] = s2[p2..p2+ln-1], with len maximal;) N
+() S 8 T ( * i.e., finds embeddings in s1 and s2 of a longest common substring ) N
+(         * of s1 and s2) N
+() S 8 T ( * - assumes that characters of s1 and s2 occupy positions 0 onwards) N
+() S 8 T ( * so that p1 and p2 count from 0) N
+() S 8 T ( * ) N
+() S 8 T ( * @param s1Length the length of s1) N
+() S 8 T ( * ) N
+() S 8 T ( * @return a Task4Info object) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( Task4Info traverseForLcs \() p
+(int) k
+( s1Length\) {) p n
+() S 8 T () S 16 T () S
+(//Very similar to Task3Info, only changed sections will be comme) c n
+(nted.) N
+() p 8 T () S 16 T (SuffixTreeNode currentNode = t.getRoot\(\).getChild\(\);) N
+() S 8 T () S 16 T (LinkedList<SuffixTreeNode> bestLcrNodes = ) S
+(new) K
+( LinkedList<SuffixT) p n
+(reeNode>\(\);) N
+() S 8 T () S 16 T (LinkedList<SuffixTreeNode> currentPath = ) S
+(new) K
+( LinkedList<SuffixTr) p n
+(eeNode>\(\);) N
+(SuffixTreeAppl.java) (Page 6/8) (Feb 15, 13 5:25) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T (LinkedList<SuffixTreeNode> tempLeaves = ) S
+(new) K
+( LinkedList<SuffixTre) p n
+(eNode>\(\);) N
+() S 8 T () S 16 T (currentPath.addLast\(currentNode\);) N
+() S 8 T () S 16 T () S
+(boolean) k
+( isLast = ) p
+(false) k
+(;) p n
+() S 8 T () S 16 T () S
+(boolean) k
+( left = ) p
+(false) k
+(;) p n
+() S 8 T () S 16 T () S
+(boolean) k
+( right = ) p
+(false) k
+(;) p n
+() S 8 T () S 16 T () S
+(while) K
+( \(currentPath != ) p
+(null) k
+( || isLast\){) p n
+() S 8 T () S 16 T () S 24 T (currentNode = currentPath.getLast\(\);) N
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(getLength\(currentPath\) > getLength\(bestLcrNodes\) && ) p n
+(isValidBranch\(currentNode\)\){) N
+() S 8 T () S 16 T () S 24 T () S 32 T (tempLeaves = getImmidiateLeafDescs\(currentNode\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(for) K
+( \(SuffixTreeNode node:tempLeaves\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(//if a node is in the first file set lef) c n
+(t to true) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(node.getSuffix\(\) < s1Length\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (left = ) S
+(true) k
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(//if a node is in the second file set ri) c n
+(ght to true) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) S
+(else) K
+( ) p
+(if) K
+(\(node.getSuffix\(\) > s1Length\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (right = ) S
+(true) k
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(//ONLY is subtring is present in BOTH the first ) c n
+(and second files.) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(left && right\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(//reset bestLcrNodes to empty) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (bestLcrNodes.clear\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(//Update bestLcrNodes) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(for) K
+( \(SuffixTreeNode n: currentPath\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (bestLcrNodes.addLast\(n\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (};) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(//Reset left and right values as we move to a ne) c n
+(w node.) N
+() p 8 T () S 16 T () S 24 T () S 32 T (left = ) S
+(false) k
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (right = ) S
+(false) k
+(;) p n
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T () S 24 T (currentPath = next\(currentPath\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T (Task4Info result = ) S
+(new) K
+( Task4Info\(\);) p n
+() S 8 T () S 16 T () S
+(if) K
+( \(bestLcrNodes.isEmpty\(\)\){) p n
+() S 8 T () S 16 T () S 24 T () S
+(return) K
+( result;) p n
+() S 8 T () S 16 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S
+(int) k
+([] positions = getLeafSuffixes\(bestLcrNodes.getLast\(\)) p n
+(\);) N
+() S 8 T () S 16 T () S 24 T () S
+(int) k
+( which = -1;) p n
+() S 8 T () S 16 T () S 24 T () N
+() S 8 T () S 16 T () S 24 T () S
+(//Index movements relative to the position in THEIR resp) c n
+(ective files.) N
+() p 8 T () S 16 T () S 24 T () S
+(if) K
+( \(positions[0] > s1Length\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (positions[0]-= \(s1Length + 1\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (which = 0;) N
+() S 8 T () S 16 T () S 24 T (}) S
+(else) K
+( ) p
+(if) K
+( \(positions[1] > s1Length\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (positions[1]-= \(s1Length + 1\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (which = 1;) N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T () S 24 T () N
+() S 8 T () S 16 T () S 24 T () S
+(//Set the data for return) c n
+() p 8 T () S 16 T () S 24 T () S
+(if) K
+( \(which == 0\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (result.setPos1\(positions[0]\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (result.setPos2\(positions[1]\);) N
+() S 8 T () S 16 T () S 24 T (}) S
+(else) K
+( ) p
+(if) K
+( \(which == 1\){) p n
+(SuffixTreeAppl.java) (Page 7/8) (Feb 15, 13 5:25) title
+border
+grestore
+(Printed by Garry Sharp) rhead
+(SuffixTreePackage/SuffixTreeAppl.java) (8/9) (Friday February 15, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (8) 9
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T () S 32 T (result.setPos1\(positions[1]\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (result.setPos2\(positions[0]\);) N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T () S 24 T (result.setLen\(getLength\(bestLcrNodes\)\);) N
+() S 8 T () S 16 T () S 24 T () S
+(return) K
+( result;) p n
+() S 8 T () S 16 T (}) N
+() S 8 T (}) N
+() S 8 T () S 16 T () S
+(private) K
+( LinkedList<SuffixTreeNode> getImmidiateLeafDescs\(SuffixT) p n
+(reeNode x\){) N
+() S 8 T () S 16 T () S 24 T (LinkedList<SuffixTreeNode> leaves = ) S
+(new) K
+( LinkedList<Suffi) p n
+(xTreeNode>\(\);) N
+() S 8 T () S 16 T () S 24 T () S
+(// if x itself is a lead return null) c n
+() p 8 T () S 16 T () S 24 T () S
+(if) K
+( \(x.getChild\(\) == ) p
+(null) k
+(\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(return) K
+( ) p
+(null) k
+(;) p n
+() S 8 T () S 16 T () S 24 T () N
+() S 8 T () S 16 T () S 24 T () S
+(//if a branch...) c n
+() p 8 T () S 16 T () S 24 T (}) S
+(else) K
+({) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(//examine all children and siblings of the branc) c n
+(h) N
+() p 8 T () S 16 T () S 24 T () S 32 T (x = x.getChild\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(while) K
+( \(x != ) p
+(null) k
+(\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(//if a leaf then add to the list) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(x.getChild\(\) == ) p
+(null) k
+(\){) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (leaves.add\(x\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (x = x.getSibling\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(return) K
+( leaves;) p n
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (}) N
+(}) N
+(SuffixTreeAppl.java) (Page 8/8) (Feb 15, 13 5:25) title
+border
+grestore
+(Printed by Garry Sharp) rhead
+(SuffixTreePackage/SuffixTreeAppl.java) (9/9) (Friday February 15, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF

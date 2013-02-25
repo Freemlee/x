@@ -1,0 +1,11 @@
+foo :: Int -> Maybe Int
+foo x
+	| x < 5 = Just x
+	| Nothing
+
+{-
+unwrap :: Maybe Int -> Int
+unwrap x =
+	if (inJust x)
+		then fromJust x
+		else 0 -}

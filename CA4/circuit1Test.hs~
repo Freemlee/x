@@ -1,0 +1,49 @@
+module Main where
+
+import HDL.Hydra.Core.Lib
+import HDL.Hydra.Circuits.StandardCircuits
+import circuit1
+
+test_data_lights =
+  [[0],
+  [1],
+  [2],
+  [3],
+  [4],
+  [5],
+  [6],
+  [7],
+  [8],
+  [9]]
+  
+separator :: IO ()
+separator = putStrLn (take 72 (repeat '-'))
+
+main :: IO ()
+main =
+  do separator
+     putStrLn "4-bit adder"
+     run_lights lightLogic test_data_lights
+
+     separator
+  
+
+
+type Bit = Stream Bool
+type Word = [Bit]
+
+run_lights :: (Word -> (Bit,Bit,Bit)) -> [Int] -> IO()
+run_lights func input = runAllInput input output
+  where
+	i0 = getbin 4 input 0
+	i1 = getbin 4 input 1
+	i2 = getbin 4 input 2
+	i3 = getbin 4 input 3
+	
+	(r,a,g) = func [i0,i1,i2,i3] 
+	
+	output = 
+	  [string "r = " r,
+	  string "a = " a,
+	  string "g = " g]
+	  

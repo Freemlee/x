@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Delete extraneous files, leaving only the sources.
+
+# First use cabal to delete its temporary files
+runhaskell Setup clean
+
+# Delete object and backup files
+find . \( -name '*~' -o -name '*.hi' -o -name '*.bak' -o -name '*.o' \) -delete

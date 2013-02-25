@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# This shell script builds an archive of the current draft of a
+# Haskell package.  It should be placed in the directory for that
+# package, with a path like wherever/Package-i.j.k.  The parent
+# directory should have a subdirectory "archive", and the snapshot
+# will be placed there.  The snapshot is a compressed tar file, and
+# its name will have the form Package-x.y.z-year-month-day.tar.bz2.
+
+scripts/cleanup
+
+packagepath=`pwd`
+echo packagepath = $packagepath
+packagebasename=`basename $packagepath`
+echo packagebasename = $packagebasename
+datestamp=`date +%Y-%m-%d`
+echo datestamp = $datestamp
+snapshottarname=$packagebasename-$datestamp.tgz
+echo snapshottarname = $snapshottarname
+
+cd ..
+tar -czf $snapshottarname $packagebasename
+mv $snapshottarname ../archive

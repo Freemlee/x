@@ -1,0 +1,32 @@
+% Hydra: a functional computer hardware description language
+% John T. O'Donnell
+% 2009
+
+***
+
+### Contents
+
+*   Introduction
+    -  [Overview:](file:overview.html) a general description
+    -  [Tutorial:](file:tutorial.html) get started
+       with some simple examples
+*   User manual
+    -  [User's Guide:](file:userguide.html) explains the language,
+       organised around concepts
+    -  [Library API reference:](file:haddock/index.html) the
+       application programming interface
+*   Examples
+    -  [Multiply:](file:Multiply.hs) an integer multiplier
+       functional unit
+    -  [RTM:](file:RTM.hs) a register transfer machine
+*   About the software
+    -  [README:](file:README.html) describes the package
+    -  [LICENSE:](file:LICENSE.html) this is free software with GPL
+    -  [Installation:](file:INSTALL.html) how to build and install
+       the software
+    -  [Hydra.cabal:](file:Hydra.cabal) package specification
+       file used for installation
+    -  [Colophon](file:colophon.html) 
+
+***
+

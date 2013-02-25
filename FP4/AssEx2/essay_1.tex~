@@ -1,0 +1,135 @@
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[12pt]{article} % Default font size is 12pt, it can be changed here
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{geometry} % Required to change the page size to A4
+\geometry{a4paper} % Set the page size to be A4 as opposed to the default US Letter
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
+\usepackage{wrapfig} % Allows in-line images such as the example fish picture
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\linespread{1.2} % Line spacing
+
+%\setlength\parindent{0pt} % Uncomment to remove all indentation from paragraphs
+\graphicspath{{./Pictures/}} % Specifies the directory where pictures are stored
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines,
+%change thickness here
+\center % Center everything on the page
+\includegraphics[width=\textwidth]{Glasgow}\\[1.5cm]
+\textsc{\LARGE Functional Programming 4}\\[0.5cm] % Major heading such as course name
+\textsc{\Large Assessed Exercise 2}\\[0.5cm] % Minor heading such as course title
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Calculator}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+Garry \textsc{Sharp}\\
+0801585s\\ % Your name
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.5\textwidth}
+\begin{flushright} \large
+\emph{Supervisors:} \\
+Dr. W. \textsc{Vanderbauwhede}\\
+Dr. J. \textsc{O'Donnell}\\
+\end{flushright}
+\end{minipage}\\[4cm]
+
+{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+\newpage
+\tableofcontents
+\newpage
+
+\section{Instructions}
+Executions is as easy as: 
+\begin{verbatim}
+	$ ghc MainCalc.hs
+	$ ./MainCalc
+\end{verbatim}
+
+Please make sure that all files are as the handout files (ie. the .glade file is located at the glade/calculator.glade within the subdirectory you are working in). Also please make sure that each of the steps detailed in the setup.sh file are followed. For quick reference they are:
+
+\begin{verbatim}
+	PATH="$HOME/.cabal/bin:$PATH"
+	PATH="/users/level4/software/fp4/bin/bin:$PATH"
+	export PATH
+	HTTP_PROXY="http://wwwcache.dcs.gla.ac.uk:8080"
+	export HTTP_PROXY
+\end{verbatim}
+
+As the initial setup, followed by the installation of the following libraries
+
+\begin{verbatim}
+	cabal update
+	cabal install cabal-install
+	cabal install gtk2hs-buildtools
+	cabal install gtk
+	cabal install glade
+\end{verbatim}
+
+\section{Status}
+
+The program works and performs calculations as expected, however there are a few minor bugs that I will mention here.
+\subsection{Windows}
+\label{sec:Windows}
+The calculator has two additional windows from the standard MainWindow that was given, these are a currency converter window and an about dialog window. These windows will close properly when you click the close button on the lower right section of the panels. Clicking the top right button will also close the window but will not allow it to be re-constructed which is due to the xml file with the hidden xml windows being the one that is read. I did not a solution to this where I refreshed the xml but this became very convoluted and online forums suggested it was a horrible hack so I removed it. The windows show and hide fine so long as you close them using the close/cancel buttons at the bottom right of the panels.
+
+\subsection{The Stack}
+\label{sec:Stack}
+
+I am only ever using 1 stack in the code (an array of tuples representing a double and a label string for readablility). What I do is when the int mode is selected I change the divide function and floor all of the values and then display the output omitting the decimal point, I think that this is okay as the user will have no inclination to think that the values are still (technically) doubles. Eg a user inputs 45 and this will be stored as 45.0. Int int mode $\frac{45}{7}$ will actually be $floor \left( \frac{45.0}{7.0} \right) $. The reason for deciding to implement it this way was that it seemed simpler given that we have a binary \textit{"is int int mode"} or \textit{"isn't in int mode"} value that we could add to the calculator state to determine HOW we divide values. The alternative of 2 separate stacks or an array of a custom data type seemed both inefficient with memory and too convoluted given the relative simplicity of the extension.
+
+
+\newpage
+\section{Extensions Implemented}
+\subsection{Basic}
+
+All of the Basic Extensions are working, there was a level of ambiguity over wheter or not the STO button should pop a value from the stack or not, as it does not explicitly say to do so I decided to leave the value there. Therefore, a STO followed by a FET would lead to a stack of, for instance, $[2.5, 5.6, 7.8]$ becoming $[2.5, 2.5, 5.6, 7.8]$.
+
+The about dialog must be closed as detailed in section \ref{sec:Windows}
+
+\subsection{Advanced}
+
+Below are a list of advanced extensions implemented
+\subsubsection{Nicer GUI}
+
+The system's GUI has been redesigned to feature colours which make it clearer which buttons do what, the stack is also printed neatly on one line. A bug in the system is that both integer and double mode are presented to the user at the start of the system. Upon selecting either integer/double mode the GUI fixes itself to how it should be.
+\subsubsection{Financial Calculator}
+
+Clicking convert brings up a new window which allows the user to enter a int the top left, select a currency from and currency to and then convery between them. You must close the window by using the close button in the bottom right as detailed in section \ref{sec:Windows}.
+\subsubsection{Readable Stack}
+
+I allow users to also enter a label for a value in the stack and store the values as an array of tuples $[(Double, String)]$, when the values are printed to the screen the user can see the label they assigned. When a value is pushed onto the stack from an operation (say a multiplication) then the label defaults to \textit{"Auto Gen from"} followed by the name of the operation that created it.
+
+\subsubsection{Integer Support}
+Integers work in the system, when the user clicks the interger radio button a number of operations (sin, cos, inverse etc) dissapear and the mod function appears. As mentioned before in section \ref{sec:Stack}, the stack is always a double but when in int mode values are rounded and output as if they were ints.
+
+\subsubsection{Basic Error Handling}
+Basic error handling is performed in the code, please consult comments for instances.
+
+\end{document}

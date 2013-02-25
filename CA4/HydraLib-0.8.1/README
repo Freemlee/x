@@ -1,0 +1,38 @@
+% README
+% John T. O'Donnell
+% 2011
+
+## Overview
+
+Hydra is a Computer Hardware Description Language that supports the
+design of digital circuits and computer architectures.  It includes
+software tools for circuit specification and simulation.
+
+Hydra is a domain specific language, implemented by embedding in the
+pure functional programming language Haskell (www.haskell.org/).  A
+familiarity with Haskell is helpful but not required in order to use
+Hydra to design circuits.
+
+This is free software and is distributed under the GPL License, either
+version 3 or (at your option) any later version.  See the LICENSE and
+LICENSE_GPL3 files.
+
+The INSTALL file explains how to install and use the software.
+
+Documentation, including a tutorial to help you get started, is
+available in the doc directory.
+
+This is experimental software, and is currently under development.
+Some features that have appeared in past versions of Hydra are not
+supported in this release, although it is intended that they will be
+supported in the near future.  In particular, the automated
+transformations and metaprogramming tools described in some of the
+research papers are not supported in this version.
+
+For more information, see www.dcs.gla.ac.uk/~jtod/hydra/
+
+## Author
+
+John T. O'Donnell
+John.ODonnell@glasgow.ac.uk
+www.dcs.gla.ac.uk/~jtod/

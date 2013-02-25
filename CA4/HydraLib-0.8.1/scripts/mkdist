@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Make source distribution file, and move it to parent directory
+
+scripts/cleanup
+cabal configure
+cabal sdist
+mv dist/HydraLib-*.tar.gz ..
+

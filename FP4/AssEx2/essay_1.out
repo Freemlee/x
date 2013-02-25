@@ -1,0 +1,12 @@
+\BOOKMARK [1][-]{section.1}{Instructions}{}
+\BOOKMARK [1][-]{section.2}{Status}{}
+\BOOKMARK [2][-]{subsection.2.1}{Windows}{section.2}
+\BOOKMARK [2][-]{subsection.2.2}{The Stack}{section.2}
+\BOOKMARK [1][-]{section.3}{Extensions Implemented}{}
+\BOOKMARK [2][-]{subsection.3.1}{Basic}{section.3}
+\BOOKMARK [2][-]{subsection.3.2}{Advanced}{section.3}
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Nicer GUI}{subsection.3.2}
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Financial Calculator}{subsection.3.2}
+\BOOKMARK [3][-]{subsubsection.3.2.3}{Readable Stack}{subsection.3.2}
+\BOOKMARK [3][-]{subsubsection.3.2.4}{Integer Support}{subsection.3.2}
+\BOOKMARK [3][-]{subsubsection.3.2.5}{Basic Error Handling}{subsection.3.2}

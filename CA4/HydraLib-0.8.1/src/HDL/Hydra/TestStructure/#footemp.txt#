@@ -1,0 +1,59 @@
+Original code
+
+ foo a b = (c,d)
+   where
+     c = and2 (inv a) b
+     d = or2 c (inv b)
+
+Transformation successful, result code:
+
+
+foo_0 inport_0_1 inport_1_2 = outport_3
+          where c_4 = HDL.Hydra.Core.Signal.and2 (HDL.Hydra.Core.Signal.inv a_5) b_6
+                d_7 = HDL.Hydra.Core.Signal.or2 c_4 (HDL.Hydra.Core.Signal.inv b_6)
+                a_5 = inport_0_renamed_8
+                inport_0_shape_9 = ShapeName "a_1627402529"
+                (inport_0_cluaccess_10,
+                 inport_0_renamed_8) = Box.rename inport_0_1 inport_0_shape_9 (Box.ClusterContextInport box_11 0)
+                b_6 = inport_1_renamed_12
+                inport_1_shape_13 = ShapeName "b_1627402530"
+                (inport_1_cluaccess_14,
+                 inport_1_renamed_12) = Box.rename inport_1_2 inport_1_shape_13 (Box.ClusterContextInport box_11 1)
+                outport_3 = outport_Renamed_15
+                outport_Shape_16 = ShapeTuple [ShapeName "c_1627402531",
+                                               ShapeName "d_1627402532"]
+                (outport_CluAccess_17, outport_Renamed_15) = Box.rename (c_4,
+                                                                         d_7) outport_Shape_16 (Box.ClusterContextOutport box_11)
+                box_11 = CircBox "foo_1627402528" [inport_0_cluaccess_10,
+                                                   inport_1_cluaccess_14] [] outport_CluAccess_17
+
+Make it more readable by changing names
+ HDL.Hydra.Core.Signal.foo -> foo
+ Box.foo -> foo
+ inport_0_1 -> a'
+ inport_1_2 -> b'
+ c_4 -> c'
+ d_7 -> d'
+ inport_0_shape_9 -> a_shape
+ inport_0_renamed_8 -> a
+ inport_1_shape_13 -> b_shape
+ inport_1_renamed_12 -> b
+
+foo_0 a' b' = outport_3
+          where c' = and2 (inv a_5) b_6
+                d' = or2 c' (inv b_6)
+                a_5 = a
+                a_shape = ShapeName "a_1627402529"
+                (inport_0_cluaccess_10, a) =
+                   rename a' a_shape (ClusterContextInport box_11 0)
+                b_6 = b
+                b_shape = ShapeName "b_1627402530"
+                (inport_1_cluaccess_14, b) =
+                   rename b' b_shape (ClusterContextInport box_11 1)
+                outport_3 = outport_Renamed_15
+                outport_Shape_16 = ShapeTuple [ShapeName "c_1627402531",
+                                               ShapeName "d_1627402532"]
+                (outport_CluAccess_17, outport_Renamed_15) = rename (c',
+                                                                         d') outport_Shape_16 (ClusterContextOutport box_11)
+                box_11 = CircBox "foo_1627402528" [inport_0_cluaccess_10,
+                                                   inport_1_cluaccess_14] [] outport_CluAccess_17

@@ -1,0 +1,191 @@
+% Colophon
+% John T. O'Donnell
+% 2009
+
+
+## Summary of markdown: level 2 header
+
+Smart typesetting handles correctly lexical elements including
+quotations, en-dashes, em-dashes, ellipses. Some "text-examples" for
+smart---typesetting...to 'see' how this looks.
+
+try some math $x^2$ and $\frac{x+y}{a+b}$ and $\log_2{n}$ and
+$\sqrt{b^2 - 4 \times a \times c}$ and $[x_0, x_1, \ldots, x_{n-1}]$
+
+This is an equation using display math, the content of the
+equation is nonsense
+
+$$ scanl\ f\ a\ xs\ =\ take\ n\ (reps\ f)\ xs $$
+
+Code is indented 5 spaces
+
+     inv4 [a,b,c,d] = [inv a, inv b, inv c, inv d]
+
+### Level 3 header
+
+#### Level 4 header
+
+##### Level 5 header
+
+##### Level 6 header
+
+This is a paragraph with lots of text.
+This is a paragraph with lots of text.
+This is a paragraph with lots of text.
+
+<div class="box">
+text inside div class "box"
+text inside div class "box"
+text inside div class "box"
+text inside div class "box"
+text inside div class "box"
+text inside div class "box"
+</div>
+
+This is a paragraph with lots of text.
+This is a paragraph with lots of text.
+
+##### Figures
+
+
+A image is included with ! followed by an alternative description in
+square brackets, followed by the image label in square brackets.
+
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+
+<div class="floatright">
+![diagram of map4inv][map4inv]
+</div>
+
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+this is a big block of text
+
+***
+
+-------------------------------------------
+ opcode   format  description
+-------- -------- -------------------------
+  load    RX      r[d] := mem[q+r[x]] <br>
+                  The effective address is calculated.
+                  The word at this address is fetched from
+                  the memory, and loaded into the destination
+                  register.
+
+  add     RRR     r[d] := r[a] + r[b]
+                  The two operands are fetched from registers,
+                  added, and the sum is loaded into the
+                  destination register.
+-------------------------------------------
+
+***
+
+![foldl4 box][foldl4box]
+
+An alternative form is to incorporate the URL to the image file
+directly, rather than indirectly via a label.  The URL goes in round
+parentheses.
+
+![the same diagram of map4inv](figures/map4inv.png)
+
+At the end is a list of the image labels along with the corresponding
+links.
+
+[foldl4box]:        figures/foldl4box.png
+
+## Available figures
+
+Here are some figures
+
+<div class="floatleft">
+  ![map4inv][map4inv]
+</div>
+<div class="clearit"></div>
+
+A few more with span or div specified
+
+<div class="floatleft">
+  ![foldl4box][foldl4box]
+</div>
+<div class="clearit"></div>
+
+And another one
+
+<div class="floatleft">
+![andor][andor]
+</div>
+<div class="clearit"></div>
+
+Here are some more figures
+
+![map4invbos][map4invbos]
+![andorTFT][andorTFT]
+![map4inv][map4inv]
+![bboxnorpinvqr][bboxnorpinvqr]
+![map4][map4]
+![boxes][boxes]
+![nor3pinvqrErr][nor3pinvqrErr]
+![connected-gates][connected-gates]
+![nor3pinvqr][nor3pinvqr]
+![foldl4box][foldl4box]
+![nor3pqr.png][nor3pqr.png]
+![foldl4.png][foldl4.png]
+![norandinvor.png][norandinvor.png]
+![foldr4box.png][foldr4box.png]
+![test.png][test.png]
+![foldr4.png][foldr4.png]
+![tut1-circ1.png][tut1-circ1.png]
+![map4box.png][map4box.png]
+![two-or-gates.png][two-or-gates.png]
+
+
+[map4inv]:          figures/map4inv.png
+[foldl4box]:        figures/foldl4box.png
+[andor]:            figures/andor.png
+[map4invbos]:       figures/map4invbox.png
+[andorTFT]:         figures/andorTFT.png
+[map4inv]:          figures/map4inv.png
+[bboxnorpinvqr]:    figures/bboxnorpinvqr.png
+[map4]:             figures/map4.png
+[boxes]:            figures/boxes.png
+[nor3pinvqrErr]:    figures/nor3pinvqrErr.png
+[connected-gates]:  figures/connected-gates.png
+[nor3pinvqr]:       figures/nor3pinvqr.png
+[foldl4box]:        figures/foldl4box.png
+[nor3pqr.png]:      figures/nor3pqr.png
+[foldl4.png]:       figures/foldl4.png
+[norandinvor.png]:  figures/norandinvor.png
+[foldr4box.png]:    figures/foldr4box.png
+[test.png]:         figures/test.png
+[foldr4.png]:       figures/foldr4.png
+[tut1-circ1.png]:   figures/tut1-circ1.png
+[map4box.png]:      figures/map4box.png
+[two-or-gates.png]: figures/two-or-gates.png
+[reg1.png]:         figures/reg1.png
