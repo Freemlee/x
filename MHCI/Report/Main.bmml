@@ -1,0 +1,20 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="418" measuredH="515" mockupW="361" mockupH="515">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::Image" x="57" y="0" w="-1" h="-1" measuredW="361" measuredH="515" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/s2.png</src>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Button" x="135" y="189" w="100" h="93" measuredW="56" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <menuIcon>false</menuIcon>
+        <text>Goals</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Button" x="241" y="189" w="100" h="93" measuredW="86" measuredH="27" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Reminders</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

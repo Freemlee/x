@@ -1,0 +1,33 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="443" measuredH="515" mockupW="361" mockupH="515">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::Image" x="82" y="0" w="-1" h="-1" measuredW="361" measuredH="515" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/s2.png</src>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::ButtonBar" x="154" y="95" w="216" h="58" measuredW="210" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <selectedIndex>1</selectedIndex>
+        <text>Time%20Based%2C%20Location%20Based</text>
+      </controlProperties>
+    </control>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::HRule" x="166" y="252" w="190" h="-1" measuredW="100" measuredH="10" zOrder="2" locked="false" isInGroup="-1"/>
+    <control controlID="9" controlTypeID="com.balsamiq.mockups::TextInput" x="166" y="212" w="190" h="-1" measuredW="127" measuredH="27" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Some%20Description...</text>
+      </controlProperties>
+    </control>
+    <control controlID="10" controlTypeID="com.balsamiq.mockups::Button" x="166" y="277" w="190" h="28" measuredW="106" measuredH="27" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Add%20Reminder</text>
+      </controlProperties>
+    </control>
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::ComboBox" x="166" y="173" w="190" h="-1" measuredW="118" measuredH="24" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <state>up</state>
+        <text>Some%20Location</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

@@ -1,0 +1,71 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GoalActivity" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="This weeks progress"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+     
+        android:progress="50"
+        android:visibility="visible" />
+    
+    <LinearLayout 
+    	android:orientation="horizontal"
+    	android:layout_width="match_parent"
+    	android:layout_height="0px"
+    	android:layout_weight="0.6">
+    	
+        <ListView
+        android:id="@+id/goals"
+        android:layout_width="0px"
+        android:layout_height="match_parent" 
+        android:layout_weight="0.70"/>
+        
+        <ListView
+        android:id="@+id/goalsCompletedNoList"
+        android:layout_width="0px"
+        android:layout_height="match_parent" 
+        android:layout_weight="0.30"/>
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        
+        <Button
+            android:id="@+id/addGoal"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Add Goal" >
+
+        </Button>
+
+        <Button
+            android:id="@+id/clearGoals"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Clear all Goals" >
+
+        </Button>"
+    </LinearLayout>
+
+</LinearLayout>

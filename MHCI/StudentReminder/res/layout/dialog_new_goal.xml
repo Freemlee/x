@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/addGoalDialog"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+	android:orientation="vertical">
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Spinner
+            android:id="@+id/goalType"
+            android:layout_weight="0.7"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:entries="@array/country_arrays"
+            android:prompt="@string/TypeOfGoal"
+        />
+        
+        <EditText
+            android:id="@+id/goalCount"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:hint="No."
+            android:inputType="number" />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/goalDesc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description" >
+        
+    </EditText>
+        
+
+</LinearLayout>
