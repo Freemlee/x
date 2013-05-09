@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage[margin=1.25in]{geometry}
 \begin{document}
 
 
@@ -69,7 +70,7 @@
 \item Hazards, incorrect output based on varying gate delays (ie and2 x (inv x) results in a 1 value while (inv x) suffers gate delay).
 \item A sequential circuit may have flip flops and feedback loops.
 \item Sequential circuits perform computations through time.
-\item Flip-flip is basic memory (hydra def - dff :: Clocked a -> a -> a)
+\item Flip-flip is basic memory (hydra def - dff :: Clocked a $\rightarrow$ a $\rightarrow$ a)
 \item Clocked used a Bool is simply not rich enough.
 \item Real systems have a reset mechanism to put flip-flips into a valid state.
 \item System must ensure a valid flip-flip value (no mid-voltages).
@@ -121,7 +122,7 @@
 \item Runtime
 \end{enumerate}
 \item Always use type a rather than Bool, its a hydra thing...
-\item bitslice2 can be used so that [a] -> [a] -> [(a,a)]
+\item bitslice2 can be used so that [a] $\rightarrow$ [a] $\rightarrow$ [(a,a)]
 \item mux1w is like a multiplexor but outputs words rather than single bits.
 \item general n-bit reg an wlatch (wlatch doesn't take a load signal).
 \item Modern RISC and CISC architectures use an indexed set of registers R0, R1, R2 etc which are implemented in a circuit called the register file.
@@ -213,8 +214,86 @@
 \section*{Lecture 10}
 \begin{itemize}
 \item adr, pc and ir needed in the datapath to keep track of program execution. ALU needed to perform arithmetic.
-\item The datapath contains the processor's rigiters. 
-\item Aim 
+\item The datapath contains the processor's registers. 
+\item Aim to implement instruction set by an algorithm that uses the registers as temporary variables.
+\item Computations on registers are performed via combination logic in the datapath.
+\item registers and multiplexors have load control/control signals. The overall behavior is determined by these control signals.
+\item many datapath subsystems take control input. The right values must be place on all control signals to make the datapath do something useful.
+\item To perform an operation control signals and data inputs must be set (memdat coming from the system memory bus). Outputs will appear at the next clock cycle.
+\item almost always will the ir need to be set and the pc incremented. ir:= mem[pc], pc := pc + 1 (the comma denotes that they occur in parallel).
+\item **Perhaps look at example operations** Lecture very practical based.
+\end{itemize}
+
+
+\section*{Lecture 11}
+\begin{itemize}
+\item General behavior of the datapath is defined by the control algorithm. Which is described with high level statements such as ir := mem[pc].
+\item A circuit must be designed that will generate the correct control signals to be useful.
+\item High level control algorithm $\rightarrow$ determine which signals must be asserted to achieve each statement $\rightarrow$ synthesized control circuit to set the control signals.
+\item **Learn some examples of high level control RRR and RX functions**
+\item Imperative languages have:
+\begin{itemize}
+\item Computational Statements - assignments etc.
+\item Control Structures - concerned with what and when (eg if-then-else, while loops etc).
+\end{itemize}
+\item A control language needs:
+\begin{itemize}
+\item Computational Statement - which control signals should be set. (eg. Assert - which control signals are on/off).
+\item Control Structures (similar to those in imperative languages).
+\end{itemize}
+\item Straight-line control mode. A sequence of assert statements dictate what the control signals will be for a number of clock cycles.
+\item Statements can also be given names such as state\_1 : Assert [ctl\_a, ctl\_b, ctl\_c]. Meaning state state\_1 is synonymous with ctl\_a,b,c all being set to 1 and all others being set to 0.
+\item Control structures must also be considered, the most important are:
+\begin{itemize}
+\item Repeat Forever
+\item It-Then-Else
+\item Case (multi-way conditional)
+\item While
+\end{itemize}
+\item Sequences of statements can be embedded in a 'block' (between begin and end). While they still require several clock cycles to execute, it can be convenient for grouping.
+\item Almost every control structure REQUIRES an infinite loop, otherwise the datapath would stop doing things as the control would terminate giving it control signals.
+\item fairly obvious case and if-then-else notation.
+\item From high level to low level. high level control algorithm can be used an an emulator (executes machine language at register transfer level).
+\item Aim is to translate this high level control algorithm into a circuit
+\begin{enumerate}
+\item For each step, determine the control signals that must be set during a clock cycle.
+\item Develop a circuit that generates those signals.
+\end{enumerate}
+\item **More examples to look at**
+\item Specify control algorithm, synthesize a control circuit from the algorithm, when changes are needed, modify the algorithm and re-synthesize. (part of synthesis of control).
+\item Synthesis techniques. The delay element method. Simple, flexible and efficient but complex and irregular wiring.
+\item Done by having 1 flip-flop per state. At any time only 1 flip-flip contains 1. If a flip-flip is in state 1 it means that corresponding statement is being executed.
+
+\includegraphics[width=\linewidth]{sdff}[h]
+\includegraphics[width=\linewidth]{gcs}[h]
+
+\item **Again more examples**
+\end{itemize}
+
+\section*{Lecture 12}
+\begin{itemize}
+\item M1 is the first version of a circuit that implements the Sigma16 instruction set architecture. 2 ways to run Sigma16 programs, via an emulator or a circuit simulator on the M1 circuit.
+\item Several approaches to implement I/O in real systems. 
+\begin{itemize}
+\item I/O instructions, read and write. Only in early computers. V. Slow.
+\item Start I/O instruction. Device generates interrupt when ready.
+\item Dedicated I/O processor, running concurrently with CPU. Used in many supercomputers.
+\item Direct Memory Access. I/O implemented by stores and fetches at 'magic' memory addresses.
+\end{itemize}
+\item M1 doesn't support general I/O. It has a special facility for loading a machine language program into memory (DMA).
+\item DMA = 1, one word is place in memory each clock cycle, simulation driver is given a list of words and puts it in memory (one per cycle).
+\item When finished the simulation driver puts 1 on reset of one cycle which starts the control algorithm.
+\item **DMA examples**
+\item Software tools include: Assembler, Emulator, Circuit, Circuit Simulator, Simulation Driver.
+\item Two main environments higher level (emulation) and lower level (circuit simulation).
+\item Higher level: a suite of tools (with GUI) including assembly and emulator. Done in Hydra. Good for assembling programs, referencing behavior and long executions.
+\item Lower level: Compile a Sigma16 program with M1 circuit, M1 simulation driver and Hydra library. Produces a standalone application that executes on the Sigma16 program by running it on the circuit.
+\item **Assessed Exercise Details and ArrayMax.hs M1 program**
+\item M1 and subsystems output internal registers and signals so they can be observed during execution.
+\item Simulation driver is different from the ones seen so far as it supports DMA, input is a program (not raw signals) and detects significant output events.
+\item **More Examples**
+\item IMPORTANT NOTE. The last 2/3 lectures have been rife with examples. These notes may not be sufficient to understand (and more importantly apply) the content described.
+
 \end{itemize}
 
 \section*{Lecture 13}
@@ -241,9 +320,132 @@
 \item More sophisticated solutions include using pipelining stages, interleaved memory and superscalar memory.
 \item The M1 circuit has no interrupts, memory protection or virtual memory. No concurrency. Long-running instructions must execute until completion while the rest of the processor waits.
 \item Pipelining is the application of parallelism to the steps in executing an instruction.
-\item The basic application of pipelining is to 
+\item General approaches to improving speed include: improving clock speed (reduce critical path), reduce no. clock cycles (pipelining and superscalar parallelism), improve speed of memory (parallelism by interleaved memory, explot locality).
+\item The basic application of pipelining is to execute steams of instructions.
+\item 'overlapping the steps in consecutinve multiplications'.
+\item In multiplication, it is the idea of unrolling iterations.
+\item The functional unit has one register for each of the the variables, each clock cycle the new variable overwrites the old variable. This is modified to make a sequence of register triples, each cycle the variables move from one set of registers to the next.
+\item 2 related techniques for improving speed. RETIMING - introduce extra registers to break up long paths through combinational logic. Allows for faster clock.
+\item PIPELINING - a stream of inputs goes through a sequence of stages. Introduce parallel execution among the stages. Same kind of speed up as an assembly line in manufacturing.
+\item The idea of retiming is to find the critical path and break it into smaller paths with registers in between. It will not take several clock cycles to perform the critical path operation but the clock can now be made faster.
+\item The critical operation becomes slower due to the safety factor, whereas non-critical operations will benefit speed up.
 \end{itemize}
 
+\section*{Lecture 14 (Incomplete)}
+\begin{itemize}
+\item More stages in pipelining for RX instructions. (fetch second word of instruction, calculate ea, perform memory access).
+\item All instructions have to go through the same sequence of stages, so pipeline must have enough stages for the worst case.
+\item Conflicts caused by sequencing in pipelining are called hazards. Some can be circumvented by introducing more circuits, some require stalling the pipeline, so we get sequential execution for a brief time.
+\item Important to maintain correct behavior.
+\item To avoid structural hazards, we separate memories for instructions and data.
+\item Data hazards occur when the 'wrong' value is accessed. Similar to critical sections in imperative programming.
+\item There are 2 main classifications:
+\begin{enumerate}
+\item Read After Write
+\item Write After Read
+\item Write After Write
+\item Intuitively, there is no hazard invoked from a Read After Read
+\end{enumerate}
+\item To detect hazards, we must make a complete list of hazards and introduce combinational logic to check them all. It is essential to find ALL the potential hazards.
+\item To detect a read after write hazard:
+\[ \text{raw} = (ir1\text{\_sa} = ir3\text{\_d}) \lor (ir\text{\_sb} = ir3\text{\_d}) \]
+\item To handle data hazards we can:
+\begin{enumerate}
+\item STALLING - temporarily stop an instruction in an earlier stage from proceeding, giving time for a later stage to complete its work. This introduces a 'bubble' into the system.
+\item BYPASSING (also called forwarding) - introduce additional circuitry that allows the pipeline to continue at full speed without error.
+\end{enumerate}
+\item BYPASSING in summary, is when an early stage requires a value that hasnt yet been loaded into the register (but the value exits elsewhere in the machine). We can introduce a new signal that 'bypasses' the register and transmits the signal to where it is needed directly. More comparators and multiplexors.
+\item A functional unit is a separate subsystem that performs a specific operation (integer multiplication for instance). It consists of a datapath, control and interface. Typically it is interfaced with a start signal input and ready output (as well as data if required).
+\item The ALU is restricted to operations that can be performed quickly (hence the need for functional units).
+\item It's possible for the pipeline to issue a calculation to a functional unit, and then proceed to perform another instruction. It enables instructions to be performed in parallel and also for pipelines to get past a 'difficult' (time consuming) instruction.
+\item In superscalar parallelism, a processor uses multiple functional units to keep the pipeline going closer to full speed (obtaining parallelism among calculations). Programs are not restricted to the specific iterations over arrays supported by vector machines.
+\item Key concern is allowing as much parallelism as possible while maintaining correctness.
+\begin{itemize}
+\item Centralised Control - The control algorithm analyses the stream of instructions and schedules the functional units to perform them.
+\item Distributed control - Control is distributed among the subsystems (pipeline, functional units, signals etc). 
+\end{itemize}
+\item Tomasulo paper (refer)
+\item 
+\end{itemize}
+
+\section*{Lecture 15 (Incomplete)}
+\begin{itemize}
+\item Fast operations are done in the ALU, slow operations in dedicated functional units.
+\item Multiple functional units can operate in parallel.
+\item The functional units have two operands (sink \& source) which receive data and a result buffer.
+\item When an operation reaches pipeline stage for executing the operation, the pipeline stalls, and the control unit performs the iteration using special registers in the main datapath.
+\item A functional unit has and interface (registers to receive operands from pipeline) and working registers (with combinational logic and control). In initial versions there was only 1 set of registers.
+
+\end{itemize}
+
+\section*{Lecture 16}
+\begin{itemize}
+\item Many different types of memory from small and fast to large and slow.
+\item The reason for the correlation between speed and size is because larger memory requires more address bits (and hence more time to decode the addresses).
+\item RAM is slower than registers because of the extra gate delays in decoding the address \& the physical space that memory takes up (registers are directly located on the processor).
+\item The M1 only allows 1 clock cycle for a memory operation which is completely unrealistic (control algorithm must wait).
+\item The M1 control algorithm proceeds by placing whatever value is on the memory bus into the destination register (which will probably be incorrect).
+\item Interleaved memory is a solution to this problem. (used in the IBM 360/91).
+\item The memory consists of $s^k$ individual memory banks, which is ordered sequentially.
+\item Many programs fetch or store a sequence of memory addresses. These can be done concurrently since they refer to distinct memory backs.
+\item Reduce random access by moving commonly accessed data into the faster cache.
+\item Cache mimics the most commonly used words in main memory but runs at full processor speed. 
+\item Datapath and Control must determine if a value is in cache or not VERY quickly. Extra registers are needed to do this.
+\item Each location in the cache contains a word of data and a tag (the actual address of the data in memory). Which allows the machine to identify if an arbitrary address refers to data already in the cache, and if so, where it is.
+\item If data is in the cache it is a cache hit, else it is a cache miss (where the accessed value is then placed into the cache to prevent the same miss).
+\item A cache line is a sequence of data from memory in the same cache 'slot'. The greater the line the more likely a hit, but also the slower the access.
+\item For cache searching the most general approach is an associative search (each line has a comparator which check address against tag, this is done in parallel).
+\item The quickest approach is direct mapped cache which requires each address to go into a specific cache entry.
+\item Direct Mapped Cache - each word has a cache location, it contains data word, a tag, valid bit.
+\item Maps to a cache space based on its lower order k bits.
+\item If a value has 'valid' set then it contains the value of the word value.
+\item This is a bit inflexible. An alternative is to allow the value to do in any cache slow. The hardware must search all the tags of possible cache locations.
+\item Associative/Content-Addressable Memory. A field value is set and the memory return the rest of the word that matches that field is returned.
+\item Each location has logic as well. Values are compared in parallel, a tree of or gates can determine whether a match exists in logarithmic time. If there are multiple matches a tree circuit can determine a unique responder in logarithmic time.
+\item Compromise, set associative cache. A limited set of slots in cache that a value can be placed in.
+\item 2 approaches to memory stores, write-through (cache and memory values updates together), write-back  write-back (cache is allowed to become inconsistent with memory. Performance may be improved when this approach is taken.
+\item Virtual Memory is the like the difference between cache and memory elevated to the difference between memory and disk.
+\item A page table specifies where each part of the virtual address space actually is.
+\item Virtual memory offers a large address space that can (almost) be accessed at the speed of primary memory.
+\item Additional features include segmentation and protection.
+\item Pages are like cache lines in cache memory. Data isn't kept as words but rather sequences of words, typically 2Kb or 4Kb large. Either a page is in main memory or it is on the disk.
+\item A frame is a block of locations big enough to hold a page. When a page is in use it is kept in a frame.
+\item Page number and offset. The page number if the relative address of the page within the virtual address space, the offset if the specific location of the information relative to the page.
+\item Page table. A page table is an array (one entry per page) indexed by the page number. It contains entries 'resident' and 'frame address' which allow the system to determine if and where the page is in main memory. Other fields may exist depending on the system.
+\item Dynamic Address Translation (DAT). Effective Address $\rightarrow$ Physical address in main memory OR Physical address on disk.
+\item Look over DAT algorithm.
+\item Dirty bit in a page table means that the page doesn't have to be written back to disk unless it has changed.
+\item A common page replacement algorithm is the 'least recently used' (LRU).
+\item Translation Lookaside Buffers are a special cache for the most active entries in the page table. It will usually have a reasonably large number of entries. Associative memory is used for TLBs
+\end{itemize}
+
+\section*{Lecture 17}
+\begin{itemize}
+\item An interrupt is a jump (to the OS), initiated by an event other than a jump instruction.
+\item They are used to prevent user programs executing prohibited instructions, allow programs to access OS services, foundation for concurrent processes and threads.
+\item Interrupts are implemented as part of the control algorithm. If an interrupt request signal is 0 then the control algorithms functions as per usual. If 1 then the current pc is saved, and the updated to the address of the interrupt handler.
+\item The pc can be saved in a special register, into memory or onto a stack. All of these approaches have to deal with the possibility of other interrupts (and where to move the pc), what if there is a stack overflow.
+\item The state also needs to be saved. It can either be done by the interrupt hander (in software), which is flexible. Or be saved in the control algorithms (OS doesn't need to do it), which is simpler and reliable.
+\item As state could potentially be lost if an interrupt occurs whilst saving state. A signal 'enable' is added which only allows interrupts to take place when this signal is 1 (normally 0).
+\item If an interrupt is missed it must wait.
+\item Some events are 'real time' and there is no deadline by which they must be processed. OS should strive to save state quickly and enable interrupts.
+\item Memory protection is usually done with base and limit registers, where if the EA is $>$ lr or $<$ br then the operating system can decide what to do with the process. Most computers include this protection as part of the dynamic address translation algorithm in virtual memory.
+\item Some 'privileged'  instructions can perform potentially dangerous operations (like altering the lr/br or I/O). These can only be executed by the OS.
+\item To check if it is a user or OS instruction a system state flip-flip is set. This is updated each time an instruction is received. 
+\item Moore's law (see earlier). More complications with additional transistors. More transistors but not the same speed increase as 1990s.
+\item Techniques to notice speed increase (can generally only be applied once) include: Increased word size, on-chip cache memory, pipelining, superscalar and multiple threads. We are running out of speed increasing techniques.
+\item Trending towards large scale asynchronous circuits (though small circuits are synchronous, I/O is inherently asynchronous. ie Processors cannot insist input is given on its own clock).
+\item Clock distribution is much more difficult with larger circuits, it simply isn't practical given transistor trends.
+\item Use separate Intellectual Property (IP) cores, made by different vendors but installed on the same chip. Intercommunication is done via 'network on a chip'
+\item If a signal is produced by a circuit on clock 1, and received by a flip flop on clock 2 it is asynchronous.
+\item The signal may not have enough time to settle down (and be incorrect) or may be in transition (metastable).
+\item Metastability is the area between a 1 and a 0. Signals snap to either 1 (even if there is minor degradation). Flip flops typically become metastable with large degradation or transitions. They will eventually snap to a 1/0 after a random (but unbounded) time.
+\item A signal has to be converted to make it valid in the receivers clock domain (synchronization).
+\\
+\includegraphics[width=\linewidth]{syncer}
+\item Synchronizer doesn't provide a guarantee of metastability but reduces its likelihood. There must be a trade off between an acceptable probability of failure and speed/power consumption of the synchronizer.
+\item GALS - Globally Asynchronous Locally Synchronous. (As it says on the tin).
+\end{itemize}
 \end{document}
 
 
